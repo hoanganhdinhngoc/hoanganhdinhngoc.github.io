@@ -12806,7 +12806,7 @@ cr.system_object.prototype.loadFromJSON = function (o)
     SysActs.prototype.GoToLayout = function (to)
     {
 		if (this.runtime.isloading)
-			return;		// cannot change layout while loading on loader layout
+			// return;		// cannot change layout while loading on loader layout
 		if (this.runtime.changelayout)
 			return;		// already changing to a different layout
 ;
@@ -22809,4 +22809,3 @@ cr.getObjectRefTable = function () { return [
 	cr.plugins_.Audio.prototype.acts.StopAll,
 	cr.system_object.prototype.cnds.OnLayoutEnd
 ];};
-
