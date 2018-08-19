@@ -1,5 +1,5 @@
 ﻿{
-	"version": 1533817286,
+	"version": 1534699178,
 	"fileList": [
 		"data.js",
 		"c2runtime.js",
@@ -20,9 +20,11 @@
 		"images/koilogo.png",
 		"images/fadein-sheet0.png",
 		"images/ingamemenuboard.png",
+		"images/whitesolidbox-sheet0.png",
+		"images/shield-sheet0.png",
+		"media/shooting.ogg",
 		"media/58 nier automata ost - the sound of the end ( 8 - bit ).ogg",
 		"media/42 nier automata ost - fortress of lies the bunker (online-audio-converter.com).ogg",
-		"media/laser_shoot21.ogg",
 		"icon-16.png",
 		"icon-32.png",
 		"icon-114.png",
