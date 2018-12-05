@@ -1,0 +1,21 @@
+- style.css:
+
+line 96 to line 102
+
+.theme-color {
+  background: rgba(41, 116, 112, 0.9);
+}
+
+ a {
+  color: rgba(41, 116, 112, 1);
+}
+
+- pie-chart:
+
+line 111
+
+barColor: 'rgba(41, 116, 112, 1)',
+
+- other hover and icon:
+
+just find color: rgba(41, 116, 112, 1)
