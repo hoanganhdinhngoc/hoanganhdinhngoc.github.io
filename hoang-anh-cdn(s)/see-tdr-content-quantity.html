@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <style>
+    .type1 {
+      margin: auto;
+      position: absolute;
+      top: 80px;
+      left: 10%;
+
+    }
+
+    p {
+      font-size: 25px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class = "type1">
+  <p>Wait a sec, I will show you how many topics and posts have been created today </p>
+</div>
+
+  <script type="text/javascript">
+
+  var todayLink ="https://www.tiendauroi.com/admin/reports/moderators_activity?";
+  var todayDate ="";
+  var today ="";
+
+
+
+  function getDate() {
+
+    var n = new Date();
+    var dd = String(n.getDate()).padStart(2, '0');
+    var mm = String(n.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = n.getFullYear();
+
+    todayDate = yyyy + '-' + mm + '-' + dd;
+
+
+    today = "end_date=" + todayDate + "&" + "start_date=" + todayDate;
+    todayLink = todayLink + today;
+  // Open link
+    window.open(todayLink, "_top");
+  }
+
+  window.onload = setTimeout(getDate, 2000);
+
+
+  </script>
+
+</body>
+</html>
+
+<!-- Target link: https://www.tiendauroi.com/admin/reports/moderators_activity?end_date=2019-06-28&start_date=2019-06-28 -->
+
+
+<!-- Open link (https://www.geeksforgeeks.org/open-a-link-without-clicking-on-it-using-javascript/)
+
+Syntax:
+
+window.open( URL, Specs )
+Parameters: This function accepts three parameters as mentioned above and described below:
+
+URL: It is optional parameter. It is used to specify the URL of the web page which need to open. If URL is not specified then a new Window is open.
+Name: It is an optional parameter which is used to specify the target attribute.
+_blank: The URL is loaded into the new window. It is optional.
+_top: The URL replaces the current page.
+Specs: It is an optional parameter. It is a comma-separated list of items, no whitespace.
+Height: It represents the height of window in the pixel.
+Width- It represents the width of window in the pixel.
+
+Get this articles: https://www.freecodecamp.org/news/client-side-web-scraping-with-javascript-using-jquery-and-regex-5b57a271cb86/
+
+Login and craw from this: https://www.tiendauroi.com/admin/reports/moderators_activity?end_date=2019-07-02&start_date=2019-07-02 -->
