@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <style>
+    .deal-item {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      grid-template-areas: ". ."". ."". .";
+    }
+
+    .submit-button {
+      margin-top: 3em;
+    }
+
+    .hotdeal-container {
+      display: grid;
+      //   text-align: center;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr 1fr;
+      grid-template-areas: ". ."". ."". .";
+    }
+
+    .hotdeal-main-title {
+      // margin-top: 2em;
+    }
+
+    .hotdeal-title {
+      padding: 0em;
+      margin: 0.5em;
+      color: #08c;
+    }
+
+    .hotdeal-item {
+      display: inline-block;
+    }
+
+    a.hotdeal-link {
+      text-decoration: none;
+      color: #4c4c4c;
+    }
+
+    li.hotdeal-item {
+      list-style-type: none;
+      position: relative;
+      padding-left: 1em;
+    }
+
+    li.hotdeal-item:before {
+      content: "\25BA \0020";
+      font-size: 1em;
+      position: absolute;
+      top: 0.3em;
+      left: -0.5em;
+    }
+
+    .result {
+      top: 30px;
+      border: solid 1px;
+      width: 800px;
+      height: 500px;
+      margin: auto;
+      overflow: scroll;
+    }
+  </style>
+
+
+</head>
+
+<body onload="shit()">
+
+  <!-- Code lấy link -->
+
+  <h2>Lấy link vào mục hotdeal</h2>
+  <p>Chú ý dòng đầu là 2 link được click nhiều nhất</p>
+
+  <div class="deal-item">
+
+    <div class="item-container">
+      <p>Link #1</p>
+      <input id="get-link-text01" class="text-input" placeholder="Chỗ này điền text">
+      <input id="get-link01" class="link-input" placeholder="Chỗ này điền link">
+    </div>
+
+    <div class="item-container">
+      <p>Link #2</p>
+      <input id="get-link-text02" class="text-input" placeholder="Chỗ này điền text">
+      <input id="get-link02" class="link-input" placeholder="Chỗ này điền link">
+    </div>
+
+    <div class="item-container">
+      <p>Link #3</p>
+      <input id="get-link-text03" class="text-input" placeholder="Chỗ này điền text">
+      <input id="get-link03" class="link-input" placeholder="Chỗ này điền link">
+    </div>
+
+    <div class="item-container">
+      <p>Link #4</p>
+      <input id="get-link-text04" class="text-input" placeholder="Chỗ này điền text">
+      <input id="get-link04" class="link-input" placeholder="Chỗ này điền link">
+    </div>
+
+    <div class="item-container">
+      <p>Link #5</p>
+      <input id="get-link-text05" class="text-input" placeholder="Chỗ này điền text">
+      <input id="get-link05" class="link-input" placeholder="Chỗ này điền link">
+    </div>
+
+    <div class="item-container">
+      <p>Link #6</p>
+      <input id="get-link-text06" class="text-input" placeholder="Chỗ này điền text">
+      <input id="get-link06" class="link-input" placeholder="Chỗ này điền link">
+    </div>
+
+  </div>
+
+  <button type="button" class="submit-button" onclick="getContent()">Submit</button>
+
+  <h2 style="diplay:block;">Check kết quả bên dưới</h2>
+    <div class="hotdeal-wrap">
+      <h4 class="hotdeal-main-title"><img src="https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/120/google/146/fire_1f525.png" style="width:1em;margin:0em 0.2em;">Deal Hot Trong Ngày</h4>
+      <ul class="hotdeal-container slider" id="visible">
+
+
+      </ul>
+    </div>
+
+
+
+  </p>
+
+
+    <!-- html cần generate -->
+<div class="result-holder">
+  <button type="button" class="copy-result" onclick="copyandpaste()" style="display:inline;">Copy code và đến trang sửa</button>
+
+</div>
+<textarea style="white-space: break-spaces;" id="result" rows="30" cols="80">
+
+</textarea>
+
+
+<script>
+
+
+
+function getContent() {
+  var varlink01 = document.getElementById("get-link01").value;
+  var vartext01 = document.getElementById("get-link-text01").value;
+
+  var varlink02 = document.getElementById("get-link01").value;
+  var vartext02 = document.getElementById("get-link-text01").value;
+
+  var varlink03 = document.getElementById("get-link01").value;
+  var vartext03 = document.getElementById("get-link-text01").value;
+
+  var varlink04 = document.getElementById("get-link01").value;
+  var vartext04 = document.getElementById("get-link-text01").value;
+
+  var varlink05 = document.getElementById("get-link01").value;
+  var vartext05 = document.getElementById("get-link-text01").value;
+
+  var varlink06 = document.getElementById("get-link01").value;
+  var vartext06 = document.getElementById("get-link-text01").value;
+
+  document.getElementById("result").innerHTML = "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink01 + "\"><p class=\"hotdeal-title\">" + vartext01 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink02 + "\"><p class=\"hotdeal-title\">" + vartext02 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink03 + "\"><p class=\"hotdeal-title\">" + vartext03 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink04 + "\"><p class=\"hotdeal-title\">" + vartext04 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink05 + "\"><p class=\"hotdeal-title\">" + vartext05 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink06 + "\"><p class=\"hotdeal-title\">" + vartext06 + "</p></a></li>"
+  ;
+
+  document.getElementById("visible").innerHTML = "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink01 + "\"><p class=\"hotdeal-title\">" + vartext01 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink02 + "\"><p class=\"hotdeal-title\">" + vartext02 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink03 + "\"><p class=\"hotdeal-title\">" + vartext03 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink04 + "\"><p class=\"hotdeal-title\">" + vartext04 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink05 + "\"><p class=\"hotdeal-title\">" + vartext05 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink06 + "\"><p class=\"hotdeal-title\">" + vartext06 + "</p></a></li>"
+
+}
+
+var linkfix = "https://www.tiendauroi.com/admin/customize/themes/4/common/after_header/edit"
+
+function copyandpaste() {
+  document.getElementById("result").focus();
+  document.getElementById("result").select();
+  document.execCommand("copy");
+  window.open(linkfix, "new window",
+    "height=1000,width=1000,modal=yes,alwaysRaised=yes");
+}
+
+</script>
+
+
+</body>
+</html>
