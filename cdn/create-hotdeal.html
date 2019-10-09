@@ -184,13 +184,15 @@ function getContent() {
 
 }
 
-var linkfix = "https://www.tiendauroi.com/admin/customize/themes/4/common/after_header/edit"
+var linkfixDesktop = "https://www.tiendauroi.com/admin/customize/themes/4/desktop/after_header/edit"
+var linkfixMobile = "https://www.tiendauroi.com/admin/customize/themes/4/mobile/after_header/edit"
 
 function copyandpaste() {
   document.getElementById("result").focus();
   document.getElementById("result").select();
   document.execCommand("copy");
-  window.open(linkfix, "_top");
+  window.open(linkfixDesktop, "_blank");
+  window.open(linkfixMobile, "_blank");
 }
 
 </script>
