@@ -136,7 +136,7 @@
 
     <!-- html cần generate -->
 <div class="result-holder">
-  <button type="button" class="copy-result" onclick="copyandpaste()" style="display:inline;">Copy code và đến trang sửa</button>
+  <button type="button" class="copy-result" onclick="copyandpaste();openMobile();" style="display:inline;">Copy code và đến trang sửa</button>
 
 </div>
 <textarea style="white-space: break-spaces;" id="result" rows="30" cols="80">
@@ -194,6 +194,7 @@ function copyandpaste() {
   window.open(linkfixDesktop, "_blank");
   window.open(linkfixMobile, "_blank");
 }
+
 
 </script>
 
