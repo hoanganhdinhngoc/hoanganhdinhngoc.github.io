@@ -167,32 +167,30 @@ function getContent() {
   var varlink06 = document.getElementById("get-link06").value;
   var vartext06 = document.getElementById("get-link-text06").value;
 
-  document.getElementById("result").innerHTML = "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink01 + "\"><p class=\"hotdeal-title\">" + vartext01 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink02 + "\"><p class=\"hotdeal-title\">" + vartext02 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink03 + "\"><p class=\"hotdeal-title\">" + vartext03 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink04 + "\"><p class=\"hotdeal-title\">" + vartext04 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink05 + "\"><p class=\"hotdeal-title\">" + vartext05 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink06 + "\"><p class=\"hotdeal-title\">" + vartext06 + "</p></a></li>"
+  document.getElementById("result").innerHTML = "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink01 + "\"><p class=\"hotdeal-title\">" + vartext01 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink02 + "\"><p class=\"hotdeal-title\">" + vartext02 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink03 + "\"><p class=\"hotdeal-title\">" + vartext03 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink04 + "\"><p class=\"hotdeal-title\">" + vartext04 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink05 + "\"><p class=\"hotdeal-title\">" + vartext05 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink06 + "\"><p class=\"hotdeal-title\">" + vartext06 + "</p></a></li>"
   ;
 
-  document.getElementById("visible").innerHTML = "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink01 + "\"><p class=\"hotdeal-title\">" + vartext01 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink02 + "\"><p class=\"hotdeal-title\">" + vartext02 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink03 + "\"><p class=\"hotdeal-title\">" + vartext03 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink04 + "\"><p class=\"hotdeal-title\">" + vartext04 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink05 + "\"><p class=\"hotdeal-title\">" + vartext05 + "</p></a></li>" +
-  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link\" href=\"" + varlink06 + "\"><p class=\"hotdeal-title\">" + vartext06 + "</p></a></li>"
+  document.getElementById("visible").innerHTML = "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink01 + "\"><p class=\"hotdeal-title\">" + vartext01 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink02 + "\"><p class=\"hotdeal-title\">" + vartext02 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink03 + "\"><p class=\"hotdeal-title\">" + vartext03 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink04 + "\"><p class=\"hotdeal-title\">" + vartext04 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink05 + "\"><p class=\"hotdeal-title\">" + vartext05 + "</p></a></li>" +
+  "<li class=\"hotdeal-item\"><a class=\"hotdeal-link jump-to\" href=\"" + varlink06 + "\"><p class=\"hotdeal-title\">" + vartext06 + "</p></a></li>"
 
 }
 
-var linkfixDesktop = "https://www.tiendauroi.com/admin/customize/themes/4/desktop/after_header/edit"
-var linkfixMobile = "https://www.tiendauroi.com/admin/customize/themes/4/mobile/after_header/edit"
+var linkfixDesktop = "https://www.tiendauroi.com/admin/customize/themes/4/common/after_header/edit"
 
 function copyandpaste() {
   document.getElementById("result").focus();
   document.getElementById("result").select();
   document.execCommand("copy");
   window.open(linkfixDesktop, "_blank");
-  window.open(linkfixMobile, "_blank");
 }
 
 
