@@ -1,0 +1,53 @@
+
+<!-- Import script -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+  crossorigin="anonymous">
+
+<style>
+ #result{
+   overflow: auto;
+ }
+</style>
+<section class="container-fluid">
+  <h3 class="text-center">Tạo list ID Airtable</h3>
+  <p class="text-center">Copy 1 cột key ID trong Airtable và dán vào tool này, bạn sẽ có 1 list mới sẵn sàng để paste vào cột link trong bảng lấy data.</p>
+  <div class="row">
+    <div class="col-sm-6">
+      <form id="my-form">
+        <textarea id="mytextarea" name="name" rows="20" cols="80"></textarea>
+      </form>
+      <button id="myButton" name="button" class="btn btn-primary">Submit</button>
+
+    </div>
+    <textarea id="result" class="col-sm-6">
+    </textarea>
+  </div>
+
+</section>
+
+
+  <script type="text/javascript">
+
+  var listID ="";
+  var convertedlistID = "";
+
+  function generateEbayLink() {
+    $('#result').html('');
+    // convert textarea values to array, separate by \n
+    listID = $('textarea#mytextarea').val().split("\n");
+    // loop through listID
+    for (i = 0; i < listID.length; i++) {
+      convertedlistID = convertedlistID.concat(listID[i]).concat(", ");
+    }
+
+    $('#result').append(convertedlistID);
+
+    // copy to clipboard
+    $("#result").select();
+    document.execCommand("copy");
+    convertedlistID = '';
+  }
+  $('#myButton').click(generateEbayLink);
+
+</script>
