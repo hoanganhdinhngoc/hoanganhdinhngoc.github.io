@@ -1,0 +1,182 @@
+{
+  "userId": "usrZNVjfpFVIf5HXy",
+  "permissionLevel": "owner",
+  "grantedByUserId": "usrZNVjfpFVIf5HXy",
+  "createdTime": "2019-06-02T09:33:29.000Z",
+  "isSharedAtWorkspaceLevel": true
+}]
+}, "rawUsers": {
+  "usr4DFYRCFpUj5YnQ": {
+    "id": "usr4DFYRCFpUj5YnQ",
+    "firstName": "Khanh Linh",
+    "lastName": "Nguyen",
+    "email": "khanhlinhnt@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_1.png",
+    "name": "Khanh Linh Nguyen"
+  },
+  "usrCjWX65t6rvY3wV": {
+    "id": "usrCjWX65t6rvY3wV",
+    "firstName": "Vũ",
+    "lastName": "Thành",
+    "email": "thanhvu@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002F356db47c56a32319953b6f1e92b6b7b4\u002Feae71742",
+    "name": "Vũ Thành"
+  },
+  "usrIA3szroyZAJImk": {
+    "id": "usrIA3szroyZAJImk",
+    "firstName": "Hiệp",
+    "lastName": "Nguyễn",
+    "email": "hiepnv@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002F96fbfe7f082f85b9f3a8ec80762e8c8c\u002Fcc6fbd62",
+    "name": "Hiệp Nguyễn"
+  },
+  "usrIWE3MJg7EGMneQ": {
+    "id": "usrIWE3MJg7EGMneQ",
+    "firstName": "Thu Ngan",
+    "lastName": "Tran Doan",
+    "email": "ngantdt@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_5.png",
+    "name": "Thu Ngan Tran Doan"
+  },
+  "usrMsLGoeOfJ8vrIp": {
+    "id": "usrMsLGoeOfJ8vrIp",
+    "firstName": "Anh",
+    "lastName": "Nguyễn Khắc Việt",
+    "email": "vietanhnk@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_1.png",
+    "name": "Anh Nguyễn Khắc Việt"
+  },
+  "usrQDf8Rwl7B7ruU4": {
+    "id": "usrQDf8Rwl7B7ruU4",
+    "firstName": "Ha Phuong",
+    "lastName": "Ngo",
+    "email": "phuongnh@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_6.png",
+    "name": "Ha Phuong Ngo"
+  },
+  "usrThtdPPfYExxWn6": {
+    "id": "usrThtdPPfYExxWn6",
+    "firstName": "Hoang Anh",
+    "lastName": "Dinh Ngoc",
+    "email": "anhdnch@buybulous.com",
+    "isEmailVerified": true,
+    "isEmailValid": true,
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002F9c23cb641e4f00108c26b088f5448fab\u002F46bfc7cb",
+    "referralCode": "JSu3L3qk",
+    "lastRefreshedGoogleContacts": null,
+    "referredByUserId": "usrZNVjfpFVIf5HXy",
+    "prefs": {
+      "onboardingShouldAutoExpandBlocksTip": true,
+      "isExpandRecordOnboardingTipCompleted": true,
+      "isColumnConfigOnboardingTipCompleted": true,
+      "isBlocksOnboardingTipCompleted": true,
+      "isViewsOnboardingTipCompleted": true,
+      "isRecordLinkingOnboardingTipCompleted": true,
+      "shouldSkipColumnConfigChangeWarning": true,
+      "isCollabOnboardingTipCompleted": true,
+      "isGuideOnboardingTipCompleted": true,
+      "onboardingTipsState": "circle"
+    },
+    "creditInCents": 2200,
+    "visibleWorkspaceOrder": ["wspSHARED00000000", "wsp7mjKzE867tqUoN"],
+    "createdTime": "2019-09-20T08:30:25.000Z",
+    "name": "Hoang Anh Dinh Ngoc"
+  },
+  "usrUmG7NqVxoKiHlp": {
+    "id": "usrUmG7NqVxoKiHlp",
+    "firstName": "Thuy Linh",
+    "lastName": "Nguyen Thi",
+    "email": "linhntt@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_1.png",
+    "name": "Thuy Linh Nguyen Thi"
+  },
+  "usrZNVjfpFVIf5HXy": {
+    "id": "usrZNVjfpFVIf5HXy",
+    "firstName": "Toan",
+    "lastName": "Ngo",
+    "email": "tdngo22@gmail.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_9.png",
+    "name": "Toan Ngo"
+  },
+  "usrZOpwUzbJdELwku": {
+    "id": "usrZOpwUzbJdELwku",
+    "firstName": "Chris",
+    "lastName": "Giang",
+    "email": "tieubach.giang@gmail.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_7.png",
+    "name": "Chris Giang"
+  },
+  "usrccEUsAZEAFEoEh": {
+    "id": "usrccEUsAZEAFEoEh",
+    "firstName": "Chi",
+    "lastName": "Nguyen Thi Thuy",
+    "email": "chintt@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002F968df28336d0af62d7df3f605ced207d\u002Fff880e0f",
+    "name": "Chi Nguyen Thi Thuy"
+  },
+  "usre5JbN71eeey0mQ": {
+    "id": "usre5JbN71eeey0mQ",
+    "firstName": "Duc",
+    "lastName": "Le Minh",
+    "email": "duclm@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002F767ec7f9c4fc44fdb97c735f642c61d1\u002F2ab45138",
+    "name": "Duc Le Minh"
+  },
+  "usritxZSugYuK7uBl": {
+    "id": "usritxZSugYuK7uBl",
+    "firstName": "Tu",
+    "lastName": "Nguyen Anh",
+    "email": "tuna@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_9.png",
+    "name": "Tu Nguyen Anh"
+  },
+  "usrjLyXkp6GpY5Frb": {
+    "id": "usrjLyXkp6GpY5Frb",
+    "firstName": "Tiến",
+    "lastName": "Nhâm",
+    "email": "tiennx@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_2.png",
+    "name": "Tiến Nhâm"
+  },
+  "usrmEY5RhR9s9s2IR": {
+    "id": "usrmEY5RhR9s9s2IR",
+    "firstName": "Nguyễn",
+    "lastName": "Linh",
+    "email": "linhntk@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002Fe35213e6f0aa63b2b52e282f7f8b5d4f\u002F94a0ee03",
+    "name": "Nguyễn Linh"
+  },
+  "usrpfrPjEwE3yNTw4": {
+    "id": "usrpfrPjEwE3yNTw4",
+    "firstName": "Hieu",
+    "lastName": "Phung",
+    "email": "hieupm@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fdl.airtable.com\u002F.profilePics\u002Fb7ef844dc57cc4604ee2fa5028c7986e\u002F0461b165",
+    "name": "Hieu Phung"
+  },
+  "usrzf7wBKoh4GTwW4": {
+    "id": "usrzf7wBKoh4GTwW4",
+    "firstName": "Bích",
+    "lastName": "Nguyễn Thị",
+    "email": "bichnt@buybulous.com",
+    "state": "active",
+    "profilePicUrl": "https:\u002F\u002Fstatic.airtable.com\u002Fimages\u002FuserIcons\u002Fuser_icon_3.png",
+    "name": "Bích Nguyễn Thị"
+  }
+}
