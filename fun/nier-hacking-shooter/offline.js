@@ -1,0 +1,30 @@
+﻿{
+	"version": 1534699178,
+	"fileList": [
+		"data.js",
+		"c2runtime.js",
+		"jquery-2.1.1.min.js",
+		"offlineClient.js",
+		"images/basebackground.png",
+		"images/shooter-sheet0.png",
+		"images/bullet-sheet0.png",
+		"images/coretarget-sheet0.png",
+		"images/redbullet-sheet0.png",
+		"images/violetbullet-sheet0.png",
+		"images/coretargetld-sheet0.png",
+		"images/chasingguard-sheet0.png",
+		"images/sceengrilllayer.png",
+		"images/4cornerdardlayer.png",
+		"images/yorhasign.png",
+		"images/menubackground.png",
+		"images/koilogo.png",
+		"images/fadein-sheet0.png",
+		"images/ingamemenuboard.png",
+		"images/whitesolidbox-sheet0.png",
+		"images/shield-sheet0.png",
+		"media/shooting.ogg",
+		"media/58 nier automata ost - the sound of the end ( 8 - bit ).ogg",
+		"media/42 nier automata ost - fortress of lies the bunker (online-audio-converter.com).ogg",
+
+	]
+}
