@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Template prototype & content definition. Type: Nier-list source: hoanganhdinhngoc.github.io/cdn/core-system-project -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Shortcut giúp tiết kiệm thời gian cho team Tiendauroi"/>
+	<meta name="author" content="HoangAnhDinhNgoc" />
+  <!--
+//////////////////////////////////////////////////////
+
+MADE with <3 by Hoang Anh Dinh Ngoc
+
+Website: 		http://hoanganhdinhngoc.github.io
+Email: 			hanh2122011@gmail.com
+Twitter: 		https://twitter.com/Hanh2122011
+Facebook: 	https://www.facebook.com/HoangAnhDinhNgoc
+LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
+
+//////////////////////////////////////////////////////
+ -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!-- <link rel='stylesheet' href='style.css'/> -->
+	<!-- <script src='script.js'></script> -->
+  <title>Tiendauroi shortcut dashboard</title>
+
+  <!-- CSS STYLE SECTION -->
+
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400');
+
+
+    * {
+    margin: 0px;
+    padding: 0px;
+    }
+
+    .title {
+      padding: 20px;
+      font-family: 'Montserrat', sans-serif;
+      color: #4b4340;
+      text-shadow: 4px 5px rgba(162,156,142,.8);
+    }
+
+    .sectionTitle {
+      padding: 1% 1%;
+      color: #d3cebb;
+      background: rgba(100,98,86,0.8);
+    }
+
+    body {
+      background-color: #ccc6b0;
+      background-image: linear-gradient(90deg, rgba(198,192,170,.5) 30%, transparent 30%),
+      linear-gradient(rgba(198,192,170,.5) 30%, transparent 30%);
+      background-size:5px 5px;
+    }
+
+    .coreSystem {
+      height: 1000em;
+      box-shadow: inset 0px 0px 100px 20px rgba(0,0,0, 0.3);
+    }
+
+    .section {
+      margin: 20px 30px;
+      padding: 0 0 1px 0;
+      background: rgba(216,210,186,.5);
+      font-family: 'Montserrat', sans-serif;
+      line-height: 20pt;
+      color:  #4b4340;
+      box-shadow: 2px 2px 1px #4f4b42;
+    }
+
+    .dropContent {
+      display: block;
+      padding: 2px;
+      margin: 3px 8px;
+      cursor: pointer;
+    }
+
+    .dropContent:hover {
+      color: #d3cebb;
+      background: rgba(0,0,0,0.2);
+    }
+
+    ul {
+      list-style: none;
+      padding: 0px 8px;
+    }
+
+    li {
+      margin-left: 20px;
+    }
+
+    .selected {
+      font-weight: bold;
+    }
+
+    .top-logo {
+      margin: 0px 30px;
+      padding: 0 0 1px 0;
+      filter: saturate(30%);
+    }
+
+    a {
+      color: #4b4340;
+      font-weight: bold;
+    }
+
+  </style>
+
+</head>
+<body>
+<div class='coreSystem'>
+  <h1 class="title">Tiendauroi's shortcut dashboard</h1>
+
+
+  <a href="https://www.tiendauroi.com/" class="logo" target="_blank">
+					<img width="275" height="80" src="https://www.tiendauroi.com/wp-content/uploads/2020/03/logo-slogan-5.png" class="top-logo" alt="" srcset="https://www.tiendauroi.com/wp-content/uploads/2020/03/logo-slogan-5.png 275w, https://www.tiendauroi.com/wp-content/uploads/2020/03/logo-slogan-5-150x44.png 150w" sizes="(max-width: 275px) 100vw, 275px"></a>
+
+  <!-- System Info -->
+
+
+  <div class='section' id='info'>
+      <h2 class="tutorial" style='padding: 1% 1%; cursor: pointer;'>Hướng dẫn</h2>
+      <ul class='content'>
+        <li><p><b>Sử dụng: </b>Ấn vào mục tương ứng với việc mình định làm. Chọn link và nó sẽ bật ra trang làm việc. Vậy hoy.</p></li>
+        <li>Dùng trang này sẽ giúp tiết kiệm nhiều thời gian cho contentwriter, và giảm tải cho thanh bookmark.
+        <li><p>Lưu cái này vào bookmark để làm việc mở cho dễ nhé!</li>
+      </ul>
+  </div>
+
+  <!-- Section 1 -->
+
+  <div class='section' id='section1'>
+      <h2 class='sectionTitle'>Viết bài</h2>
+      <div class='dropContent'>Viết blogpost</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post-new.php" target="_blank">Tạo blog post mới</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/edit.php" target="_blank">Xem list blog post</a></p></li>
+      </ul>
+      <div class='dropContent'>Viết deal lẻ</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post-new.php?post_type=coupon" target="_blank">Viết deal mới</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/edit.php?post_type=coupon" target="_blank">Xem danh sách deal</a></p></li>
+      </ul>
+      <div class='dropContent'>Cập nhật bài tổng hợp (category)</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/edit-tags.php?taxonomy=coupon-category&post_type=coupon" target="_blank">Danh sách category</a></p></li>
+        <br>
+        <li><h2>Nhóm thương mại điện tử: </h2></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=274&post_type=coupon" target="_blank">Khuyến mãi Shopee</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=262&post_type=coupon" target="_blank">Khuyến mãi Tiki</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=272&post_type=coupon" target="_blank">Khuyến mãi Lazada</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=273&post_type=coupon" target="_blank">Khuyến mãi Sendo</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=508&post_type=coupon" target="_blank">Khuyến mãi Nguyen Kim</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=507&post_type=coupon" target="_blank">Khuyến mãi Yes24</a></p></li>
+        <br>
+        <li><h2>Nhóm gọi xe & giao đồ ăn: </h2></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=155&post_type=coupon" target="_blank">Cập nhật mã giảm giá Baemin</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=177&post_type=coupon" target="_blank">Cập nhật mã giảm giá Grab</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=154&post_type=coupon" target="_blank">Cập nhật mã giảm giá NOW</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=179&post_type=coupon" target="_blank">Cập nhật mã giảm giá Grabfood</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=175&post_type=coupon" target="_blank">Cập nhật mã giảm giá Be</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=150&post_type=coupon" target="_blank">Cập nhật mã giảm giá Goviet</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=147&post_type=coupon" target="_blank">Cập nhật mã giảm giá Grabexpress</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=156&post_type=coupon" target="_blank">Cập nhật mã giảm giá Loship</a></p></li>
+        <br>
+        <li><h2>Nhóm ăn uống: </h2></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=137&post_type=coupon" target="_blank">Cà Phê - Trà Sữa</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=138&post_type=coupon" target="_blank">Lẩu</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=299&post_type=coupon" target="_blank">Nướng</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=133&post_type=coupon" target="_blank">Đồ ăn nhanh</a></p></li>
+        <br>
+        <li><h2>Nhóm ví điện tử - thẻ: </h2></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=132&post_type=coupon" target="_blank">Điện nước internet</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=168&post_type=coupon" target="_blank">Momo</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=170&post_type=coupon" target="_blank">VNpay</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=163&post_type=coupon" target="_blank">VinID</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=296&post_type=coupon" target="_blank">Zalopay</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=169&post_type=coupon" target="_blank">Airpay</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=201&post_type=coupon" target="_blank">Senpay</a></p></li>
+        <br>
+        <li><h2>Nhóm đi chơi, du lịch: </h2></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=76&post_type=coupon" target="_blank">Khuyến mãi xem phim</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=140&post_type=coupon" target="_blank">Vé máy bay</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=85&post_type=coupon" target="_blank">Tour giá tốt</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=84&post_type=coupon" target="_blank">Đặt phòng tổng hợp</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=157&post_type=coupon" target="_blank">Traveloka</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=152&post_type=coupon" target="_blank">Agoda</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=143&post_type=coupon" target="_blank">Luxstay</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=151&post_type=coupon" target="_blank">Reddoorz</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=268&post_type=coupon" target="_blank">OYO</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=269&post_type=coupon" target="_blank">Spaceshare</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=159&post_type=coupon" target="_blank">Klook</a></p></li>
+        <br>
+        <li>Còn một số cái lẻ nữa, nhiều lắm ví dụ <a href="https://www.tiendauroi.com/wp-admin/term.php?taxonomy=coupon-category&tag_ID=173&post_type=coupon" target="_blank">Tổng hợp ưu đãi sách</a>. Lâu lâu nhớ tổng hợp lại nhé</li>
+
+      </ul>
+  </div>
+
+  <!-- Section 2 -->
+
+  <div class='section' id='section2'>
+      <h2 class='sectionTitle'>Thay ads</h2>
+      <div class='dropContent'>Định nghĩa vị trí lên ads</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/admin.php?page=_options&tab=12" target="_blank">Couponis Advertising</a></p></li>
+        <li><p><b>Mô tả: </b>Đây là nơi quy định block ads nào đặt ở chỗ nào, chọn tên block ads để thể hiện</p></li>
+      </ul>
+      <div class='dropContent'>Setup ads</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/edit.php?post_type=extrapage" target="_blank">Trang setup chung</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=21342&action=edit&classic-editor" target="_blank">Ads trên các bài tổng hợp đồ ăn</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=20484&action=edit&classic-editor" target="_blank">Header bar ads</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=19934&action=edit&classic-editor" target="_blank">Side banner ads</a></p></li>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=18247&action=edit&classic-editor" target="_blank">House ads toàn trang</a></p></li>
+      </ul>
+  </div>
+
+  <!-- Section 3 -->
+
+  <div class='section' id='section3'>
+      <h2 class='sectionTitle'>Airtable</h2>
+      <div class='dropContent'>Cập nhật tự động mã giảm giá</div>
+      <ul class='content'>
+        <li><p><a href="https://airtable.com/tbluxDrnseWxOl09w/viwHZhx5qozqDZMMO" target="_blank">Cập nhật mã giảm giá</a></p></li>
+      </ul>
+      <div class='dropContent'>Quản lý CTV</div>
+      <ul class='content'>
+        <li><p><a href="https://airtable.com/tblMWBP6kcEHorqsF/viwuQciG0OO6hHRn1" target="_blank">Bài viết CTV</a></p></li>
+      </ul>
+  </div>
+
+  <!-- Section 4 -->
+
+  <div class='section' id='section4'>
+      <h2 class='sectionTitle'>Xem traffic</h2>
+
+      <div class='dropContent'>Google Analytics 7 days</div>
+      <ul class='content'>
+        <li><p><a href="https://analytics.google.com/analytics/web/#/report/visitors-overview/a99123203w168698282p168749691/overview-graphOptions.primaryConcept=analytics.totalVisitors" target="_blank">User</a></p></li>
+        <li><p><a href="https://analytics.google.com/analytics/web/#/report/content-pages/a99123203w168698282p168749691/" target="_blank">Pageviews</a></p></li>
+        <li><p><a href="https://analytics.google.com/analytics/web/#/report/content-engagement-flow/a99123203w168698282p168749691/" target="_blank">Behavior flow</a></p></li>
+        <li><p><a href="https://analytics.google.com/analytics/web/#/realtime/rt-overview/a99123203w168698282p168749691/" target="_blank">Realtime</a></p></li>
+        <li><p><a href="https://analytics.google.com/analytics/web/#/report/trafficsources-overview/a99123203w168698282p168749691/" target="_blank">Acquisition Overview</a></p></li>
+      </ul>
+      <div class='dropContent'>Search console</div>
+      <ul class='content'>
+      <li><p><a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20baemin" target="_blank">Mã giảm giá Baemin</a></p></li>
+      <li><p><a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20now" target="_blank">Mã giảm giá NOW</a></p></li>
+      <li><p><a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20grabfood" target="_blank">Mã giảm giá Grabfood</a></p></li>
+      </ul>
+      <div class='dropContent'>Yandex Metrica</div>
+      <ul class='content'>
+      <li><p><a href="https://metrica.yandex.com/dashboard?group=day&period=week&id=56082535" target="_blank">Dashboard</a></p></li>
+      <li><p><a href="https://metrica.yandex.com/stat/visor?period=week&id=56082535" target="_blank">Session Replay</a></p></li>
+      <br>
+      ID: team@buybulous.com,
+      maketdr**********
+
+
+      </ul>
+
+  </div>
+
+  <!-- Section 5 -->
+
+  <div class='section' id='section4'>
+      <h2 class='sectionTitle'>Dùng tool</h2>
+
+      <div class='dropContent'>Chuyển cột thành list</div>
+      <ul class='content'>
+        <li><p><a href="hoanganhdinhngoc.github.io/cdn/column-to-list-converter.html" target="_blank">Column-to-list-converter</a></p></li>
+        <li><p><b>Mô tả: </b>Dùng khi cần link một record airtale tói nhiều record khác, ví dụ như khi tính lương cho ctv theo số bài.</p></li>
+      </ul>
+
+      <div class='dropContent'>Tạo nội dung rút gọn</div>
+      <ul class='content'>
+        <li><p><a href="https://hoanganhdinhngoc.github.io/cdn/create-summary.html" target="_blank">Create-summary</a></p></li>
+        <li><p><b>Mô tả: </b>Tạo phần "Xem thêm:" để rút gọn các nội dung dài.</p></li>
+      </ul>
+
+      <div class='dropContent'>Tool tạo bảng lấy mã</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/tool-tao-bang-lay-ma/" target="_blank">Tool-tao-bang-lay-ma</a></p></li>
+        <li><p><b>Mô tả: </b>Dùng cái này để tạo các bảng đưa mã cho người dùng, dùng trong bài lẻ hoặc bài tổng hợp đều được.</p></li>
+      </ul>
+
+      <div class='dropContent'>Tool tạo list "sản phẩm nổi bật"</div>
+      <ul class='content'>
+        <li><p><a href="https://gilcodes.github.io/featuredproducts/" target="_blank">Featuredproducts</a></p></li>
+        <li><p><b>Mô tả: </b>Dùng cái này để tạo các bảng đưa mã cho người dùng, dùng trong bài lẻ hoặc bài tổng hợp đều được. Xem hướng dẫn sử dụng <a href="https://quip.com/xl8qAelPPOBb" target="_blank">Tại đây.</a></p></li>
+      </ul>
+    </div>
+
+    <!-- Section 6 -->
+
+  <div class='section' id='section4'>
+      <h2 class='sectionTitle'>Các tùy biến khác</h2>
+
+      <div class='dropContent'>Link redirection</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/tools.php?page=redirection.php" target="_blank">Redirection</a></p></li>
+        <li><p><b>Mô tả: </b>Dùng cái này để redirect link trong trang</p></li>
+      </ul>
+      <div class='dropContent'>Add code vào source = 99 robots</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/admin.php?page=hfcm-list" target="_blank">HFCM</a></p></li>
+        <li><p><b>Mô tả: </b>Dùng để add code vào trang</p></li>
+      </ul>
+      <div class='dropContent'>Sửa top button</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=18236&action=edit&classic-editor" target="_blank">Danh mục coupon extend</a></p></li>
+        <li><p><b>Mô tả: </b>Dùng sửa icon và link các button đầu trang</p></li>
+      </ul>
+      <div class='dropContent'>Sửa trang chủ</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=2619&action=edit" target="_blank">Sửa trang chủ</a></p></li>
+        <li><p><b>Mô tả: </b>Sửa banner đầu trang tại đây. Trong block Image list: Style: Mặc định - Homepage Banner</p></li>
+      </ul>
+      <div class='dropContent'>Tùy biến element trang chủ</div>
+      <ul class='content'>
+        <li><p><a href="https://www.tiendauroi.com/wp-admin/customize.php?url=https%3A%2F%2Fwww.tiendauroi.com%2F" target="_blank">Customize trang chủ</a></p></li>
+        <li><p><b>Mô tả: </b>Có thể sửa được trang chủ hoặc các trang khác. Sau khi đăng nhập tk admin, vào giao diện người dùng và chọn "Tùy biến" ở menu sửa trang trên cùng.</p></li>
+      </ul>
+
+
+
+
+
+  </div>
+
+
+</div>
+
+
+  <!-- SCRIPT -->
+
+<script type='text/javascript'>
+
+    // fade in section
+    $('.section').hide();
+    $('.section').fadeIn(500);
+
+    // hide all content class to toggle
+    $('.content').hide();
+
+    //toggle dropContent
+    $('.dropContent').click(function() {
+        $(this).next().slideToggle(300);
+        $(this).toggleClass("selected");
+    });
+    $('.tutorial').click(function() {
+        $(this).next().slideToggle(300);
+    });
+
+
+
+
+
+</script>
+
+
+</body>
+</html>
