@@ -1,0 +1,157 @@
+/* sudokuJS v0.4.4 - CSS
+// https://github.com/pocketjoso/sudokuJS
+// Author: Jonas Ohlsson
+// License: MIT
+*/
+
+.sudoku-board {
+	min-height: 22.75rem;
+	margin-top: 2px;
+	margin-bottom: 1em;
+}
+	/*cell (wrapper) contains both cell input and candidates div*/
+	.sudoku-board-cell {
+		display: inline-block;
+		position: relative;
+		border: 1px solid #4b4340;
+		background: rgba(216, 210, 186, .5);
+		max-width: 11.11111%;
+	}
+
+	#toggleCandidates {
+		margin: 0em 0.3em;
+	}
+
+		/*rules for drawing the black lines dividing houses
+			-- specific for board size 9! need diff rules for diff board sizes
+		*/
+		[data-board-size="9"].sudoku-board .sudoku-board-cell:nth-of-type(9n+1){
+			border-left-width: 5px;
+			border-left-color: #4b4340;
+		}
+		[data-board-size="9"].sudoku-board .sudoku-board-cell:nth-of-type(n):nth-of-type(-n+9){
+			border-top-width: 5px;
+			border-top-color: #4b4340;
+		}
+		[data-board-size="9"].sudoku-board .sudoku-board-cell:nth-of-type(3n){
+			border-right-width: 5px;
+			border-right-color: #4b4340;
+		}
+		[data-board-size="9"].sudoku-board .sudoku-board-cell:nth-of-type(n+19):nth-of-type(-n+27),
+		[data-board-size="9"].sudoku-board .sudoku-board-cell:nth-of-type(n+46):nth-of-type(-n+54),
+		[data-board-size="9"].sudoku-board .sudoku-board-cell:nth-of-type(n+73):nth-of-type(-n+81){
+			border-bottom-width: 5px;
+			border-bottom-color: #4b4340;
+		}
+
+		/* the input for the value of each cell (i.e. 1-9 or empty for standard sudoku*/
+		.sudoku-board-cell input {
+			background: none;
+			font-size: 19.2px;
+			font-size: 1.2rem;
+			text-align: center;
+			width: 2em;
+			max-width: 100%;
+			height: 2em;
+			border: 0;
+			position: relative;
+			z-index: 1; /*on top of candidates*/
+		}
+		/* highlight cell already has value */
+		.sudoku-board-cell > input:not([value='']) {
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+
+			/*highlight new input in board cell*/
+			.sudoku-board-cell .highlight-val {
+				color: #4b4340;
+			}
+			/*highligt incorrect input*/
+			.sudoku-board-cell .board-cell--error {
+				background: rgba(119, 47, 37, 0.6);
+				color: #eee;
+			}
+		/*wrapper that hold the candidates for each cell*/
+		.sudoku-board-cell .candidates {
+			display: none; /*hidden by default*/
+			position: absolute;
+			top: 0; bottom: 0; left: 0; right: 0;
+			text-align: center;
+			font-size: .75em; /*1/3 /1.13 out of the 2*1.2em cell height*/
+			letter-spacing: -.5px;
+			font-family: 'Montserrat', sans-serif;
+
+			/*use as justify grid*/
+			line-height: 0;
+			text-align: justify;
+		}
+			.sudoku-board .candidates:after {
+				content: "";
+				display: inline-block;
+				width: 100%;
+			}
+		/* when board cells start to get narrower because of small screen,
+			reduce letter spacing for candidates to make them still fit*/
+		@media(max-width: 23em){
+			.sudoku-board .candidates {
+				letter-spacing: -2px;
+			}
+		}
+			.showCandidates .candidates {
+				display: block;
+			}
+
+			/*each candidate in each cell is wrapped in a div*/
+			.sudoku-board .candidates div {
+				display: inline-block;
+				width: 20%;
+				line-height: 1.13;
+				vertical-align: top;
+				*display: inline;
+				*zoom: 1;
+			}
+				/*.candidates div*/.candidate--highlight {
+					background-color: yellow;
+				}
+				/*.candidates div*/.candidate--to-remove {
+					background-color: red;
+					color: white;
+				}
+
+.sudokubutton1,.sudokubutton2,.sudokubutton3,.sudokubutton4,
+.sudokubutton5,.sudokubutton6,.sudokubutton7 {
+	cursor: pointer;
+	margin: 0.2em 0.2em;
+	width: 6em;
+	height: 2em;
+	font-weight: bold;
+	color: #4b4340;
+	border: none;
+	background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0.2) 50%);
+	background-size: 200% 100%;
+	background-position: right bottom;
+	transition: all .2s ease-out;
+}
+/* .sudokubutton1 {
+background-color: #3cbf71;
+}
+.sudokubutton2 {
+background-color: #ff9224;
+}
+.sudokubutton3 {
+background-color: #ff3c3c;
+}
+.sudokubutton4 {
+background-color: #020202;
+}
+.sudokubutton5,.sudokubutton6 {
+background-color: #4040ff;
+}
+.sudokubutton7 {
+background-color: #899db6;
+} */
+.sudokubutton1:hover,.sudokubutton2:hover,.sudokubutton3:hover,.sudokubutton4:hover,
+.sudokubutton5:hover,.sudokubutton6:hover,.sudokubutton7:hover {
+	color: #d3cebb;
+	background-position: left bottom;
+}
