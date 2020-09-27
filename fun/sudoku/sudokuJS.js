@@ -1,7 +1,4 @@
 // sudokuJS v0.4.4
-// https://github.com/pocketjoso/sudokuJS
-// Author: Jonas Ohlsson
-// License: MIT
 
 (function (window, $, undefined) {
 	'use strict';
