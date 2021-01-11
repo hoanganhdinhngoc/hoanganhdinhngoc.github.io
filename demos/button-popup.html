@@ -22,31 +22,47 @@
         .popupHubspotForm {
             position: fixed;
             width: 1080px;
-            height: 460px;
             border: solid 4px #c5c5c5;
             border-radius: 8px;
             background-color: #efefef;
             z-index: 9999;
-            overflow-y: scroll;
-            margin: 0;
-            padding: 40px;
         }
 
-        .popupHubspotForm::-webkit-scrollbar-thumb {
+        .hubspotFormContainer {
+            height: 460px;
+            overflow-y: scroll;
+            margin: 0;
+            padding: 0;
+        }
+
+        .hubspotFormContainer::-webkit-scrollbar-thumb {
             background-color: rgb(197, 197, 197);
             border: 4px solid transparent;
             border-radius: 16px;
             background-clip: padding-box;
         }
 
-        .popupHubspotForm::-webkit-scrollbar {
+        .hubspotFormContainer::-webkit-scrollbar {
             width: 16px;
+        }
+
+        .popupHeader {
+            border-bottom: solid 1px rgb(197, 197, 197);
         }
 
         #popupTitle {
             text-align: center;
             color: #1f9ad6;
         }
+
+        .popupCloseButton {
+            position: absolute;
+            top: 0.5em;
+            right: 0.5em;
+            cursor: pointer;
+            border: 0;
+            padding: 10px;
+        } 
 
         .buttonPopup {
             background-color: #5aa1e3;
@@ -82,25 +98,30 @@
         <div class="popupHeader">
             <h3 id="popupTitle">Đăng ký dùng thử ngay!</h3>
         </div>
-        <div class="hubspotForm" style="text-align: center;">
-            <!--[if lte IE 8]>
-            <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2-legacy.js"></script>
-            <![endif]-->
+        <button class="popupCloseButton">✕</button>
+        <div class="hubspotFormContainer">
+            <div class="hubspotForm" style="text-align: center;">
+                <!--[if lte IE 8]>
+                <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2-legacy.js"></script>
+                <![endif]-->
 
-            <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
-            <script>    
-            hbspt.forms.create({
-                portalId: "7122216",
-                formId: "147fb645-0ac9-4c16-8aa6-6a6c79ed145b"
-            });
-            </script>
+                <script charset="utf-8" type="text/javascript" src="//js.hsforms.net/forms/v2.js"></script>
+                <script>    
+                hbspt.forms.create({
+                    portalId: "7122216",
+                    formId: "147fb645-0ac9-4c16-8aa6-6a6c79ed145b"
+                });
+                </script>
+
+                <div style="height: 1000px;"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        $('.popupHubspotForm').hide();
+        // $('.popupHubspotForm').hide();
 
-        $('.buttonPopup').click(function () {
+        $('.buttonPopup, .popupCloseButton').click(function () {
             $('.popupHubspotForm').toggle(300);
         })
     </script>
