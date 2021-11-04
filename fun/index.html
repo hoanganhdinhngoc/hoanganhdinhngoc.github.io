@@ -119,9 +119,16 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       filter: saturate(30%);
     }
 
-    a {
+    a:not(#hidelink) {
       color: #4b4340;
       font-weight: bold;
+    }
+    
+    #hidelink {
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      line-height: 20pt;
+      color: #4b4340;
     }
 
     .toolzone{
@@ -273,7 +280,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <img height="360px" src="https://hoanganhdinhngoc.github.io/images/2B_Nier.png" class="" alt="">
         </li>
         <li>
-          <p>Come back anytime, this is our relaxing place</p>
+          <p>Come back anytime, this is our <a id="hidelink" href="https://hoanganhdinhngoc.github.io/fun/random/leila-joy.html">relaxing</a> place</p>
         </li>
       </ul>
     </div>
