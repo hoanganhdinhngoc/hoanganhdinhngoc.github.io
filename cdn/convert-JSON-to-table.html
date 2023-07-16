@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON to HTML Table</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+
+    #jsonInput {
+      width: 100%;
+      height: 150px;
+      resize: vertical;
+    }
+
+    #convertButton {
+      margin-top: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h2>JSON to HTML Table Converter</h2>
+  <textarea id="jsonInput" placeholder="Enter JSON data here (multiline)"></textarea>
+  <button id="convertButton">Convert to HTML Table</button>
+  <div id="tableContainer"></div>
+
+  <script>
+    document.getElementById('convertButton').addEventListener('click', function() {
+      var jsonInput = document.getElementById('jsonInput').value;
+      var jsonData;
+
+      try {
+        // Preprocess the JSON data to remove line breaks/newlines
+        jsonInput = jsonInput.replace(/\n/g, "").replace(/\r/g, "");
+        jsonData = JSON.parse(jsonInput);
+      } catch (error) {
+        alert('Invalid JSON format! Please enter valid JSON data.');
+        return;
+      }
+
+      var tableHtml = '<table>';
+      var headers = [];
+      var data = [];
+
+      // Recursive function to extract headers and data from nested JSON
+      function processJson(obj) {
+        for (var key in obj) {
+          if (typeof obj[key] === 'object') {
+            // Recurse into nested object
+            processJson(obj[key]);
+          } else {
+            // Store header and data
+            headers.push(key);
+            data.push(obj[key]);
+          }
+        }
+      }
+
+      // Call the recursive function on the provided JSON data
+      processJson(jsonData);
+
+      // Create table header
+      tableHtml += '<tr>';
+      headers.forEach(function(header) {
+        tableHtml += '<th>' + header + '</th>';
+      });
+      tableHtml += '</tr>';
+
+      // Create table row with data
+      tableHtml += '<tr>';
+      data.forEach(function(value) {
+        tableHtml += '<td>' + value + '</td>';
+      });
+      tableHtml += '</tr>';
+
+      tableHtml += '</table>';
+
+      document.getElementById('tableContainer').innerHTML = tableHtml;
+    });
+  </script>
+</body>
+</html>
