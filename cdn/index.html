@@ -133,12 +133,27 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       border: 2px solid rgba(100, 98, 86, 1);
     }
 
-    #inputAPI {
+    #hexToTextInput, #textToHexInput {
+    padding: 10px;
+    margin: 10px 0;
+    overflow: hidden;
+    box-sizing: border-box;
+    resize: none;
     color: #4b4340;
     background: rgba(216, 210, 186, .5);
     }
 
-    #shortcodeValue {
+    #textToHexInput {
+      min-height: 5em;
+    }
+
+    #textToHexOutput, #hexToTextOutput {
+    padding: 10px;
+    margin: 10px 0;
+    min-height: 10em;
+    overflow: hidden;
+    box-sizing: border-box;
+    resize: none;
     color: #d3cebb;
     background: rgba(100, 98, 86, 0.8);
     }
@@ -184,26 +199,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
   <script>
 
   $(document).ready(function(){
-
-    // Create Airtable Shortcode script
-    $('#inputAPI').on('propertychange input', function (e) {
-      var valueChanged = false;
-
-      if (e.type=='propertychange') {
-          valueChanged = e.originalEvent.propertyName=='value';
-      } else {
-          valueChanged = true;
-      }
-      if (valueChanged) {
-        var str = $("#inputAPI").val();
-        $('#shortcodeValue').html('[airtable_cp sheet_name=' + str +']');
-      }
-  });
-  $("#copybutton").click(function(){
-    $('#shortcodeValue').focus();
-    $('#shortcodeValue').select();
-    document.execCommand("copy");
-  });
 
   // Sounds
   var tutorialSound = document.getElementById("tutorial-sound");
@@ -297,38 +292,111 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     <!-- Section 2 -->
 
     <div class='section' id='section2'>
-      <h2 class='sectionTitle'>Thay ads</h2>
-      <div class='dropContent'>Định nghĩa vị trí lên ads</div>
+      <h2 class='sectionTitle'>Converters</h2>
+      <div class='dropContent'>Convert hex to text</div>
       <ul class='content'>
-        <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/admin.php?page=_options&tab=12" target="_blank">Couponis Advertising</a></p>
-        </li>
-        <li>
-          <p><b>Mô tả: </b>Đây là nơi quy định block ads nào đặt ở chỗ nào, chọn tên block ads để thể hiện</p>
-        </li>
+
+        <!-- TOOL CONVERT HEX TO TEX -->
+        <div class="toolTaoShortCode">
+          <p>Điền hex code vào ô input dưới đây, nó sẽ tự động được convert thành plain text ở ô output.</p>
+          <input id="hexToTextInput" class="toolzone" placeholder="Enter hex string" oninput="convertHex()"></input>
+          <p><b>Converted Text: </b><textarea id="hexToTextOutput" readonly class="toolzone"></textarea>
+          <button id="copybutton" class='themebutton toolzone' onclick="copyTextToClipboard()">Copy Shortcode</button>
+        </div>
+
+        <script>
+              // Convert hext to text function
+    function convertHex() {
+            const hexToTextInput = document.getElementById('hexToTextInput').value;
+            let plainText = '';
+
+            for (let i = 0; i < hexToTextInput.length; i += 2) {
+                plainText += String.fromCharCode(parseInt(hexToTextInput.substr(i, 2), 16));
+            }
+
+            document.getElementById('hexToTextOutput').value = plainText;
+            resizeTextarea('hexToTextInput');
+            resizeTextarea('hexToTextOutput');
+        }
+
+        function resizeTextarea(id) {
+            const textarea = document.getElementById(id);
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function copyTextToClipboard() {
+            const outputElement = document.getElementById('hexToTextOutput');
+            outputElement.select();
+            document.execCommand('copy');
+        }
+
+        // Adjust the initial size
+        document.addEventListener('DOMContentLoaded', () => {
+            resizeTextarea('hexToTextInput');
+            resizeTextarea('hexToTextOutput');
+        });
+
+        </script>
+
       </ul>
-      <div class='dropContent'>Setup ads</div>
+      
+      <div class='dropContent'>Convert text to hex</div>
       <ul class='content'>
-        <li>
-          <p>Xem hướng dẫn chi tiết cách sửa, thiết lập nội dung house ads, custom ads <a href="https://www.tiendauroi.com/wp-admin/edit.php?post_type=extrapage" target="_blank">Tại đây.</a></p>
-        </li>
-        <li>
-          <p><a href="https://quip.com/IWQLAORxs9RS" target="_blank">Trang setup chung</a></p>
-        </li>
-        <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=21342&action=edit&classic-editor" target="_blank">Ads trên các bài tổng hợp đồ ăn</a></p>
-        </li>
-        <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=20484&action=edit&classic-editor" target="_blank">Header bar ads</a></p>
-        </li>
-        <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=19934&action=edit&classic-editor" target="_blank">Side banner ads</a></p>
-        </li>
-        <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=18247&action=edit&classic-editor" target="_blank">House ads toàn trang</a></p>
-        </li>
+
+      <!-- TOOL CONVERT TEXT TO HEX -->
+      <div class="toolTaoShortCode">
+        <h3>Hướng dẫn convert text to hex</h3>
+        <p>Điền văn bản vào ô input dưới đây, nó sẽ tự động được convert thành hex code ở ô output.</p>
+        <textarea id="textToHexInput" class="toolzone" placeholder="Enter plain text" oninput="convertTextToHex()"></textarea>
+        <p><b>Converted Hex: </b><textarea id="textToHexOutput" readonly class="toolzone"></textarea>
+        <button id="copybutton" class='themebutton toolzone' onclick="copyHexToClipboard()">Copy Shortcode</button>
+      </div>
+
+      <script>
+          // Convert text to hex function
+          function convertTextToHex() {
+              const textInput = document.getElementById('textToHexInput').value;
+              let hexOutput = '';
+
+              for (let i = 0; i < textInput.length; i++) {
+                  // Convert each character to hex
+                  hexOutput += textInput.charCodeAt(i).toString(16).padStart(2, '0');
+              }
+
+              document.getElementById('textToHexOutput').value = hexOutput.toUpperCase();
+              resizeTextarea('textToHexInput');
+              resizeTextarea('textToHexOutput');
+          }
+
+          function resizeTextarea(id) {
+              const textarea = document.getElementById(id);
+              textarea.style.height = 'auto';
+              textarea.style.height = textarea.scrollHeight + 'px';
+          }
+
+          function copyHexToClipboard() {
+              const outputElement = document.getElementById('textToHexOutput');
+              outputElement.select();
+              document.execCommand('copy');
+          }
+
+          // Adjust the initial size
+          document.addEventListener('DOMContentLoaded', () => {
+              resizeTextarea('textToHexInput');
+              resizeTextarea('textToHexOutput');
+          });
+      </script> 
+
+
       </ul>
+ 
+
+
+
     </div>
+
+
 
     <!-- Section 3 -->
 
