@@ -467,15 +467,37 @@ var Game = new (function() {
     endGame();
   }
 
+  // function tutorialPlayed() {
+  //   if (!window.localStorage) return true;
+  //   return (window.localStorage.getItem('tutorialPlayed') + '') == 'true';
+  // }
+
+  // function markTutorialAsPlayed() {
+  //   if (!window.localStorage) return;
+  //   window.localStorage.setItem('tutorialPlayed', true);
+  // }
+
+  // Fix localStorage problem part 1 of 2
   function tutorialPlayed() {
     if (!window.localStorage) return true;
-    return (window.localStorage.getItem('tutorialPlayed') + '') == 'true';
-  }
+    try {
+        return (window.localStorage.getItem('tutorialPlayed') + '') == 'true';
+    } catch (e) {
+        console.error('Failed to access localStorage:', e);
+        return true; // Default to true if there's an error
+    }
+}
 
   function markTutorialAsPlayed() {
     if (!window.localStorage) return;
-    window.localStorage.setItem('tutorialPlayed', true);
+    try {
+        window.localStorage.setItem('tutorialPlayed', true);
+    } catch (e) {
+        console.error('Failed to set localStorage:', e);
+    }
   }
+
+  // End Fix localStorage problem part 1 of 2
 
   function startTutorial() {
     onHomeScreen = false;
@@ -503,20 +525,50 @@ var Game = new (function() {
     return Utils.draw(remainingOjoos);
   }
 
+  // function getScore() {
+  //   return (window.localStorage.getItem('score') * 1);
+  // }
+
+  // function setScore(addPoints) {
+  //   clearTimeout(setScore.TOH)
+  //   var curScore = score = getScore(),
+  //       newScore = curScore + (addPoints? addPoints : 0);
+  //   if (newScore <= curScore) 
+  //     return curScore;
+
+  //   window.localStorage.setItem('score', newScore);
+  //   return newScore;
+  // }
+
+
+    // Fix localStorage problem part 2 of 2
+
   function getScore() {
-    return (window.localStorage.getItem('score') * 1);
-  }
+    try {
+        return (window.localStorage.getItem('score') * 1);
+    } catch (e) {
+        console.error('Failed to access localStorage:', e);
+        return 0; // Default to 0 if there's an error
+    }
+}
 
   function setScore(addPoints) {
-    clearTimeout(setScore.TOH)
+    clearTimeout(setScore.TOH);
     var curScore = score = getScore(),
-        newScore = curScore + (addPoints? addPoints : 0);
-    if (newScore <= curScore) 
-      return curScore;
-
-    window.localStorage.setItem('score', newScore);
+        newScore = curScore + (addPoints ? addPoints : 0);
+    if (newScore <= curScore)
+        return curScore;
+    
+    try {
+        window.localStorage.setItem('score', newScore);
+    } catch (e) {
+        console.error('Failed to set localStorage:', e);
+    }
     return newScore;
   }
+
+    // End Fix localStorage problem part 2 of 2
+
 
   function animateScore(curScore, newScore) {
     var delay = 500 / (newScore - curScore);
