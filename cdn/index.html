@@ -24,8 +24,9 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
 //////////////////////////////////////////////////////
  -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <title>Nier list || Main menu</title>
 
   <!-- CSS STYLE SECTION -->
@@ -227,8 +228,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     openlinkSound.play();
     });
 
-    // Sounds control
-
 });
 
 
@@ -301,7 +300,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p>Điền hex code vào ô input dưới đây, nó sẽ tự động được convert thành plain text ở ô output.</p>
           <input id="hexToTextInput" class="toolzone" placeholder="Enter hex string" oninput="convertHex()"></input>
           <p><b>Converted Text: </b><textarea id="hexToTextOutput" readonly class="toolzone"></textarea>
-          <button id="copybutton" class='themebutton toolzone' onclick="copyTextToClipboard()">Copy Shortcode</button>
+          <button id="copybutton" class='themebutton toolzone' onclick="copyTextToClipboard()">Copy Text</button>
         </div>
 
         <script>
@@ -350,7 +349,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         <p>Điền văn bản vào ô input dưới đây, nó sẽ tự động được convert thành hex code ở ô output.</p>
         <textarea id="textToHexInput" class="toolzone" placeholder="Enter plain text" oninput="convertTextToHex()"></textarea>
         <p><b>Converted Hex: </b><textarea id="textToHexOutput" readonly class="toolzone"></textarea>
-        <button id="copybutton" class='themebutton toolzone' onclick="copyHexToClipboard()">Copy Shortcode</button>
+        <button id="copybutton" class='themebutton toolzone' onclick="copyHexToClipboard()">Copy Text</button>
       </div>
 
       <script>
@@ -565,9 +564,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p><b>Mô tả: </b>Có thể sửa được trang chủ hoặc các trang khác. Sau khi đăng nhập tk admin, vào giao diện người dùng và chọn "Tùy biến" ở menu sửa trang trên cùng.</p>
         </li>
       </ul>
-
-
-
 
 
     </div>
