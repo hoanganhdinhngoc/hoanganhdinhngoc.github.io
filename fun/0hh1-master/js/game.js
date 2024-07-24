@@ -6,6 +6,37 @@
  * Written by Martin Kool
  * martin@q42.nl | @mrtnkl
  */
+
+// Cookier helper function
+
+function setCookie(name, value, days) {
+  var expires = "";
+  if (days) {
+      var date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+function eraseCookie(name) {
+  document.cookie = name + '=; Max-Age=-99999999;';
+}
+
+// End cookie helper function
+
+
 var Game = new (function() {
   var self = this,
       debug = Config.debug,
@@ -479,23 +510,13 @@ var Game = new (function() {
 
   // Fix localStorage problem part 1 of 2
   function tutorialPlayed() {
-    if (!window.localStorage) return true;
-    try {
-        return (window.localStorage.getItem('tutorialPlayed') + '') == 'true';
-    } catch (e) {
-        console.error('Failed to access localStorage:', e);
-        return true; // Default to true if there's an error
-    }
+    return (getCookie('tutorialPlayed') + '') === 'true';
 }
 
-  function markTutorialAsPlayed() {
-    if (!window.localStorage) return;
-    try {
-        window.localStorage.setItem('tutorialPlayed', true);
-    } catch (e) {
-        console.error('Failed to set localStorage:', e);
-    }
-  }
+function markTutorialAsPlayed() {
+    setCookie('tutorialPlayed', 'true', 365); // Cookie will expire in 365 days
+}
+
 
   // End Fix localStorage problem part 1 of 2
 
@@ -543,28 +564,19 @@ var Game = new (function() {
 
     // Fix localStorage problem part 2 of 2
 
-  function getScore() {
-    try {
-        return (window.localStorage.getItem('score') * 1);
-    } catch (e) {
-        console.error('Failed to access localStorage:', e);
-        return 0; // Default to 0 if there's an error
-    }
-}
-
+    function getScore() {
+      var score = getCookie('score');
+      return score ? parseInt(score, 10) : 0;
+  }
+  
   function setScore(addPoints) {
-    clearTimeout(setScore.TOH);
-    var curScore = score = getScore(),
-        newScore = curScore + (addPoints ? addPoints : 0);
-    if (newScore <= curScore)
-        return curScore;
-    
-    try {
-        window.localStorage.setItem('score', newScore);
-    } catch (e) {
-        console.error('Failed to set localStorage:', e);
-    }
-    return newScore;
+      clearTimeout(setScore.TOH);
+      var curScore = score = getScore();
+      var newScore = curScore + (addPoints ? addPoints : 0);
+      if (newScore <= curScore) return curScore;
+  
+      setCookie('score', newScore, 365); // Cookie will expire in 365 days
+      return newScore;
   }
 
     // End Fix localStorage problem part 2 of 2
