@@ -9,24 +9,9 @@
   <meta name="description" content="Nier list template" />
   <meta name="author" content="HoangAnhDinhNgoc" />
   <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
-
-
-  <!--
-//////////////////////////////////////////////////////
-
-MADE with <3 by Hoang Anh Dinh Ngoc
-
-Website: 		http://hoanganhdinhngoc.github.io
-Email: 			hanh2122011@gmail.com
-Twitter: 		https://twitter.com/Hanh2122011
-Facebook: 	https://www.facebook.com/HoangAnhDinhNgoc
-LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
-
-//////////////////////////////////////////////////////
- -->
- <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <title>Nier list || Main menu</title>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Fun || Main menu</title>
 
   <!-- CSS STYLE SECTION -->
 
@@ -46,16 +31,20 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       text-shadow: 4px 5px rgba(162, 156, 142, .8);
     }
 
+
+
     .sectionTitle {
       padding: 1% 1%;
       color: #d3cebb;
       background: rgba(100, 98, 86, 0.8);
     }
 
-    ::-moz-selection { /* Code for Firefox */
+    ::-moz-selection {
+      /* Code for Firefox */
       color: #d3cebb;
       background: rgba(100, 98, 86, 0.8);
     }
+
     ::selection {
       color: #d3cebb;
       background: rgba(100, 98, 86, 0.8);
@@ -101,7 +90,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       padding: 0px 8px;
     }
 
-    li, .toolTaoShortCode {
+    li,
+    .toolTaoShortCode {
       margin-left: 20px;
     }
 
@@ -123,7 +113,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       color: #4b4340;
       font-weight: bold;
     }
-    
+
     #hidelink {
       text-decoration: none;
       font-family: 'Montserrat', sans-serif;
@@ -131,7 +121,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       color: #4b4340;
     }
 
-    .toolzone{
+    .toolzone {
       display: block;
       margin: 1em;
       width: 100%;
@@ -141,13 +131,13 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     }
 
     #inputAPI {
-    color: #4b4340;
-    background: rgba(216, 210, 186, .5);
+      color: #4b4340;
+      background: rgba(216, 210, 186, .5);
     }
 
     #shortcodeValue {
-    color: #d3cebb;
-    background: rgba(100, 98, 86, 0.8);
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
     }
 
     .themebutton {
@@ -169,9 +159,9 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     }
 
     .linkbutton {
-      text-align:center;
+      text-align: center;
       text-decoration: none;
-      margin-left:0px;
+      margin-left: 0px;
       font-size: 0.9em;
     }
 
@@ -180,68 +170,57 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       float: right;
       right: 1em;
       top: 0.5em;
-      font-size:2em;
+      font-size: 2em;
       color: rgba(100, 98, 86, 0.8);
     }
 
+    /* For mobile */
 
+    @media only screen and (max-width: 600px) {
+      .sectionTitle, #info {
+        font-size: 15px;
+        padding: 0.5em 0.5em;
+      }
 
+      .content {
+        margin: 0.5em 0em;
+      }
+    }
   </style>
 
   <script>
 
-  $(document).ready(function(){
+    $(document).ready(function () {
 
-    // Create Airtable Shortcode script
-    $('#inputAPI').on('propertychange input', function (e) {
-      var valueChanged = false;
+      // Sounds
+      var tutorialSound = document.getElementById("tutorial-sound");
+      var hoverSound = document.getElementById("hover-sound");
+      var clickSound = document.getElementById("click-sound");
+      var openlinkSound = document.getElementById("open-link-sound");
+      $(".dropContent,.tutorial").hover(function () {
+        hoverSound.play();
+      }, function () {
+        hoverSound.load();
+      });
 
-      if (e.type=='propertychange') {
-          valueChanged = e.originalEvent.propertyName=='value';
-      } else {
-          valueChanged = true;
-      }
-      if (valueChanged) {
-        var str = $("#inputAPI").val();
-        $('#shortcodeValue').html('[airtable_cp sheet_name=' + str +']');
-      }
-  });
-  $("#copybutton").click(function(){
-    $('#shortcodeValue').focus();
-    $('#shortcodeValue').select();
-    document.execCommand("copy");
-  });
+      $(".tutorial").click(function () {
+        tutorialSound.play();
+      });
 
-  // Sounds
-  var tutorialSound = document.getElementById("tutorial-sound");
-  var hoverSound = document.getElementById("hover-sound");
-  var clickSound = document.getElementById("click-sound");
-  var openlinkSound = document.getElementById("open-link-sound");
-  $(".dropContent,.tutorial").hover(function(){
-    hoverSound.play();
-    }, function(){
-    hoverSound.load();
-  });
+      $("a").click(function () {
+        openlinkSound.play();
+      });
 
-  $(".tutorial").click(function(){
-    tutorialSound.play();
+      $(".dropContent,.themebutton").click(function () {
+        clickSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
+
     });
-
-  $("a").click(function(){
-    openlinkSound.play();
-    });
-
-  $(".dropContent,.themebutton").click(function(){
-    clickSound.play();
-    });
-
-  $("a").click(function(){
-    openlinkSound.play();
-    });
-
-    // Sounds control
-
-});
 
 
   </script>
@@ -249,21 +228,30 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 </head>
 
 <body>
-  <audio id="tutorial-sound"><source src="sounds/core_1.ogg" type="audio/ogg"></audio>
-  <audio id="hover-sound"><source src="sounds/core_16.ogg" type="audio/ogg"></audio>
-  <audio id="click-sound"><source src="sounds/core_52.ogg" type="audio/ogg"></audio>
-  <audio id="open-link-sound"><source src="sounds/core_58.ogg" type="audio/ogg"></audio>
+  <audio id="tutorial-sound">
+    <source src="sounds/core_1.ogg" type="audio/ogg">
+  </audio>
+  <audio id="hover-sound">
+    <source src="sounds/core_16.ogg" type="audio/ogg">
+  </audio>
+  <audio id="click-sound">
+    <source src="sounds/core_52.ogg" type="audio/ogg">
+  </audio>
+  <audio id="open-link-sound">
+    <source src="sounds/core_58.ogg" type="audio/ogg">
+  </audio>
 
   <div class='coreSystem'>
 
     <h1 class="title">Fun Project || Main menu</h1>
 
     <div class="logoSection">
-    <a href="https://hoanganhdinhngoc.github.io" class="logo" target="_blank">
-    <img width="120" height="120" src="https://hoanganhdinhngoc.github.io/images/YoRHa.png" class="top-logo" alt=""
-      srcset="https://hoanganhdinhngoc.github.io/images/YoRHa.png 275w, https://hoanganhdinhngoc.github.io/images/YoRHa.png 150w" sizes="(max-width: 275px) 100vw, 275px"></a>
-    <audio id="themeSong" loop src="sounds/fortress-of-lies-the-bunker.ogg" preload="auto"></audio>
-    <i id="controlButton" class="fas fa-play soundControl"></i>
+      <a href="https://hoanganhdinhngoc.github.io" class="logo" target="_blank">
+        <img width="120" height="120" src="https://hoanganhdinhngoc.github.io/images/YoRHa.png" class="top-logo" alt=""
+          srcset="https://hoanganhdinhngoc.github.io/images/YoRHa.png 275w, https://hoanganhdinhngoc.github.io/images/YoRHa.png 150w"
+          sizes="(max-width: 275px) 100vw, 275px"></a>
+      <audio id="themeSong" loop src="sounds/fortress-of-lies-the-bunker.ogg" preload="auto"></audio>
+      <i id="controlButton" class="fas fa-play soundControl"></i>
     </div>
 
     <!-- System Info -->
@@ -273,11 +261,11 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <h2 class="tutorial" style='padding: 1% 1%; cursor: pointer;'>What is this page and how to use?</h2>
       <ul class='content'>
         <li>
-          <p><b>What is this page? </b>Just a fun zone to enjoy flash games... and hentai here.</p>
+          <p><b>What is this page? </b>Just a fun zone to enjoy html games & some interesting stuffs.</p>
         </li>
         <li>Click to Game list below and start playing, that's it.</li>
         <li>
-          <img height="360px" src="https://hoanganhdinhngoc.github.io/images/2B_Nier.png" class="" alt="">
+          <img height="360px" src="https://hoanganhdinhngoc.github.io/images/2B_Nier.png" class="" alt="2B">
         </li>
         <li>
           <p>Come back anytime, this is our relaxing place</p>
@@ -286,13 +274,14 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     </div>
 
     <!-- Section -->
-    
+
     <div class='section' id='section1'>
       <h2 class='sectionTitle'>Time killer</h2>
 
       <div class='dropContent'>Puzzle</div>
       <ul class='content'>
-        <img height="90px" style="margin: 0px 10px;" src="https://hoanganhdinhngoc.github.io/images/bubu-dudu-stickers-bubu-sleep.gif" class="" alt="">
+        <img height="90px" style="margin: -15px 10px 0px 10px;"
+          src="https://hoanganhdinhngoc.github.io/images/bubu-dudu-stickers-bubu-sleep.gif" class="" alt="">
         <li>
           <p><a href="https://hoanganhdinhngoc.github.io/fun/2048/2048" target="_blank">2048</a></p>
         </li>
@@ -308,7 +297,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       </ul>
       <div class='dropContent'>Acade</div>
       <ul class='content'>
-        <img height="100px" style="margin: 0px 20px;" src="https://hoanganhdinhngoc.github.io/images/dancing-duckdancing.gif" class="" alt="">
+        <img height="100px" style="margin: 0px 20px;"
+          src="https://hoanganhdinhngoc.github.io/images/dancing-duckdancing.gif" class="" alt="">
         <li>
           <p><a href="https://hoanganhdinhngoc.github.io/fun/clumsy-bird" target="_blank">Clumsy Bird</a></p>
         </li>
@@ -317,43 +307,45 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         </li>
       </ul>
 
-      
+
     </div>
 
-        <!-- Section --> 
+    <!-- Section -->
 
-        <div class='section' id='section2'>
-          <h2 class='sectionTitle'>Hand made</h2>
-          <div class='dropContent'>Nier Project</div>
-          <ul class='content'>
-            <li>
-              <p><a href="https://hoanganhdinhngoc.github.io/fun/nier-hacking-shooter/" target="_blank">Nier Hacking Shooter</a></p>
-            </li>
-          </ul>
-    
-        </div>
+    <div class='section' id='section2'>
+      <h2 class='sectionTitle'>Hand made</h2>
+      <div class='dropContent'>Nier Project</div>
+      <ul class='content'>
+        <li>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/nier-hacking-shooter/" target="_blank">Nier Hacking
+              Shooter</a></p>
+        </li>
+      </ul>
 
-        <!-- Section --> 
+    </div>
 
-        <div class='section' id='section3'>
-          <h2 class='sectionTitle'>Fantastic</h2>
-          <div class='dropContent'>3D</div>
-          <ul class='content'>
-            <li>
-              <p><a href="https://hoanganhdinhngoc.github.io/fun/HexGL-master" target="_blank">HexGL Master</a></p>
-            </li>
-          </ul>
-    
-        </div>
+    <!-- Section -->
 
-    <!-- Section --> 
+    <div class='section' id='section3'>
+      <h2 class='sectionTitle'>Fantastic</h2>
+      <div class='dropContent'>3D</div>
+      <ul class='content'>
+        <li>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/HexGL-master" target="_blank">HexGL Master</a></p>
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- Section -->
 
     <div class='section' id='section4'>
       <h2 class='sectionTitle'>Hentais</h2>
       <div class='dropContent'>Elven Conquest</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/elven-conquest-0-1-8_files/elven-conquest-0-1-8_files" target="_blank">Elven Conquest 0.1.8b</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/elven-conquest-0-1-8_files/elven-conquest-0-1-8_files"
+              target="_blank">Elven Conquest 0.1.8b</a></p>
         </li>
       </ul>
 
@@ -366,7 +358,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Science Simulations</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/N-body-gravity" target="_blank">N-Body Gravity Simulations</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/N-body-gravity" target="_blank">N-Body Gravity
+              Simulations</a></p>
         </li>
       </ul>
     </div>
@@ -376,8 +369,11 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     <div class='section' id='section6'>
       <h2 class='sectionTitle'>Creative</h2>
       <div class='dropContent'>Grow games EYEZMAZE</div>
-    
-      <p><i>Deleted all Grow game due to unsupported flash platform</i></p>
+      <ul class='content'>
+        <li>
+          <p><a href="" target="_blank">Trying to add Grow games</a></p>
+        </li>
+      </ul>
 
     </div>
 
@@ -391,17 +387,17 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
         <li>
           <p><b>Step 1: </b>Open CMD command line</p>
-        <br>
+          <br>
         </li>
         <li>
           <p><b>Step 2: </b>Change directory to the folder contains the large file</p>
-        <br>
+          <br>
         </li>
         <li>
           <p><b>Step 3: </b>Write code below</p>
           <code>git lfs track '*.extensionName'</code>
           <p>('extensionName' is the extension name type of the large file you tell lfs to track)</p>
-        <br>
+          <br>
         </li>
         <li>
           <p><b>Step 4: </b>Write code below</p>
@@ -409,15 +405,17 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p>then commit it</p>
           <code>git commit -m 'fileName'</code>
           <p>(fileName is the name of the large file you want to commit)</p>
-        <br>
+          <br>
         </li>
         <li>
           <p><b>Step 5: </b>Check Github Desktop to make sure the file has been successfully commited</p>
-        <br>
+          <br>
         </li>
         <li>
           <p>See tutorial here:</p>
-          <iframe width="820" height="415" src="https://www.youtube.com/embed/uLR1RNqJ1Mw?start=37" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="820" height="415" src="https://www.youtube.com/embed/uLR1RNqJ1Mw?start=37" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen></iframe>
         </li>
       </ul>
 
@@ -438,11 +436,11 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     $('.content').hide();
 
     //toggle dropContent
-    $('.dropContent').click(function() {
+    $('.dropContent').click(function () {
       $(this).next().slideToggle(300);
       $(this).toggleClass("selected");
     });
-    $('.tutorial').click(function() {
+    $('.tutorial').click(function () {
       $(this).next().slideToggle(300);
     });
   </script>
@@ -462,10 +460,10 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         $('#controlButton').removeClass('fa-play').addClass('fa-pause');
       }
     });
-    themeSong.onplaying = function() {
+    themeSong.onplaying = function () {
       isPlaying = true;
     };
-    themeSong.onpause = function() {
+    themeSong.onpause = function () {
       isPlaying = false;
     };
 

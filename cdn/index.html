@@ -27,7 +27,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <title>Nier list || Main menu</title>
+  <title>CDN || Main menu</title>
 
   <!-- CSS STYLE SECTION -->
 
@@ -53,10 +53,12 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       background: rgba(100, 98, 86, 0.8);
     }
 
-    ::-moz-selection { /* Code for Firefox */
+    ::-moz-selection {
+      /* Code for Firefox */
       color: #d3cebb;
       background: rgba(100, 98, 86, 0.8);
     }
+
     ::selection {
       color: #d3cebb;
       background: rgba(100, 98, 86, 0.8);
@@ -102,7 +104,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       padding: 0px 8px;
     }
 
-    li, .toolTaoShortCode {
+    li,
+    .toolTaoShortCode {
       margin-left: 20px;
     }
 
@@ -125,7 +128,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       font-weight: bold;
     }
 
-    .toolzone{
+    .toolzone {
       display: block;
       margin: 1em;
       width: 100%;
@@ -134,29 +137,31 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       border: 2px solid rgba(100, 98, 86, 1);
     }
 
-    #hexToTextInput, #textToHexInput {
-    padding: 10px;
-    margin: 10px 0;
-    overflow: hidden;
-    box-sizing: border-box;
-    resize: none;
-    color: #4b4340;
-    background: rgba(216, 210, 186, .5);
+    #hexToTextInput,
+    #textToHexInput {
+      padding: 10px;
+      margin: 10px 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      resize: none;
+      color: #4b4340;
+      background: rgba(216, 210, 186, .5);
     }
 
     #textToHexInput {
       min-height: 5em;
     }
 
-    #textToHexOutput, #hexToTextOutput {
-    padding: 10px;
-    margin: 10px 0;
-    min-height: 10em;
-    overflow: hidden;
-    box-sizing: border-box;
-    resize: none;
-    color: #d3cebb;
-    background: rgba(100, 98, 86, 0.8);
+    #textToHexOutput,
+    #hexToTextOutput {
+      padding: 10px;
+      margin: 10px 0;
+      min-height: 10em;
+      overflow: hidden;
+      box-sizing: border-box;
+      resize: none;
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
     }
 
     .themebutton {
@@ -178,9 +183,9 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     }
 
     .linkbutton {
-      text-align:center;
+      text-align: center;
       text-decoration: none;
-      margin-left:0px;
+      margin-left: 0px;
       font-size: 0.9em;
     }
 
@@ -189,46 +194,57 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       float: right;
       right: 1em;
       top: 0.5em;
-      font-size:2em;
+      font-size: 2em;
       color: rgba(100, 98, 86, 0.8);
     }
 
 
+    /* For mobile */
 
+    @media only screen and (max-width: 600px) {
+      .sectionTitle, #info {
+        font-size: 15px;
+        padding: 0.5em 0.5em;
+      }
+
+      .content {
+        margin: 0.5em 0em;
+      }
+    }
   </style>
 
   <script>
 
-  $(document).ready(function(){
+    $(document).ready(function () {
 
-  // Sounds
-  var tutorialSound = document.getElementById("tutorial-sound");
-  var hoverSound = document.getElementById("hover-sound");
-  var clickSound = document.getElementById("click-sound");
-  var openlinkSound = document.getElementById("open-link-sound");
-  $(".dropContent,.tutorial").hover(function(){
-    hoverSound.play();
-    }, function(){
-    hoverSound.load();
-  });
+      // Sounds
+      var tutorialSound = document.getElementById("tutorial-sound");
+      var hoverSound = document.getElementById("hover-sound");
+      var clickSound = document.getElementById("click-sound");
+      var openlinkSound = document.getElementById("open-link-sound");
+      $(".dropContent,.tutorial").hover(function () {
+        hoverSound.play();
+      }, function () {
+        hoverSound.load();
+      });
 
-  $(".tutorial").click(function(){
-    tutorialSound.play();
+      $(".tutorial").click(function () {
+        tutorialSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
+      $(".dropContent,.themebutton").click(function () {
+        clickSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
     });
-
-  $("a").click(function(){
-    openlinkSound.play();
-    });
-
-  $(".dropContent,.themebutton").click(function(){
-    clickSound.play();
-    });
-
-  $("a").click(function(){
-    openlinkSound.play();
-    });
-
-});
 
 
   </script>
@@ -236,10 +252,18 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 </head>
 
 <body>
-  <audio id="tutorial-sound"><source src="sounds/core_1.ogg" type="audio/ogg"></audio>
-  <audio id="hover-sound"><source src="sounds/core_16.ogg" type="audio/ogg"></audio>
-  <audio id="click-sound"><source src="sounds/core_52.ogg" type="audio/ogg"></audio>
-  <audio id="open-link-sound"><source src="sounds/core_58.ogg" type="audio/ogg"></audio>
+  <audio id="tutorial-sound">
+    <source src="sounds/core_1.ogg" type="audio/ogg">
+  </audio>
+  <audio id="hover-sound">
+    <source src="sounds/core_16.ogg" type="audio/ogg">
+  </audio>
+  <audio id="click-sound">
+    <source src="sounds/core_52.ogg" type="audio/ogg">
+  </audio>
+  <audio id="open-link-sound">
+    <source src="sounds/core_58.ogg" type="audio/ogg">
+  </audio>
 
 
 
@@ -250,11 +274,12 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     <h1 class="title">CDN</h1>
 
     <div class="logoSection">
-    <a href="https://hoanganhdinhngoc.github.io" class="logo" target="_blank">
-    <img width="120" height="120" src="https://hoanganhdinhngoc.github.io/images/YoRHa.png" class="top-logo" alt=""
-      srcset="https://hoanganhdinhngoc.github.io/images/YoRHa.png 275w, https://hoanganhdinhngoc.github.io/images/YoRHa.png 150w" sizes="(max-width: 275px) 100vw, 275px"></a>
-    <audio id="themeSong" loop src="sounds/fortress-of-lies-the-bunker.ogg" preload="auto"></audio>
-    <i id="controlButton" class="fas fa-play soundControl"></i>
+      <a href="https://hoanganhdinhngoc.github.io" class="logo" target="_blank">
+        <img width="120" height="120" src="https://hoanganhdinhngoc.github.io/images/YoRHa.png" class="top-logo" alt=""
+          srcset="https://hoanganhdinhngoc.github.io/images/YoRHa.png 275w, https://hoanganhdinhngoc.github.io/images/YoRHa.png 150w"
+          sizes="(max-width: 275px) 100vw, 275px"></a>
+      <audio id="themeSong" loop src="sounds/fortress-of-lies-the-bunker.ogg" preload="auto"></audio>
+      <i id="controlButton" class="fas fa-play soundControl"></i>
     </div>
 
     <!-- System Info -->
@@ -277,13 +302,16 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Utilities</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/convert-JSON-to-table" target="_blank">Convert JSON to table of string</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/convert-JSON-to-table" target="_blank">Convert JSON to
+              table of string</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/column-to-list-converter" target="_blank">Convert multiline text to list</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/column-to-list-converter" target="_blank">Convert multiline
+              text to list</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/public-directory" target="_blank">Google Drive public directory</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/public-directory" target="_blank">Google Drive public
+              directory</a></p>
         </li>
       </ul>
     </div>
@@ -300,96 +328,97 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p>Điền hex code vào ô input dưới đây, nó sẽ tự động được convert thành plain text ở ô output.</p>
           <input id="hexToTextInput" class="toolzone" placeholder="Enter hex string" oninput="convertHex()"></input>
           <p><b>Converted Text: </b><textarea id="hexToTextOutput" readonly class="toolzone"></textarea>
-          <button id="copybutton" class='themebutton toolzone' onclick="copyTextToClipboard()">Copy Text</button>
+            <button id="copybutton" class='themebutton toolzone' onclick="copyTextToClipboard()">Copy Text</button>
         </div>
 
         <script>
-              // Convert hext to text function
-    function convertHex() {
+          // Convert hext to text function
+          function convertHex() {
             const hexToTextInput = document.getElementById('hexToTextInput').value;
             let plainText = '';
 
             for (let i = 0; i < hexToTextInput.length; i += 2) {
-                plainText += String.fromCharCode(parseInt(hexToTextInput.substr(i, 2), 16));
+              plainText += String.fromCharCode(parseInt(hexToTextInput.substr(i, 2), 16));
             }
 
             document.getElementById('hexToTextOutput').value = plainText;
             resizeTextarea('hexToTextInput');
             resizeTextarea('hexToTextOutput');
-        }
-
-        function resizeTextarea(id) {
-            const textarea = document.getElementById(id);
-            textarea.style.height = 'auto';
-            textarea.style.height = textarea.scrollHeight + 'px';
-        }
-
-        function copyTextToClipboard() {
-            const outputElement = document.getElementById('hexToTextOutput');
-            outputElement.select();
-            document.execCommand('copy');
-        }
-
-        // Adjust the initial size
-        document.addEventListener('DOMContentLoaded', () => {
-            resizeTextarea('hexToTextInput');
-            resizeTextarea('hexToTextOutput');
-        });
-
-        </script>
-
-      </ul>
-      
-      <div class='dropContent'>Convert text to hex</div>
-      <ul class='content'>
-
-      <!-- TOOL CONVERT TEXT TO HEX -->
-      <div class="toolTaoShortCode">
-        <h3>Hướng dẫn convert text to hex</h3>
-        <p>Điền văn bản vào ô input dưới đây, nó sẽ tự động được convert thành hex code ở ô output.</p>
-        <textarea id="textToHexInput" class="toolzone" placeholder="Enter plain text" oninput="convertTextToHex()"></textarea>
-        <p><b>Converted Hex: </b><textarea id="textToHexOutput" readonly class="toolzone"></textarea>
-        <button id="copybutton" class='themebutton toolzone' onclick="copyHexToClipboard()">Copy Text</button>
-      </div>
-
-      <script>
-          // Convert text to hex function
-          function convertTextToHex() {
-              const textInput = document.getElementById('textToHexInput').value;
-              let hexOutput = '';
-
-              for (let i = 0; i < textInput.length; i++) {
-                  // Convert each character to hex
-                  hexOutput += textInput.charCodeAt(i).toString(16).padStart(2, '0');
-              }
-
-              document.getElementById('textToHexOutput').value = hexOutput.toUpperCase();
-              resizeTextarea('textToHexInput');
-              resizeTextarea('textToHexOutput');
           }
 
           function resizeTextarea(id) {
-              const textarea = document.getElementById(id);
-              textarea.style.height = 'auto';
-              textarea.style.height = textarea.scrollHeight + 'px';
+            const textarea = document.getElementById(id);
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
           }
 
-          function copyHexToClipboard() {
-              const outputElement = document.getElementById('textToHexOutput');
-              outputElement.select();
-              document.execCommand('copy');
+          function copyTextToClipboard() {
+            const outputElement = document.getElementById('hexToTextOutput');
+            outputElement.select();
+            document.execCommand('copy');
           }
 
           // Adjust the initial size
           document.addEventListener('DOMContentLoaded', () => {
-              resizeTextarea('textToHexInput');
-              resizeTextarea('textToHexOutput');
+            resizeTextarea('hexToTextInput');
+            resizeTextarea('hexToTextOutput');
           });
-      </script> 
+
+        </script>
+
+      </ul>
+
+      <div class='dropContent'>Convert text to hex</div>
+      <ul class='content'>
+
+        <!-- TOOL CONVERT TEXT TO HEX -->
+        <div class="toolTaoShortCode">
+          <h3>Hướng dẫn convert text to hex</h3>
+          <p>Điền văn bản vào ô input dưới đây, nó sẽ tự động được convert thành hex code ở ô output.</p>
+          <textarea id="textToHexInput" class="toolzone" placeholder="Enter plain text"
+            oninput="convertTextToHex()"></textarea>
+          <p><b>Converted Hex: </b><textarea id="textToHexOutput" readonly class="toolzone"></textarea>
+            <button id="copybutton" class='themebutton toolzone' onclick="copyHexToClipboard()">Copy Text</button>
+        </div>
+
+        <script>
+          // Convert text to hex function
+          function convertTextToHex() {
+            const textInput = document.getElementById('textToHexInput').value;
+            let hexOutput = '';
+
+            for (let i = 0; i < textInput.length; i++) {
+              // Convert each character to hex
+              hexOutput += textInput.charCodeAt(i).toString(16).padStart(2, '0');
+            }
+
+            document.getElementById('textToHexOutput').value = hexOutput.toUpperCase();
+            resizeTextarea('textToHexInput');
+            resizeTextarea('textToHexOutput');
+          }
+
+          function resizeTextarea(id) {
+            const textarea = document.getElementById(id);
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+          }
+
+          function copyHexToClipboard() {
+            const outputElement = document.getElementById('textToHexOutput');
+            outputElement.select();
+            document.execCommand('copy');
+          }
+
+          // Adjust the initial size
+          document.addEventListener('DOMContentLoaded', () => {
+            resizeTextarea('textToHexInput');
+            resizeTextarea('textToHexOutput');
+          });
+        </script>
 
 
       </ul>
- 
+
 
 
 
@@ -404,7 +433,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Cập nhật tự động mã giảm giá</div>
       <ul class='content'>
         <li>
-          <p><a href="https://airtable.com/tbluxDrnseWxOl09w/viwHZhx5qozqDZMMO" target="_blank">Cập nhật mã giảm giá</a></p>
+          <p><a href="https://airtable.com/tbluxDrnseWxOl09w/viwHZhx5qozqDZMMO" target="_blank">Cập nhật mã giảm giá</a>
+          </p>
         </li>
       </ul>
       <div class='dropContent'>Quản lý CTV</div>
@@ -423,40 +453,56 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Google Analytics 7 days</div>
       <ul class='content'>
         <li>
-          <p><a href="https://analytics.google.com/analytics/web/#/report/visitors-overview/a99123203w168698282p168749691/overview-graphOptions.primaryConcept=analytics.totalVisitors" target="_blank">User</a></p>
+          <p><a
+              href="https://analytics.google.com/analytics/web/#/report/visitors-overview/a99123203w168698282p168749691/overview-graphOptions.primaryConcept=analytics.totalVisitors"
+              target="_blank">User</a></p>
         </li>
         <li>
-          <p><a href="https://analytics.google.com/analytics/web/#/report/content-pages/a99123203w168698282p168749691/" target="_blank">Pageviews</a></p>
+          <p><a href="https://analytics.google.com/analytics/web/#/report/content-pages/a99123203w168698282p168749691/"
+              target="_blank">Pageviews</a></p>
         </li>
         <li>
-          <p><a href="https://analytics.google.com/analytics/web/#/report/content-engagement-flow/a99123203w168698282p168749691/" target="_blank">Behavior flow</a></p>
+          <p><a
+              href="https://analytics.google.com/analytics/web/#/report/content-engagement-flow/a99123203w168698282p168749691/"
+              target="_blank">Behavior flow</a></p>
         </li>
         <li>
-          <p><a href="https://analytics.google.com/analytics/web/#/realtime/rt-overview/a99123203w168698282p168749691/" target="_blank">Realtime</a></p>
+          <p><a href="https://analytics.google.com/analytics/web/#/realtime/rt-overview/a99123203w168698282p168749691/"
+              target="_blank">Realtime</a></p>
         </li>
         <li>
-          <p><a href="https://analytics.google.com/analytics/web/#/report/trafficsources-overview/a99123203w168698282p168749691/" target="_blank">Acquisition Overview</a></p>
+          <p><a
+              href="https://analytics.google.com/analytics/web/#/report/trafficsources-overview/a99123203w168698282p168749691/"
+              target="_blank">Acquisition Overview</a></p>
         </li>
       </ul>
       <div class='dropContent'>Search console</div>
       <ul class='content'>
         <li>
-          <p><a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20baemin" target="_blank">Mã giảm giá Baemin</a></p>
+          <p><a
+              href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20baemin"
+              target="_blank">Mã giảm giá Baemin</a></p>
         </li>
         <li>
-          <p><a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20now" target="_blank">Mã giảm giá NOW</a></p>
+          <p><a
+              href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20now"
+              target="_blank">Mã giảm giá NOW</a></p>
         </li>
         <li>
-          <p><a href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20grabfood" target="_blank">Mã giảm giá Grabfood</a></p>
+          <p><a
+              href="https://search.google.com/search-console/performance/search-analytics?resource_id=https%3A%2F%2Fwww.tiendauroi.com%2F&query=*mã%20giảm%20giá%20grabfood"
+              target="_blank">Mã giảm giá Grabfood</a></p>
         </li>
       </ul>
       <div class='dropContent'>Yandex Metrica</div>
       <ul class='content'>
         <li>
-          <p><a href="https://metrica.yandex.com/dashboard?group=day&period=week&id=56082535" target="_blank">Dashboard</a></p>
+          <p><a href="https://metrica.yandex.com/dashboard?group=day&period=week&id=56082535"
+              target="_blank">Dashboard</a></p>
         </li>
         <li>
-          <p><a href="https://metrica.yandex.com/stat/visor?period=week&id=56082535" target="_blank">Session Replay</a></p>
+          <p><a href="https://metrica.yandex.com/stat/visor?period=week&id=56082535" target="_blank">Session Replay</a>
+          </p>
         </li>
         <li style="margin-left: 2em;">
           <p>ID: team@buybulous.com</p>
@@ -476,10 +522,12 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Chuyển cột thành list</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/column-to-list-converter.html" target="_blank">Column-to-list-converter</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/column-to-list-converter.html"
+              target="_blank">Column-to-list-converter</a></p>
         </li>
         <li>
-          <p><b>Mô tả: </b>Dùng khi cần link một record airtale tói nhiều record khác, ví dụ như khi tính lương cho ctv theo số bài.</p>
+          <p><b>Mô tả: </b>Dùng khi cần link một record airtale tói nhiều record khác, ví dụ như khi tính lương cho ctv
+            theo số bài.</p>
         </li>
       </ul>
 
@@ -499,7 +547,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p><a href="https://www.tiendauroi.com/tool-tao-bang-lay-ma/" target="_blank">Tool-tao-bang-lay-ma</a></p>
         </li>
         <li>
-          <p><b>Mô tả: </b>Dùng cái này để tạo các bảng đưa mã cho người dùng, dùng trong bài lẻ hoặc bài tổng hợp đều được.</p>
+          <p><b>Mô tả: </b>Dùng cái này để tạo các bảng đưa mã cho người dùng, dùng trong bài lẻ hoặc bài tổng hợp đều
+            được.</p>
         </li>
       </ul>
 
@@ -509,7 +558,9 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p><a href="https://gilcodes.github.io/featuredproducts/" target="_blank">Featuredproducts</a></p>
         </li>
         <li>
-          <p><b>Mô tả: </b>Dùng cái này để tạo các bảng tổng hợp sản phẩm đáng mua nhất cho người dùng, dùng trong bài lẻ hoặc bài tổng hợp đều được. Xem hướng dẫn sử dụng <a href="https://quip.com/xl8qAelPPOBb" target="_blank">Tại đây.</a></p>
+          <p><b>Mô tả: </b>Dùng cái này để tạo các bảng tổng hợp sản phẩm đáng mua nhất cho người dùng, dùng trong bài
+            lẻ hoặc bài tổng hợp đều được. Xem hướng dẫn sử dụng <a href="https://quip.com/xl8qAelPPOBb"
+              target="_blank">Tại đây.</a></p>
         </li>
       </ul>
     </div>
@@ -522,7 +573,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Link redirection</div>
       <ul class='content'>
         <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/tools.php?page=redirection.php" target="_blank">Redirection</a></p>
+          <p><a href="https://www.tiendauroi.com/wp-admin/tools.php?page=redirection.php"
+              target="_blank">Redirection</a></p>
         </li>
         <li>
           <p><b>Mô tả: </b>Dùng cái này để redirect link trong trang</p>
@@ -540,7 +592,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Sửa top button</div>
       <ul class='content'>
         <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=18236&action=edit&classic-editor" target="_blank">Danh mục coupon extend</a></p>
+          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=18236&action=edit&classic-editor"
+              target="_blank">Danh mục coupon extend</a></p>
         </li>
         <li>
           <p><b>Mô tả: </b>Dùng sửa icon và link các button đầu trang</p>
@@ -549,7 +602,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Sửa trang chủ</div>
       <ul class='content'>
         <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=2619&action=edit" target="_blank">Sửa trang chủ</a></p>
+          <p><a href="https://www.tiendauroi.com/wp-admin/post.php?post=2619&action=edit" target="_blank">Sửa trang
+              chủ</a></p>
         </li>
         <li>
           <p><b>Mô tả: </b>Sửa banner đầu trang tại đây. Trong block Image list: Style: Mặc định - Homepage Banner</p>
@@ -558,10 +612,12 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Tùy biến element trang chủ</div>
       <ul class='content'>
         <li>
-          <p><a href="https://www.tiendauroi.com/wp-admin/customize.php?url=https%3A%2F%2Fwww.tiendauroi.com%2F" target="_blank">Customize trang chủ</a></p>
+          <p><a href="https://www.tiendauroi.com/wp-admin/customize.php?url=https%3A%2F%2Fwww.tiendauroi.com%2F"
+              target="_blank">Customize trang chủ</a></p>
         </li>
         <li>
-          <p><b>Mô tả: </b>Có thể sửa được trang chủ hoặc các trang khác. Sau khi đăng nhập tk admin, vào giao diện người dùng và chọn "Tùy biến" ở menu sửa trang trên cùng.</p>
+          <p><b>Mô tả: </b>Có thể sửa được trang chủ hoặc các trang khác. Sau khi đăng nhập tk admin, vào giao diện
+            người dùng và chọn "Tùy biến" ở menu sửa trang trên cùng.</p>
         </li>
       </ul>
 
@@ -583,11 +639,11 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     $('.content').hide();
 
     //toggle dropContent
-    $('.dropContent').click(function() {
+    $('.dropContent').click(function () {
       $(this).next().slideToggle(300);
       $(this).toggleClass("selected");
     });
-    $('.tutorial').click(function() {
+    $('.tutorial').click(function () {
       $(this).next().slideToggle(300);
     });
   </script>
@@ -607,10 +663,10 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         $('#controlButton').removeClass('fa-play').addClass('fa-pause');
       }
     });
-    themeSong.onplaying = function() {
+    themeSong.onplaying = function () {
       isPlaying = true;
     };
-    themeSong.onpause = function() {
+    themeSong.onpause = function () {
       isPlaying = false;
     };
 
