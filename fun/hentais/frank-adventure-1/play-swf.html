@@ -28,11 +28,24 @@
 </head>
 
 <body>
-	<div>
-		<iframe class="gamearea"
-			src="http://files1.swfchan.com/ruffle/index.html?http://files1.swfchan.com/franks-adventure.swfSWF=-_=_-=CHAN%3C68322320-2217544120-827955886SWF=_-=-_=CHANinternalSWFdXuXmXmXyCHAN0.9282354308413803"
-			scrolling="no" width="100%" height="900em"></iframe>
-	</div>
+	<div id='ruffle'></div>
+	<script src='https://e9x.github.io/ruffle-example/ruffle.js'></script>
+	<script>
+		var swfobject = {};
+
+		swfobject.embedSWF = function (url, cont, width, height) {
+			var ruffle = window.RufflePlayer.newest(),
+				player = Object.assign(document.getElementById(cont).appendChild(ruffle.createPlayer()), {
+					width: width,
+					height: height,
+					style: 'width: ' + width + 'px; height: ' + height + 'px',
+				});
+
+			player.load({ url: url });
+		}
+
+		swfobject.embedSWF('https://e9x.github.io/ruffle-example/1on1soccer_24.swf', 'ruffle', 500, 500);
+	</script>
 
 </body>
 
