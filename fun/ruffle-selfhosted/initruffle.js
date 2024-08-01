@@ -1,7 +1,7 @@
 
-// Frank's Adventure 1 - ID: franksAdventure1:
+// Frank's Adventure Series - ID: franksAdventure1:
 
-function franksAdventure1() {
+function franks_adventure_1() {
     var swfobject = {};
 
     swfobject.embedSWF = function (url, cont, width, height) {
@@ -15,12 +15,12 @@ function franksAdventure1() {
         player.load({ url: url });
     };
 
-    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/frank-adventure-1/franks-adventure-1.swf', 'ruffle', 1500, 800);
+    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-1/franks-adventure-1.swf', 'ruffle', 1500, 800);
 }
 
-// Frank's Adventure 2 - ID: franksAdventure2:
 
-function franksAdventure2() {
+
+function franks_adventure_2() {
     var swfobject = {};
 
     swfobject.embedSWF = function (url, cont, width, height) {
@@ -34,12 +34,12 @@ function franksAdventure2() {
         player.load({ url: url });
     };
 
-    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/frank-adventure-2/franks-adventure-2.swf', 'ruffle', 1500, 800);
+    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-2/franks-adventure-2.swf', 'ruffle', 1500, 800);
 }
 
-// Frank's Adventure 3 - ID: franksAdventure3:
 
-function franksAdventure3() {
+
+function franks_adventure_3() {
     var swfobject = {};
 
     swfobject.embedSWF = function (url, cont, width, height) {
@@ -53,12 +53,12 @@ function franksAdventure3() {
         player.load({ url: url });
     };
 
-    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/frank-adventure-3/franks-adventure-3.swf', 'ruffle', 1500, 800);
+    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-3/franks-adventure-3.swf', 'ruffle', 1500, 800);
 }
 
-// Frank's Adventure 4 - ID: franksAdventure4:
 
-function franksAdventure4() {
+
+function franks_adventure_4() {
     var swfobject = {};
 
     swfobject.embedSWF = function (url, cont, width, height) {
@@ -72,8 +72,10 @@ function franksAdventure4() {
         player.load({ url: url });
     };
 
-    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/frank-adventure-4/franks-adventure-4.swf', 'ruffle', 1500, 800);
+    swfobject.embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-4/franks-adventure-4.swf', 'ruffle', 1500, 800);
 }
+
+
 
 
 
@@ -84,7 +86,7 @@ function franksAdventure4() {
 function initruffle() {
     var gameElement = document.querySelector('.gamearea');
     if (gameElement) {
-        var gameId = gameElement.id;
+        var gameId = gameElement.id.replace(/-/g, '_');
         var initFunction = window[gameId];
         if (typeof initFunction === 'function') {
             initFunction();
