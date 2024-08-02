@@ -21,7 +21,7 @@ function grow_cube() {
 }
 
 function grow_cannon() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow_cannon/grow_cannon.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-cannon/grow-cannon.swf', 'ruffle', 1500, 800);
 }
 
 function grow_island() {
