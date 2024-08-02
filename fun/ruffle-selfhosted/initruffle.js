@@ -17,63 +17,63 @@ function how_dark_priestess_uriki_got_her_groove_back_by_purplemantis() {
 // Grow games EYEZMAZE
 
 function grow_cube() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-cube.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-cube/grow-cube.swf', 'ruffle', 1500, 800);
 }
 
 function grow_cannon() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow_cannon.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow_cannon/grow_cannon.swf', 'ruffle', 1500, 800);
 }
 
 function grow_island() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-Island.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-island/grow-Island.swf', 'ruffle', 1500, 800);
 }
 
 function grow_rpg() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-rpg.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-rpg/grow-rpg.swf', 'ruffle', 1500, 800);
 }
 
 function grow_tower() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-tower.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-tower/grow-tower.swf', 'ruffle', 1500, 800);
 }
 
 function grow_transform() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-transform.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-transform/grow-transform.swf', 'ruffle', 1500, 800);
 }
 
 function grow_v1() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-v1.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-v1/grow-v1.swf', 'ruffle', 1500, 800);
 }
 
 function grow_v2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-v2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-v2/grow-v2.swf', 'ruffle', 1500, 800);
 }
 
 function grow_valley() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-valley.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-valley/grow-valley.swf', 'ruffle', 1500, 800);
 }
 
 function grow_nano_v0() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v0.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v0/grow-nano-v0.swf', 'ruffle', 1500, 800);
 }
 
 function grow_nano_v1() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v1.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v1/grow-nano-v1.swf', 'ruffle', 1500, 800);
 }
 
 function grow_nano_v2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v2/grow-nano-v2.swf', 'ruffle', 1500, 800);
 }
 
 function grow_nano_v3() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v3.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v3/grow-nano-v3.swf', 'ruffle', 1500, 800);
 }
 
 function grow_nano_v4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v4.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v4/grow-nano-v4.swf', 'ruffle', 1500, 800);
 }
 
 function chronon() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/chronon.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/chronon/chronon.swf', 'ruffle', 1500, 800);
 }
 
 
