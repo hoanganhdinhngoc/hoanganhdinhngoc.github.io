@@ -1,53 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<!-- Import script -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
-  crossorigin="anonymous">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CDN || Convert multiline text to list</title>
 
-<style>
- #result{
-   overflow: auto;
- }
-</style>
-<section class="container-fluid">
-  <h3 class="text-center">Convert multiline text to list</h3>
-  <p class="text-center">Copy 1 cột multiline text vào tool này và ấn Submit, sẽ convert thành một list devided bằng dấu phẩy trong ô kết quả</p>
-  <div class="row">
-    <div class="col-sm-6">
-      <form id="my-form">
-        <textarea id="mytextarea" name="name" rows="20" cols="80"></textarea>
-      </form>
-      <button id="myButton" name="button" class="btn btn-primary">Submit</button>
+  <!-- Import script -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
+  <!-- End Google Tag Manager -->
 
+  <style>
+    #result {
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <section class="container-fluid">
+    <h3 class="text-center">Convert multiline text to list</h3>
+    <p class="text-center">Copy 1 cột multiline text vào tool này và ấn Submit, sẽ convert thành một list devided bằng
+      dấu phẩy trong ô kết quả</p>
+    <div class="row">
+      <div class="col-sm-6">
+        <form id="my-form">
+          <textarea id="mytextarea" name="name" rows="20" cols="80"></textarea>
+        </form>
+        <button id="myButton" name="button" class="btn btn-primary">Submit</button>
+
+      </div>
+      <textarea id="result" class="col-sm-6">
+      </textarea>
     </div>
-    <textarea id="result" class="col-sm-6">
-    </textarea>
-  </div>
 
-</section>
+  </section>
 
 
   <script type="text/javascript">
 
-  var listID ="";
-  var convertedlistID = "";
+    var listID = "";
+    var convertedlistID = "";
 
-  function generateEbayLink() {
-    $('#result').html('');
-    // convert textarea values to array, separate by \n
-    listID = $('textarea#mytextarea').val().split("\n");
-    // loop through listID
-    for (i = 0; i < listID.length; i++) {
-      convertedlistID = convertedlistID.concat(listID[i]).concat(", ");
+    function generateEbayLink() {
+      $('#result').html('');
+      // convert textarea values to array, separate by \n
+      listID = $('textarea#mytextarea').val().split("\n");
+      // loop through listID
+      for (i = 0; i < listID.length; i++) {
+        convertedlistID = convertedlistID.concat(listID[i]).concat(", ");
+      }
+
+      $('#result').append(convertedlistID);
+
+      // copy to clipboard
+      $("#result").select();
+      document.execCommand("copy");
+      convertedlistID = '';
     }
+    $('#myButton').click(generateEbayLink);
 
-    $('#result').append(convertedlistID);
+  </script>
+</body>
 
-    // copy to clipboard
-    $("#result").select();
-    document.execCommand("copy");
-    convertedlistID = '';
-  }
-  $('#myButton').click(generateEbayLink);
-
-</script>
+</html>

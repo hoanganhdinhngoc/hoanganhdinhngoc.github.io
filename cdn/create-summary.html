@@ -4,9 +4,18 @@
 <head>
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
+  <!-- End Google Tag Manager -->
 
   <style>
-
     .submit-button {
       margin-top: 3em;
     }
@@ -33,6 +42,10 @@
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <!-- Code lấy link -->
 
@@ -43,7 +56,9 @@
 
     <div class="item-container">
       <input id="get-summary" class="summary-input" placeholder="Viết đoạn text ngắn">
-      <textarea id="get-full-content" class="full-content-input" placeholder="Chỗ này điền nội dung dài cần thu gọn. Lưu ý: tốt nhất là điền nội dung html, nghĩa là copy nội dung dài vào ô viết bài trước, chuyển sang tab text rồi copy đoạn html paste vào đây." rows="20" cols="50"></textarea>
+      <textarea id="get-full-content" class="full-content-input"
+        placeholder="Chỗ này điền nội dung dài cần thu gọn. Lưu ý: tốt nhất là điền nội dung html, nghĩa là copy nội dung dài vào ô viết bài trước, chuyển sang tab text rồi copy đoạn html paste vào đây."
+        rows="20" cols="50"></textarea>
     </div>
 
 
@@ -53,52 +68,54 @@
 
   <h2 style="diplay:block;">Check kết quả bên dưới</h2>
   <p>Nếu ngon rồi thì copy code và paste vào bài. Paste vào bên tab "Text", không phải bên "Visual"</p>
-    <div class="hotdeal-wrap">
-      <div class="hotdeal-container slider" id="visible">
+  <div class="hotdeal-wrap">
+    <div class="hotdeal-container slider" id="visible">
 
-      </div>
     </div>
+  </div>
 
 
 
   </p>
 
 
-    <!-- html cần generate -->
-<div class="result-holder">
-  <button type="button" class="copy-result" onclick="copyandpaste();openMobile();" style="display:inline;">Copy code</button>
+  <!-- html cần generate -->
+  <div class="result-holder">
+    <button type="button" class="copy-result" onclick="copyandpaste();openMobile();" style="display:inline;">Copy
+      code</button>
 
-</div>
-<textarea style="white-space: break-spaces;" id="result" rows="20" cols="60"></textarea>
-
-
-<script>
+  </div>
+  <textarea style="white-space: break-spaces;" id="result" rows="20" cols="60"></textarea>
 
 
-
-function getContent() {
-  var content = document.getElementById("get-full-content").value;
-  var summary = document.getElementById("get-summary").value;
-
-  document.getElementById("result").innerHTML = "<details><summary><strong>"+ summary
-  + "</strong></summary>"+content+"</details>"
-  ;
-
-  document.getElementById("visible").innerHTML = "<details><summary><strong>"+ summary
-  + "</strong></summary>"+content+"</details>"
-  ;
-}
+  <script>
 
 
-function copyandpaste() {
-  document.getElementById("result").focus();
-  document.getElementById("result").select();
-  document.execCommand("copy");
-}
+
+    function getContent() {
+      var content = document.getElementById("get-full-content").value;
+      var summary = document.getElementById("get-summary").value;
+
+      document.getElementById("result").innerHTML = "<details><summary><strong>" + summary
+        + "</strong></summary>" + content + "</details>"
+        ;
+
+      document.getElementById("visible").innerHTML = "<details><summary><strong>" + summary
+        + "</strong></summary>" + content + "</details>"
+        ;
+    }
 
 
-</script>
+    function copyandpaste() {
+      document.getElementById("result").focus();
+      document.getElementById("result").select();
+      document.execCommand("copy");
+    }
+
+
+  </script>
 
 
 </body>
+
 </html>

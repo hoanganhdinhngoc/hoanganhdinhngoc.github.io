@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <title>JSON to HTML Table</title>
+  <title>CDN || JSON to HTML Table</title>
+
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
+  <!-- End Google Tag Manager -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -23,7 +35,8 @@
       width: 100%;
     }
 
-    th, td {
+    th,
+    td {
       border: 1px solid #dddddd;
       text-align: left;
       padding: 8px;
@@ -34,14 +47,19 @@
     }
   </style>
 </head>
+
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <h2>JSON to HTML Table Converter</h2>
   <textarea id="jsonInput" placeholder="Enter JSON data here (multiline)"></textarea>
   <button id="convertButton">Convert to HTML Table</button>
   <div id="tableContainer"></div>
 
   <script>
-    document.getElementById('convertButton').addEventListener('click', function() {
+    document.getElementById('convertButton').addEventListener('click', function () {
       var jsonInput = document.getElementById('jsonInput').value;
       var jsonData;
 
@@ -77,14 +95,14 @@
 
       // Create table header
       tableHtml += '<tr>';
-      headers.forEach(function(header) {
+      headers.forEach(function (header) {
         tableHtml += '<th>' + header + '</th>';
       });
       tableHtml += '</tr>';
 
       // Create table row with data
       tableHtml += '<tr>';
-      data.forEach(function(value) {
+      data.forEach(function (value) {
         tableHtml += '<td>' + value + '</td>';
       });
       tableHtml += '</tr>';
@@ -95,4 +113,5 @@
     });
   </script>
 </body>
+
 </html>
