@@ -174,10 +174,44 @@
       color: rgba(100, 98, 86, 0.8);
     }
 
+    .catVideoContainer {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 15px 30px;
+      text-align: center;
+      padding: 5px;
+      width: 12em;
+      height: 24em;
+      position: relative;
+    }
+
+    .catVideoContainer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      box-shadow: inset 0px 0px 5px 10px rgba(204, 198, 176, 0.9);
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(204, 198, 176, 0.9) 6%, transparent 6%),
+        linear-gradient(rgba(204, 198, 176, 0.9) 6%, transparent 6%);
+      background-size: 5px 5px;
+    }
+
+    #catVideo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
     /* For mobile */
 
     @media only screen and (max-width: 600px) {
-      .sectionTitle, #info {
+
+      .sectionTitle,
+      #info {
         font-size: 15px;
         padding: 0.5em 0.5em;
       }
@@ -185,6 +219,11 @@
       .content {
         margin: 0.5em 0em;
       }
+
+      .catVideoContainer {
+        margin: 20px auto;
+      }
+
     }
   </style>
 
@@ -243,9 +282,9 @@
 
   <div class='coreSystem'>
 
-    <h1 class="title">Fun Project || Main menu</h1>
+    <h1 class="title fadeIn">Fun Project || Main menu</h1>
 
-    <div class="logoSection">
+    <div class="logoSection fadeIn">
       <a href="https://hoanganhdinhngoc.github.io" class="logo" target="_blank">
         <img width="120" height="120" src="https://hoanganhdinhngoc.github.io/images/YoRHa.png" class="top-logo" alt=""
           srcset="https://hoanganhdinhngoc.github.io/images/YoRHa.png 275w, https://hoanganhdinhngoc.github.io/images/YoRHa.png 150w"
@@ -257,16 +296,18 @@
     <!-- System Info -->
 
 
-    <div class='section' id='info'>
+    <div class="section fadeIn" id='info'>
       <h2 class="tutorial" style='padding: 1% 1%; cursor: pointer;'>What is this page and how to use?</h2>
       <ul class='content'>
         <li>
-          <p><b>What is this page? </b>Just a fun zone to enjoy html games & some interesting stuffs.</p>
+          <p><b>What is this page? </b>Just a fun zone to enjoy html, flash games & some interesting stuffs.</p>
         </li>
         <li>Click to Game list below and start playing, that's it.</li>
-        <li>
-          <img height="360px" src="https://hoanganhdinhngoc.github.io/images/2B_Nier.png" class="" alt="2B">
-        </li>
+        <div class="catVideoContainer">
+          <video id="catVideo" autoplay loop muted>
+            <source src="https://hoanganhdinhngoc.github.io/images/cat_hangout_video_dashinit.mp4" type="video/mp4">
+          </video>
+        </div>
         <li>
           <p>Come back anytime, this is our relaxing place</p>
         </li>
@@ -275,7 +316,7 @@
 
     <!-- Section -->
 
-    <div class='section' id='section1'>
+    <div class="section fadeIn" id='section1'>
       <h2 class='sectionTitle'>Time killer</h2>
 
       <div class='dropContent'>Puzzle</div>
@@ -295,7 +336,7 @@
           <p><a href="https://hoanganhdinhngoc.github.io/fun/hashiwokakero" target="_blank">Hashiwokakero</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/break-lock" target="_blank">Breaklock Master</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/break-lock" target="_blank">Breaklock</a></p>
         </li>
       </ul>
       <div class='dropContent'>Acade</div>
@@ -321,7 +362,7 @@
 
     <!-- Section -->
 
-    <div class='section' id='section2'>
+    <div class="section fadeIn" id='section2'>
       <h2 class='sectionTitle'>Hand made</h2>
       <div class='dropContent'>Nier Project</div>
       <ul class='content'>
@@ -333,27 +374,15 @@
 
     </div>
 
-        <!-- Section -->
-
-        <div class='section' id='section3'>
-          <h2 class='sectionTitle'>Strategy</h2>
-          <div class='dropContent'>Turn Base</div>
-          <ul class='content'>
-            <li>
-              <p><a href="https://hoanganhdinhngoc.github.io/fun/win-the-white-house" target="_blank">Win the White House</a></p>
-            </li>
-          </ul>
-    
-        </div>
-
     <!-- Section -->
 
-    <div class='section' id='section4'>
-      <h2 class='sectionTitle'>Fantastic</h2>
-      <div class='dropContent'>3D</div>
+    <div class="section fadeIn" id='section3'>
+      <h2 class='sectionTitle'>Strategy</h2>
+      <div class='dropContent'>Turn Base</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/HexGL" target="_blank">HexGL Master</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/win-the-white-house" target="_blank">Win the White
+              House</a></p>
         </li>
       </ul>
 
@@ -361,7 +390,20 @@
 
     <!-- Section -->
 
-    <div class='section' id='section5'>
+    <div class="section fadeIn" id='section4'>
+      <h2 class='sectionTitle'>Fantastic</h2>
+      <div class='dropContent'>3D</div>
+      <ul class='content'>
+        <li>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/HexGL" target="_blank">HexGL</a></p>
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- Section -->
+
+    <div class="section fadeIn" id='section5'>
       <h2 class='sectionTitle'>Simulations</h2>
       <div class='dropContent'>Science Simulations</div>
       <ul class='content'>
@@ -374,78 +416,75 @@
 
     <!-- Section -->
 
-    <div class='section' id='section6'>
+    <div class="section fadeIn" id='section6'>
 
       <h2 class='sectionTitle'>Hentais</h2>
       <div class='dropContent'>Visual Novel</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/elven-conquest-0-1-8"
-              target="_blank">Elven Conquest 0.1.8b</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/elven-conquest-0-1-8" target="_blank">Elven
+              Conquest 0.1.8b</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/indecent-wife-hana"
-              target="_blank">Indecent Wife Hana</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/indecent-wife-hana" target="_blank">Indecent Wife
+              Hana</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/nemurimouto_v0.05"
-              target="_blank">Nemurimouto v0.05</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/nemurimouto_v0.05" target="_blank">Nemurimouto
+              v0.05</a></p>
         </li>
       </ul>
 
       <div class='dropContent'>Frank's Adventure Series</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-1"
-              target="_blank">Frank's Adventure 1</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-1" target="_blank">Frank's
+              Adventure 1</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-2"
-              target="_blank">Frank's Adventure 2</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-2" target="_blank">Frank's
+              Adventure 2</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-3"
-              target="_blank">Frank's Adventure 3</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-3" target="_blank">Frank's
+              Adventure 3</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-4"
-              target="_blank">Frank's Adventure 4</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-4" target="_blank">Frank's
+              Adventure 4</a></p>
         </li>
       </ul>
 
       <div class='dropContent'>Simgirls Series</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-5.5"
-              target="_blank">Simgirls 5.5</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-5.5" target="_blank">Simgirls 5.5</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-6.6"
-              target="_blank">Simgirls 6.6</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-6.6" target="_blank">Simgirls 6.6</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-7.7"
-              target="_blank">Simgirls 7.7</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-7.7" target="_blank">Simgirls 7.7</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser"
-              target="_blank">Simgirls Rosebery Teaser</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser" target="_blank">Simgirls
+              Rosebery Teaser</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-tomokos-story"
-              target="_blank">Simgirls Tomoko's Story</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-tomokos-story" target="_blank">Simgirls
+              Tomoko's Story</a></p>
         </li>
       </ul>
     </div>
 
     <!-- Section -->
 
-    <div class='section' id='section7'>
+    <div class="section fadeIn" id='section7'>
       <h2 class='sectionTitle'>Creative</h2>
       <div class='dropContent'>Grow games EYEZMAZE</div>
       <ul class='content'>
         <img height="100px" style="margin: 0px 20px;"
-        src="https://hoanganhdinhngoc.github.io/images/infinite_battle.gif" class="" alt="">
+          src="https://hoanganhdinhngoc.github.io/images/infinite_battle.gif" class="" alt="">
         <li>
           <p><a href="https://hoanganhdinhngoc.github.io/fun/grow/grow-cube" target="_blank">Grow Cube</a></p>
         </li>
@@ -473,7 +512,7 @@
 
     <!-- Section -->
 
-    <div class='section' id='section8'>
+    <div class="section fadeIn" id='section8'>
       <h2 class='sectionTitle'>Other instructions</h2>
 
       <div class='dropContent'>Commit large file to Github which is larger than 100Mb (Using Git LFS)</div>
@@ -506,10 +545,7 @@
           <br>
         </li>
         <li>
-          <p>See tutorial here:</p>
-          <iframe width="820" height="415" src="https://www.youtube.com/embed/uLR1RNqJ1Mw?start=37" frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen></iframe>
+          <p>See tutorial <a href="https://www.youtube.com/embed/uLR1RNqJ1Mw?start=37" target="_blank">here</a></p>
         </li>
       </ul>
 
@@ -523,8 +559,8 @@
 
   <script type='text/javascript'>
     // fade in section
-    $('.section').hide();
-    $('.section').fadeIn(500);
+    $('.fadeIn').hide();
+    $('.fadeIn').fadeIn(500);
 
     // hide all content class to toggle
     $('.content').hide();
