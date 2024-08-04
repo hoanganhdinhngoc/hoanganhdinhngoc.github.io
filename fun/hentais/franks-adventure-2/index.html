@@ -56,6 +56,26 @@
         $(document).ready(function () {
             initruffle();
         });
+
+        // Function to dynamically adjust the size of the ruffle player
+        function resizeRufflePlayer() {
+            if (window.innerWidth <= 600) {
+                const rufflePlayer = document.querySelector('ruffle-player');
+                if (rufflePlayer) {
+                    const aspectRatio = 1500 / 800;
+                    const containerWidth = rufflePlayer.parentElement.offsetWidth;
+                    rufflePlayer.style.width = containerWidth + 'px';
+                    rufflePlayer.style.height = (containerWidth / aspectRatio) + 'px';
+                }
+            }
+        }
+
+        window.addEventListener('resize', resizeRufflePlayer);
+        window.addEventListener('load', resizeRufflePlayer);
+
+        // Initial call to ensure it runs on page load
+        resizeRufflePlayer();
+
     </script>
 </body>
 

@@ -15,7 +15,6 @@ function how_dark_priestess_uriki_got_her_groove_back_by_purplemantis() {
 }
 
 // Grow games EYEZMAZE
-
 function grow_cube() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-cube/grow-cube.swf', 'ruffle', 1500, 800);
 }
@@ -76,7 +75,6 @@ function chronon() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/chronon/chronon.swf', 'ruffle', 1500, 800);
 }
 
-
 // Frank's Adventure Series - ID: franks-adventure-1
 function franks_adventure_1() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-1/franks-adventure-1.swf', 'ruffle', 1500, 800);
@@ -115,8 +113,8 @@ function simgirls_tomokos_story() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-tomokos-story/706364_simgirls-vn.swf', 'ruffle', 1500, 800);
 }
 
-// initruffle to call the correct function to load the right swf
-function initruffle() {
+// Combined initRuffle function
+function initRuffle() {
     var gameElement = document.querySelector('.gamearea');
     if (gameElement) {
         var gameId = gameElement.id.replace(/-/g, '_');
@@ -125,4 +123,27 @@ function initruffle() {
             initFunction();
         }
     }
+
+    // Function to dynamically adjust the size of the ruffle player
+    function resizeRufflePlayer() {
+        if (window.innerWidth <= 600) {
+            const rufflePlayer = document.querySelector('ruffle-player');
+            if (rufflePlayer) {
+                const aspectRatio = 1500 / 800;
+                const containerWidth = rufflePlayer.parentElement.offsetWidth;
+                rufflePlayer.style.width = containerWidth + 'px';
+                rufflePlayer.style.height = (containerWidth / aspectRatio) + 'px';
+            }
+        }
+    }
+
+    window.addEventListener('resize', resizeRufflePlayer);
+    window.addEventListener('load', resizeRufflePlayer);
+
+    // Initial call to ensure it runs on page load
+    resizeRufflePlayer();
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    initRuffle();
+});
