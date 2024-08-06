@@ -390,7 +390,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
         <!-- TOOL CONVERT TEXT TO HEX -->
         <div class="toolTaoShortCode">
-          <h3>Hướng dẫn convert text to hex</h3>
           <p>Điền văn bản vào ô input dưới đây, nó sẽ tự động được convert thành hex code ở ô output.</p>
           <textarea id="textToHexInput" class="toolzone" placeholder="Enter plain text"
             oninput="convertTextToHex()"></textarea>
@@ -671,7 +670,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     var themeSong = document.getElementById("themeSong");
     var isPlaying;
 
-    $('#controlButton').click(function togglePlay() {
+    function togglePlay() {
       if (isPlaying) {
         themeSong.pause();
         $('#controlButton').removeClass('fa-pause').addClass('fa-play');
@@ -679,15 +678,24 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         themeSong.play();
         $('#controlButton').removeClass('fa-play').addClass('fa-pause');
       }
-    });
+    }
+
+    $('#controlButton').click(togglePlay);
+
     themeSong.onplaying = function () {
       isPlaying = true;
     };
+
     themeSong.onpause = function () {
       isPlaying = false;
     };
 
-
+    $(document).keydown(function(event) {
+      if (event.key === " " || event.keyCode === 32) {
+        event.preventDefault();
+        togglePlay();
+      }
+    });
   </script>
 
 

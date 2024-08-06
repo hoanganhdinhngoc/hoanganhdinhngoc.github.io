@@ -372,9 +372,6 @@
         <li>
           <p><a href="https://hoanganhdinhngoc.github.io/fun/the-mine" target="_blank">The Mine</a></p>
         </li>
-        <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/fun/hextris-gh-pages" target="_blank">Hextris</a></p>
-        </li>
       </ul>
 
 
@@ -630,7 +627,7 @@
     var themeSong = document.getElementById("themeSong");
     var isPlaying;
 
-    $('#controlButton').click(function togglePlay() {
+    function togglePlay() {
       if (isPlaying) {
         themeSong.pause();
         $('#controlButton').removeClass('fa-pause').addClass('fa-play');
@@ -638,15 +635,24 @@
         themeSong.play();
         $('#controlButton').removeClass('fa-play').addClass('fa-pause');
       }
-    });
+    }
+
+    $('#controlButton').click(togglePlay);
+
     themeSong.onplaying = function () {
       isPlaying = true;
     };
+
     themeSong.onpause = function () {
       isPlaying = false;
     };
 
-
+    $(document).keydown(function(event) {
+      if (event.key === " " || event.keyCode === 32) {
+        event.preventDefault();
+        togglePlay();
+      }
+    });
   </script>
 
 

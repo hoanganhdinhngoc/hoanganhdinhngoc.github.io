@@ -8,6 +8,7 @@ function embedSWF(url, cont, originalWidth, originalHeight) {
     player.style.height = "100vh";
     player.style.maxWidth = originalWidth + "px";
     player.style.maxHeight = originalHeight + "px";
+    player.style.padding = "10px";  // Adjust padding as needed
     
     player.load({ url: url });
 }
