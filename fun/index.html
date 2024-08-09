@@ -622,27 +622,27 @@
   </script>
 
 
-  <!-- Sound control -->
+  <!-- Sound controls -->
+
   <script>
     var themeSong = document.getElementById("themeSong");
     var catVideo = document.getElementById("catVideo");
-    var themeSongIsPlaying = false;
     var isHovering = false;
+    var onPlay = false;
 
     function togglePlay() {
       if (themeSong.paused) {
         themeSong.play();
-        $('#controlButton').removeClass('fa-play').addClass('fa-pause');
+        onPlay = true;
       } else {
         themeSong.pause();
-        $('#controlButton').removeClass('fa-pause').addClass('fa-play');
+        onPlay = false;
       }
     }
 
     $('#controlButton').click(togglePlay);
 
     themeSong.onplaying = function () {
-      themeSongIsPlaying = true;
       $('#controlButton').removeClass('fa-play').addClass('fa-pause');
     };
 
@@ -650,21 +650,22 @@
       $('#controlButton').removeClass('fa-pause').addClass('fa-play');
     };
 
-
-    $('.catVideoContainer').hover(function () {
-      if (!themeSong.paused) {
-        themeSong.pause();
-        themeSongIsPlaying = true;
+    $('.catVideoContainer').hover(
+      function () {
+        if (!themeSong.paused) {
+          themeSong.pause();
+        }
+        catVideo.muted = false;
+        isHovering = true;
+      },
+      function () {
+        if (onPlay) {
+          themeSong.play();
+        }
+        catVideo.muted = true;
+        isHovering = false;
       }
-      catVideo.muted = false;
-      isHovering = true;
-    }, function () {
-      catVideo.muted = true;
-      if (themeSongIsPlaying) {
-        themeSong.play();
-      }
-      isHovering = false;
-    });
+    );
 
     catVideo.controls = false;
 
@@ -676,7 +677,6 @@
     });
 
   </script>
-
 
 
 </body>
