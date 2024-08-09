@@ -625,34 +625,56 @@
   <!-- Sound control -->
   <script>
     var themeSong = document.getElementById("themeSong");
-    var isPlaying;
+    var catVideo = document.getElementById("catVideo");
+    var themeSongIsPlaying = false;
+    var isHovering = false;
 
     function togglePlay() {
-      if (isPlaying) {
-        themeSong.pause();
-        $('#controlButton').removeClass('fa-pause').addClass('fa-play');
-      } else {
+      if (themeSong.paused) {
         themeSong.play();
         $('#controlButton').removeClass('fa-play').addClass('fa-pause');
+      } else {
+        themeSong.pause();
+        $('#controlButton').removeClass('fa-pause').addClass('fa-play');
       }
     }
 
     $('#controlButton').click(togglePlay);
 
     themeSong.onplaying = function () {
-      isPlaying = true;
+      themeSongIsPlaying = true;
+      $('#controlButton').removeClass('fa-play').addClass('fa-pause');
     };
 
     themeSong.onpause = function () {
-      isPlaying = false;
+      $('#controlButton').removeClass('fa-pause').addClass('fa-play');
     };
 
-    $(document).keydown(function(event) {
-      if (event.key === " " || event.keyCode === 32) {
+
+    $('.catVideoContainer').hover(function () {
+      if (!themeSong.paused) {
+        themeSong.pause();
+        themeSongIsPlaying = true;
+      }
+      catVideo.muted = false;
+      isHovering = true;
+    }, function () {
+      catVideo.muted = true;
+      if (themeSongIsPlaying) {
+        themeSong.play();
+      }
+      isHovering = false;
+    });
+
+    catVideo.controls = false;
+
+    $(document).keydown(function (event) {
+      if (!isHovering && (event.key === " " || event.keyCode === 32)) {
         event.preventDefault();
         togglePlay();
       }
     });
+
   </script>
 
 
