@@ -39,15 +39,41 @@ function embedSWF(url, cont, originalWidth, originalHeight) {
 //     player.load({ url: url });
 // }
 
-// Visual Novel
-function how_dark_priestess_uriki_got_her_groove_back_by_purplemantis() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/how-dark-priestess-uriki-got-her-groove-back-by-purplemantis/how-dark-priestess-uriki-got-her-groove-back-by-purplemantis.swf', 'ruffle', 1500, 800);
+// Puzzle
+function weapons_of_maths() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/weapons-of-maths/weapons-of-maths.swf', 'ruffle', 1500, 800);
+}
+
+// Action
+function tactical_assassin_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/tactical-assassin-2/tactical-assassin-2.swf', 'ruffle', 1500, 800);
+}
+
+function picos_school() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 1500, 800);
+}
+
+// Adventure
+function 400_years() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
+}
+
+// Strategy
+function mcdonalds() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 800);
+}
+
+function age_of_war_1() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-1/age-of-war-1.swf', 'ruffle', 1500, 800);
+}
+
+function age_of_war_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-2/age-of-war-2.swf', 'ruffle', 1500, 800);
 }
 
 // Grow games EYEZMAZE
 function grow_cube() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-cube/grow-cube.swf', 'ruffle', 1500, 800);
-    console.log("this is so stupid")
 }
 
 function grow_cannon() {
@@ -91,7 +117,7 @@ function grow_nano_v1() {
 }
 
 function grow_nano_v2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v2/grow-nano-v2.swf', 'ruffle', 800, 1500);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v2/grow-nano-v2.swf', 'ruffle', 1500, 800);
 }
 
 function grow_nano_v3() {
@@ -99,7 +125,7 @@ function grow_nano_v3() {
 }
 
 function grow_nano_v4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v4/grow-nano-v4.swf', 'ruffle', 800, 2000);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-nano-v4/grow-nano-v4.swf', 'ruffle', 1500, 800);
 }
 
 function chronon() {
@@ -109,6 +135,16 @@ function chronon() {
 // Experience
 function fly_guy() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/fly-guy/flyguy.swf', 'ruffle', 1500, 800);
+}
+
+// Simulator
+function businessman_simulato() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/businessman-simulato/businessman-simulato.swf', 'ruffle', 1500, 800);
+}
+
+// Visual Novel
+function how_dark_priestess_uriki_got_her_groove_back_by_purplemantis() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/how-dark-priestess-uriki-got-her-groove-back-by-purplemantis/how-dark-priestess-uriki-got-her-groove-back-by-purplemantis.swf', 'ruffle', 1500, 800);
 }
 
 // Frank's Adventure Series - ID: franks-adventure-1
