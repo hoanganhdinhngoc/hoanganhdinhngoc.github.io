@@ -75,6 +75,11 @@ function chronon() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/chronon/chronon.swf', 'ruffle', 1500, 800);
 }
 
+// Experience
+function fly_guy() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/fly-guy/flyguy.swf', 'ruffle', 1500, 800);
+}
+
 // Frank's Adventure Series - ID: franks-adventure-1
 function franks_adventure_1() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-1/franks-adventure-1.swf', 'ruffle', 1500, 800);
