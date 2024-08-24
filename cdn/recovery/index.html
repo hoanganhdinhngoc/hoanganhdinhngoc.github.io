@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Template prototype & content definition. Type: Nier-list source: hoanganhdinhngoc.github.io/cdn/nier-list-template -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Password protected content" />
+    <meta name="author" content="HoangAnhDinhNgoc" />
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <script src="protectAlg.js"></script>
+
+
+    <!--
+//////////////////////////////////////////////////////
+
+MADE with <3 by Hoang Anh Dinh Ngoc
+
+Website: 		http://hoanganhdinhngoc.github.io
+Email: 			hanh2122011@gmail.com
+Twitter: 		https://twitter.com/Hanh2122011
+Facebook: 	https://www.facebook.com/HoangAnhDinhNgoc
+LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
+
+//////////////////////////////////////////////////////
+ -->
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>CDN || Recovery</title>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+            w[l] = w[l] || []; w[l].push({
+                'gtm.start':
+                    new Date().getTime(), event: 'gtm.js'
+            }); var f = d.getElementsByTagName(s)[0],
+                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+        })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- CSS STYLE SECTION -->
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400');
+
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            /* Prevent scrollbars */
+        }
+
+        body {
+            background-color: #ccc6b0;
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+        }
+
+        .title {
+            padding: 20px;
+            font-family: 'Montserrat', sans-serif;
+            color: #4b4340;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+        }
+
+        .coreSystem {
+            display: inline-block;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            justify-content: center;
+        }
+
+        .section {
+            margin: auto;
+            position: fixed;
+            top: 30%;
+            left: 25%;
+            width: 50%;
+            padding: 0 0 1px 0;
+            background: rgba(216, 210, 186, .5);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 20pt;
+            color: #4b4340;
+            box-shadow: 2px 2px 1px #4f4b42;
+        }
+
+        .sectionTitle {
+            padding: 1% 1%;
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+        }
+
+        ::-moz-selection {
+            /* Code for Firefox */
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+        }
+
+        ::selection {
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+        }
+
+        .toolzone {
+            display: block;
+            margin: 1em;
+            width: 100%;
+            max-width: 90%;
+            outline: none;
+            border: 2px solid rgba(100, 98, 86, 1);
+        }
+
+        #cheatCodeInput {
+            padding: 3px;
+            margin: 0.5em;
+            width: 20em;
+            overflow: hidden;
+            box-sizing: border-box;
+            resize: none;
+            color: #4b4340;
+            background: rgba(216, 210, 186, .5);
+        }
+
+        .themebutton {
+            cursor: pointer;
+            width: 10em;
+            height: 1.5em;
+            font-weight: bold;
+            color: #4b4340;
+            border: none;
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+        }
+
+        .themebutton:hover {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
+
+
+        .boxContent {
+            margin: 1em;
+        }
+
+
+        /* For mobile */
+
+        @media only screen and (max-width: 600px) {
+
+            .sectionTitle,
+            #info {
+                font-size: 15px;
+                padding: 0.5em 0.5em;
+            }
+
+            .content {
+                margin: 0.5em 0em;
+            }
+
+            .coreSystem {
+                min-height: 140vw;
+            }
+
+            #cheatCodeInput {
+                width: 100%;
+            }
+
+            .section {
+                margin: auto;
+                position: fixed;
+                top: 30%;
+                left: 15%;
+                width: 70%;
+            }
+        }
+    </style>
+
+    <script>
+
+        $(document).ready(function () {
+
+            // Sounds
+            var tutorialSound = document.getElementById("tutorial-sound");
+            var hoverSound = document.getElementById("hover-sound");
+            var clickSound = document.getElementById("click-sound");
+            var openlinkSound = document.getElementById("open-link-sound");
+            $(".dropContent,.tutorial").hover(function () {
+                hoverSound.play();
+            }, function () {
+                hoverSound.load();
+            });
+
+            $(".tutorial").click(function () {
+                tutorialSound.play();
+            });
+
+            $("a").click(function () {
+                openlinkSound.play();
+            });
+
+            $(".dropContent,.themebutton").click(function () {
+                clickSound.play();
+            });
+
+            $("a").click(function () {
+                openlinkSound.play();
+            });
+
+        });
+
+
+    </script>
+
+</head>
+
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    <audio id="tutorial-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg" type="audio/ogg">
+    </audio>
+    <audio id="hover-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg">
+    </audio>
+    <audio id="click-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg">
+    </audio>
+    <audio id="open-link-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg" type="audio/ogg">
+    </audio>
+
+    <div class='coreSystem'>
+        <h1 class="title">Password protected content</h1>
+        <div class='section' id='section1'>
+            <h2 class='sectionTitle'>Enter your password</h2>
+            <div class="boxContent">
+                <p>Hint: Your cheatcode for resources</p>
+                <input type="password" id="cheatCodeInput" class="toolzone" placeholder="Enter password"
+                    onkeypress="checkPassword(event)">
+                <div id="error-message" style="display: none; color: rgba(135, 32, 19, 0.9);"></div>
+                <button id="copybutton" class="themebutton toolzone" onclick="checkPassword()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive -->
+    <script type='text/javascript'>
+        $('.section').hide();
+        $('.title').hide();
+        $('.section').fadeIn(500);
+        $('.title').fadeIn(500);
+
+        function showError() {
+            $('#error-message').stop(true, true)
+                .slideDown(300)
+                .delay(5000)
+                .slideUp(300);
+        }
+
+        function fadeOutContent(callback) {
+            $('.section').fadeOut(500);
+            $('.title').fadeOut(500, callback);
+        }
+    </script>
+
+
+</body>
+
+</html>
