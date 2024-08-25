@@ -17,27 +17,27 @@ function embedSWF(url, cont, originalWidth, originalHeight) {
 
 // worked code:
 
-// function embedSWF(url, cont, width, height) {
-//     const ruffle = window.RufflePlayer.newest();
-//     const playerContainer = document.getElementById(cont);
-//     const player = ruffle.createPlayer();
+function embedSWF(url, cont, width, height) {
+    const ruffle = window.RufflePlayer.newest();
+    const playerContainer = document.getElementById(cont);
+    const player = ruffle.createPlayer();
     
-//     playerContainer.appendChild(player);
-//     const aspectRatio = width / height;
+    playerContainer.appendChild(player);
+    const aspectRatio = width / height;
     
-//     if (window.innerWidth <= 600) {
-//         const containerWidth = playerContainer.offsetWidth;
-//         width = containerWidth;
-//         height = containerWidth / aspectRatio;
-//     }
+    if (window.innerWidth <= 600) {
+        const containerWidth = playerContainer.offsetWidth;
+        width = containerWidth;
+        height = containerWidth / aspectRatio;
+    }
     
-//     player.width = width;
-//     player.height = height;
-//     player.style.width = width + 'px';
-//     player.style.height = height + 'px';
+    player.width = width;
+    player.height = height;
+    player.style.width = width + 'px';
+    player.style.height = height + 'px';
 
-//     player.load({ url: url });
-// }
+    player.load({ url: url });
+}
 
 // Puzzle
 function weapons_of_maths() {
@@ -54,9 +54,9 @@ function picos_school() {
 }
 
 // Adventure
-function 400_years() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
-}
+// function 400_years() {
+//     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
+// }
 
 // Strategy
 function mcdonalds() {
