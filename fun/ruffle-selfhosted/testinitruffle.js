@@ -54,9 +54,9 @@ function picos_school() {
 }
 
 // Adventure
-// function 400_years() {
-//     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
-// }
+function four_hundred_years() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
+}
 
 // Strategy
 function mcdonalds() {
