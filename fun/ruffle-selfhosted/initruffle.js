@@ -1,13 +1,58 @@
-function embedSWF(url, cont, width, height) {
-    var ruffle = window.RufflePlayer.newest(),
-        player = Object.assign(document.getElementById(cont).appendChild(ruffle.createPlayer()), {
-            width: width,
-            height: height,
-            style: 'width: ' + width + 'px; height: ' + height + 'px',
-        });
+function embedSWF(url, cont, originalWidth, originalHeight) {
+    var ruffle = window.RufflePlayer.newest();
+    var player = ruffle.createPlayer();
+    document.getElementById(cont).appendChild(player);
 
+    // Apply styles to make the player responsive
+    player.style.width = "100vw";
+    player.style.height = "100vh";
+    player.style.maxWidth = originalWidth + "px";
+    player.style.maxHeight = originalHeight + "px";
+    player.style.padding = "10px";  // Adjust padding as needed
+    
     player.load({ url: url });
 }
+
+// InitRuffle to call the correct function to load the right SWF
+function initRuffle() {
+    var gameElement = document.querySelector('.gamearea');
+    if (gameElement) {
+        var gameId = gameElement.id.replace(/-/g, '_');
+        var initFunction = window[gameId];
+        if (typeof initFunction === 'function') {
+            initFunction();
+        }
+    }
+}
+
+// Function to dynamically adjust the size of the Ruffle player
+function resizeRufflePlayer() {
+    const rufflePlayer = document.querySelector('ruffle-player');
+    if (rufflePlayer) {
+        const containerWidth = rufflePlayer.parentElement.offsetWidth;
+        const aspectRatio = rufflePlayer.width / rufflePlayer.height;
+        
+        if (window.innerWidth <= 600) {
+            rufflePlayer.style.width = containerWidth + 'px';
+            rufflePlayer.style.height = (containerWidth / aspectRatio) + 'px';
+        } else {
+            rufflePlayer.style.width = rufflePlayer.width + 'px';
+            rufflePlayer.style.height = rufflePlayer.height + 'px';
+        }
+    }
+}
+
+// Call initRuffle to initialize Ruffle
+document.addEventListener('DOMContentLoaded', (event) => {
+    initRuffle();
+    resizeRufflePlayer();
+});
+
+// Add event listeners for resize and load
+window.addEventListener('resize', resizeRufflePlayer);
+window.addEventListener('load', resizeRufflePlayer);
+
+
 
 // Puzzle
 function weapons_of_maths() {
@@ -154,38 +199,3 @@ function simgirls_rosebery_teaser() {
 function simgirls_tomokos_story() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-tomokos-story/706364_simgirls-vn.swf', 'ruffle', 1500, 800);
 }
-
-// Combined initRuffle function
-function initRuffle() {
-    var gameElement = document.querySelector('.gamearea');
-    if (gameElement) {
-        var gameId = gameElement.id.replace(/-/g, '_');
-        var initFunction = window[gameId];
-        if (typeof initFunction === 'function') {
-            initFunction();
-        }
-    }
-
-    // Function to dynamically adjust the size of the ruffle player
-    function resizeRufflePlayer() {
-        if (window.innerWidth <= 600) {
-            const rufflePlayer = document.querySelector('ruffle-player');
-            if (rufflePlayer) {
-                const aspectRatio = 1500 / 800;
-                const containerWidth = rufflePlayer.parentElement.offsetWidth;
-                rufflePlayer.style.width = containerWidth + 'px';
-                rufflePlayer.style.height = (containerWidth / aspectRatio) + 'px';
-            }
-        }
-    }
-
-    window.addEventListener('resize', resizeRufflePlayer);
-    window.addEventListener('load', resizeRufflePlayer);
-
-    // Initial call to ensure it runs on page load
-    resizeRufflePlayer();
-}
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    initRuffle();
-});
