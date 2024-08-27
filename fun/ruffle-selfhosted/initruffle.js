@@ -75,7 +75,7 @@ function four_hundred_years() {
 
 // Strategy
 function mcdonalds() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 800);
 }
 
 function age_of_war_1() {
