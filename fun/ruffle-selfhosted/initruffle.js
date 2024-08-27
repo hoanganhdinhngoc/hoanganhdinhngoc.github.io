@@ -65,7 +65,7 @@ function tactical_assassin_2() {
 }
 
 function picos_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 550, 350);
 }
 
 // Adventure
