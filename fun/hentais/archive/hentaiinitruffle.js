@@ -211,7 +211,7 @@ function fuck_for_luck_2() {
 }
 
 function meet_and_fuck_jessica_fuck_machine() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet- and-fuck-jessica-fuck-machine.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-jessica-fuck-machine.swf', 'ruffle', 900, 200);
 }
 
 function meet_and_fuck_dance_school() {
