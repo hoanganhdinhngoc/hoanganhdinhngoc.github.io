@@ -1,8 +1,9 @@
-const trueString = "c07e2b51b65e5a444520208377ff3371ba7";
+const trueString = "a93f04ccdc40a3563fbb37421da2183df4f7a941";
 
 function getPart(index) {
-    const parts = ["687474707", "33A2F2F77", "77772E796", "F75747562", "652E636F6D", "2F7761746", "3683F763D6", "C7867314C7", "5574559744D"];
-    return parts[index];
+    const parts = ["68747470733A2F2F6", "4726976652E676F6F", "676C652E636F6D2F6", "4726976652F752F30", "2F666F6C646572732", "F314D4B676645526C", "71383630392D58477", "A474A4B686D2D6872", "33534C5256504E30"];
+
+return parts[index];
 }
 
 function stringToHex(str) {
