@@ -1,2 +1,18 @@
 Use this chatbox to embed the assistant to another pages:
 
+  <iframe src="https://hoanganhdinhngoc.github.io/cdn/tomoko-assistant" style="position: fixed; bottom: 0px; right: 0px; border: none; overflow: hidden;" width="170" height="70" id="chatIframe"></iframe>
+
+    <script>
+        window.addEventListener("message", (event) => {
+            if (event.data.type === "chatState") {
+                const iframe = document.getElementById("chatIframe");
+                if (event.data.expanded) {
+                    iframe.width = "375";  // Expanded chatbox size
+                    iframe.height = "470";
+                } else {
+                    iframe.width = "170";  // Collapsed rectangle size
+                    iframe.height = "70";
+                }
+            }
+        });
+    </script>

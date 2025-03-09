@@ -49,6 +49,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     * {
       margin: 0px;
       padding: 0px;
+      scrollbar-color: rgba(100,98,86,0.8) rgba(143, 139, 122, 0.7);
+      scrollbar-width: auto;
     }
 
     .title {
@@ -269,6 +271,25 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
+
+  <!-- Add Tomoko AI Assistant -->
+  <iframe src="https://hoanganhdinhngoc.github.io/cdn/tomoko-assistant" style="position: fixed; bottom: 0px; right: 0px; border: none; overflow: hidden;" width="170" height="70" id="chatIframe"></iframe>
+
+  <script>
+      window.addEventListener("message", (event) => {
+          if (event.data.type === "chatState") {
+              const iframe = document.getElementById("chatIframe");
+              if (event.data.expanded) {
+                  iframe.width = "375";  // Expanded chatbox size
+                  iframe.height = "470";
+              } else {
+                  iframe.width = "170";  // Collapsed rectangle size
+                  iframe.height = "70";
+              }
+          }
+      });
+  </script>
+
   <audio id="tutorial-sound">
     <source src="sounds/core_1.ogg" type="audio/ogg">
   </audio>
