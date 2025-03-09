@@ -185,17 +185,15 @@
             const chatbox = document.getElementById("chatbox");
             const chatToggle = document.getElementById("chatToggle");
             
-            // Debugging logs to check if elements are found
-            console.log("Chatbox:", chatbox);
-            console.log("ChatToggle:", chatToggle);
-
-            // Toggle the hidden class
             chatbox.classList.toggle("hidden");
             chatToggle.classList.toggle("hidden");
-            
-            // Verify state after toggle
-            console.log("Chatbox hidden:", chatbox.classList.contains("hidden"));
-            console.log("ChatToggle hidden:", chatToggle.classList.contains("hidden"));
+
+            // Send message to parent page with current state
+            const isExpanded = !chatbox.classList.contains("hidden");
+            window.parent.postMessage({
+                type: "chatState",
+                expanded: isExpanded
+            }, "*"); // "*" allows communication to any parent origin
         }
     </script>
 </body>
