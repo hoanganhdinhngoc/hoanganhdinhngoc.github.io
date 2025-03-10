@@ -162,7 +162,7 @@
             chatBody.scrollTop = chatBody.scrollHeight;
             
             try {
-                const response = await fetch("https://knowing-correct-reptile.ngrok-free.app/webhook/personal-assistant", {
+                const response = await fetch("https://aws.kurotheblackbear.io.vn/webhook/personal-assistant", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ userId, message })
