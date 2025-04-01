@@ -13,8 +13,8 @@
         
         .chatbox-wrapper {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 110px;
+            right: 32px;
             width: 350px;
             height: 450px;
             background: white;
@@ -117,6 +117,9 @@
 <body>
     <div id="chatToggle" class="chat-toggle" onclick="toggleChat()">Your Assistant</div>
     <div id="chatbox" class="chatbox-wrapper hidden"> <!-- Added hidden class initially -->
+        
+        <!-- Add elevenlabs voice widget  -->
+        <elevenlabs-convai agent-id="KGqjsqtvt080Iv4nLHLY"></elevenlabs-convai><script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
         <div class="chat-header">
             Your Assistant
             <button onclick="toggleChat()">✖</button>
