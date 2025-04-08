@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="HoangAnhDinhNgoc" />
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+    <title>CDN || Tally Counter</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ccc6b0;
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #counter {
+            color: rgba(100, 98, 86, 0.7);
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            line-height: 1;
+            max-width: 80vw;
+            text-align: center;
+            font-size: 70vh;
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: colorGlitch 2s infinite;
+        }
+
+        .infoText {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 80vw;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .infoText h4 {
+            color: rgba(100, 98, 86, 0.7);
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            font-size: 32px;
+            margin: 10px 0;
+            text-align: center;
+            animation: colorGlitch 2s infinite;
+        }
+
+        /* Screen Glitch Effect */
+        .glitch-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        .glitch-screen.active {
+            opacity: 1;
+            animation: screenGlitch 0.04s linear;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMCAQ0IBTAG9fgEsQf7SrwAAAABJRU5ErkJggg==') repeat;
+            mix-blend-mode: overlay;
+        }
+
+        @keyframes screenGlitch {
+            0% { transform: skew(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+            25% { transform: skew(5deg); clip-path: polygon(0 20%, 100% 20%, 100% 80%, 0 80%); }
+            50% { transform: skew(-5deg); clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%); }
+            75% { transform: skew(5deg); clip-path: polygon(0 10%, 100% 10%, 100% 90%, 0 90%); }
+            100% { transform: skew(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        }
+
+        /* Text Color Glitch Effect - Adjusted to oscillate around borders */
+        #counter, .infoText h4 {
+            text-shadow: 
+                -2px 0 2px rgba(255, 0, 0, 0.3), /* Red shadow base position */
+                2px 0 2px rgba(0, 255, 255, 0.3); /* Cyan shadow base position */
+        }
+
+        #counter.red-glitch, .infoText h4.red-glitch {
+            animation: glitchRed 0.3s infinite;
+        }
+
+        #counter.cyan-glitch, .infoText h4.cyan-glitch {
+            animation: glitchCyan 0.3s infinite;
+        }
+
+        @keyframes colorGlitch {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(5px, -5px); }
+            60% { transform: translate(-5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes glitchRed {
+            0% { text-shadow: -6px 3 4px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            25% { text-shadow: -7px 3px 4px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            50% { text-shadow: -6px -11px 3px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            75% { text-shadow: -12px -4px 6px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            100% { text-shadow: -9px 2px 13px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+        }
+
+        @keyframes glitchCyan {
+            0% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px 0 5px rgba(0, 255, 255, 0.3); }
+            25% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 2px -1px 4px rgba(0, 255, 255, 0.3); }
+            50% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 4px 2px 3px rgba(0, 255, 255, 0.3); }
+            75% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 3px 4px 5px rgba(0, 255, 255, 0.3); }
+            100% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px -3px 4px rgba(0, 255, 255, 0.3); }
+        }
+
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            #counter {
+                font-size: clamp(1rem, calc(80vw / ${String(count).length}), 70vh);
+            }
+            .infoText h4 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="counter" class="red-glitch cyan-glitch">0</div>
+    <div class="infoText">
+        <h4 class="red-glitch cyan-glitch">Space or click to start counting, hold for 2 seconds to reset counter</h4>
+    </div>
+    <div class="glitch-screen"></div>
+
+    <script>
+        const counterElement = document.getElementById('counter');
+        const glitchScreen = document.querySelector('.glitch-screen');
+        let count = 0;
+        let holdTimer;
+        const HOLD_DURATION = 2000;
+
+        function updateCounter() {
+            counterElement.textContent = count;
+            if (window.innerWidth <= 768) {
+                const digitLength = String(count).length;
+                counterElement.style.fontSize = `clamp(1rem, calc(80vw / ${digitLength}), 70vh)`;
+            }
+        }
+
+        function resetCounter() {
+            count = 0;
+            updateCounter();
+        }
+
+        // Screen Glitch Effect
+        function triggerScreenGlitch() {
+            glitchScreen.classList.add('active');
+            setTimeout(() => {
+                glitchScreen.classList.remove('active');
+            }, 40); // 0.04 seconds
+
+            // Schedule next glitch (1-5 seconds)
+            const nextGlitchDelay = Math.random() * 3000 + 1000; // 1000-5000ms
+            setTimeout(triggerScreenGlitch, nextGlitchDelay);
+        }
+
+        // Start glitch effect
+        triggerScreenGlitch();
+
+        // Desktop - Keyboard events
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (!event.repeat) {
+                    count++;
+                    updateCounter();
+                    holdTimer = setTimeout(() => {
+                        resetCounter();
+                    }, HOLD_DURATION);
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Space') {
+                clearTimeout(holdTimer);
+            }
+        });
+
+        // Desktop - Mouse events
+        let mouseDownTime;
+
+        document.addEventListener('mousedown', (event) => {
+            if (event.button === 0) {
+                event.preventDefault();
+                count++;
+                updateCounter();
+                mouseDownTime = Date.now();
+                holdTimer = setTimeout(() => {
+                    resetCounter();
+                }, HOLD_DURATION);
+            }
+        });
+
+        document.addEventListener('mouseup', (event) => {
+            if (event.button === 0) {
+                const holdDuration = Date.now() - mouseDownTime;
+                if (holdDuration < HOLD_DURATION) {
+                    clearTimeout(holdTimer);
+                }
+            }
+        });
+
+        // Mobile - Touch events
+        let touchStartTime;
+
+        document.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            count++;
+            updateCounter();
+            
+            touchStartTime = Date.now();
+            holdTimer = setTimeout(() => {
+                resetCounter();
+            }, HOLD_DURATION);
+        }, { passive: false });
+
+        document.addEventListener('touchend', (event) => {
+            event.preventDefault();
+            const touchDuration = Date.now() - touchStartTime;
+            if (touchDuration < HOLD_DURATION) {
+                clearTimeout(holdTimer);
+            }
+        }, { passive: false });
+
+        document.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+
+        window.addEventListener('resize', updateCounter);
+
+        updateCounter();
+    </script>
+</body>
+</html>
