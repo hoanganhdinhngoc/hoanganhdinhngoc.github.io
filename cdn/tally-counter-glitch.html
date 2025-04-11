@@ -82,7 +82,7 @@
 
         .glitch-screen.active {
             opacity: 1;
-            animation: screenGlitch 0.04s linear;
+            animation: screenGlitch 0.02s linear;
             background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMCAQ0IBTAG9fgEsQf7SrwAAAABJRU5ErkJggg==') repeat;
             mix-blend-mode: overlay;
         }
@@ -98,16 +98,16 @@
         /* Text Color Glitch Effect - Adjusted to oscillate around borders */
         #counter, .infoText h4 {
             text-shadow: 
-                -2px 0 2px rgba(255, 0, 0, 0.3), /* Red shadow base position */
-                2px 0 2px rgba(0, 255, 255, 0.3); /* Cyan shadow base position */
+                -5px 0 5px rgba(255, 0, 0, 0.8), /* Red shadow base position */
+                5px 0 5px rgba(0, 255, 255, 0.8); /* Cyan shadow base position */
         }
 
         #counter.red-glitch, .infoText h4.red-glitch {
-            animation: glitchRed 0.3s infinite;
+            animation: glitchRed 0.1s infinite;
         }
 
         #counter.cyan-glitch, .infoText h4.cyan-glitch {
-            animation: glitchCyan 0.3s infinite;
+            animation: glitchCyan 0.1s infinite;
         }
 
         @keyframes colorGlitch {
@@ -120,19 +120,19 @@
         }
 
         @keyframes glitchRed {
-            0% { text-shadow: -6px 3 4px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
-            25% { text-shadow: -7px 3px 4px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
-            50% { text-shadow: -6px -11px 3px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
-            75% { text-shadow: -12px -4px 6px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
-            100% { text-shadow: -9px 2px 13px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            0% { text-shadow: -6px 3 4px rgba(255, 0, 0, 0.5), 2px 0 2px rgba(0, 255, 255, 0.5); }
+            25% { text-shadow: -7px 3px 4px rgba(255, 0, 0, 0.5), 2px 0 2px rgba(0, 255, 255, 0.5); }
+            50% { text-shadow: -6px -11px 3px rgba(255, 0, 0, 0.5), 2px 0 2px rgba(0, 255, 255, 0.5); }
+            75% { text-shadow: -12px -4px 6px rgba(255, 0, 0, 0.5), 2px 0 2px rgba(0, 255, 255, 0.5); }
+            100% { text-shadow: -9px 2px 13px rgba(255, 0, 0, 0.5), 2px 0 2px rgba(0, 255, 255, 0.5); }
         }
 
         @keyframes glitchCyan {
-            0% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px 0 5px rgba(0, 255, 255, 0.3); }
-            25% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 2px -1px 4px rgba(0, 255, 255, 0.3); }
-            50% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 4px 2px 3px rgba(0, 255, 255, 0.3); }
-            75% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 3px 4px 5px rgba(0, 255, 255, 0.3); }
-            100% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px -3px 4px rgba(0, 255, 255, 0.3); }
+            0% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.5), 5px 0 5px rgba(0, 255, 255, 0.5); }
+            25% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.5), 2px -1px 4px rgba(0, 255, 255, 0.5); }
+            50% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.5), 4px 2px 3px rgba(0, 255, 255, 0.5); }
+            75% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.5), 3px 4px 5px rgba(0, 255, 255, 0.5); }
+            100% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.5), 5px -3px 4px rgba(0, 255, 255, 0.5); }
         }
 
         /* Media query for mobile devices */
@@ -144,6 +144,40 @@
                 font-size: 24px;
             }
         }
+
+        /* Add text distort glitches */
+
+        .scanlines {
+        overflow: hidden;
+        mix-blend-mode: difference;
+        }
+
+        .scanlines::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+
+        background: repeating-linear-gradient(
+            to bottom,
+            transparent 0%,
+            rgba(255, 255, 255, 0.05) .5%,
+            transparent 1%
+        );
+
+        animation: fudge 7s ease-in-out alternate infinite;
+        }
+
+        @keyframes fudge {
+        from {
+            transform: translate(0px, 0px);
+        }
+        to {
+            transform: translate(0px, 2%);
+        }
+        }
     </style>
 </head>
 <body>
@@ -152,6 +186,7 @@
         <h4 class="red-glitch cyan-glitch">Space or click to start counting, hold for 2 seconds to reset counter</h4>
     </div>
     <div class="glitch-screen"></div>
+    <!-- <div class="scanlines"></div> -->
 
     <script>
         const counterElement = document.getElementById('counter');
