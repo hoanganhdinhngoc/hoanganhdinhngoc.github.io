@@ -588,7 +588,7 @@ a.arrow-link:hover {
 	box-shadow: 1px 1px 1px rgba(0,0,0,0.1) inset, 1px 1px 1px rgba(255,255,255,0.1);
 	border: 2px solid #FFDF00;
 }
-img, video, iframe, embed, object {
+img, video, embed, object {
 	max-width: 100%;
 	height: auto;
 }
