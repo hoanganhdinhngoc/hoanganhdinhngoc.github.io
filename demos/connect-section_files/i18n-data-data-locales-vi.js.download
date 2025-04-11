@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([["i18n-data-data-locales-vi"],{"tOe/":function(i,n){hns("I18n.translations.vi",{number:{currency:{format:{delimiter:".",format:"%n %u",precision:0,separator:",",significant:!1,strip_insignificant_zeros:!1}},format:{delimiter:".",precision:3,separator:",",significant:!1,strip_insignificant_zeros:!0},percentage:{format:{delimiter:"",format:"%n%",precision:0}},human:{storage_units:{format:"%n%u",units:{byte:"Byte",gb:"GB",kb:"KB",mb:"MB",tb:"TB"}}}}})}}]);
-//# sourceMappingURL=i18n-data-data-locales-vi.js.map
