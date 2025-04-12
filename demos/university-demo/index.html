@@ -59,23 +59,37 @@
 </header>
 <!--/.header-->
 
+<!-- Embed the ai chatbox -->
 <iframe src="../chatbox.html" style="position: fixed; z-index: 9999; bottom: 50px; right: 0px; border: none; overflow: hidden;" width="250" height="70" id="chatIframe"></iframe>
 
 <script>
   window.addEventListener("message", (event) => {
-      if (event.data.type === "chatState") {
-          const iframe = document.getElementById("chatIframe");
-          if (event.data.expanded) {
-              iframe.width = "375";  // Expanded chatbox size
-              iframe.height = "650";
-          } else {
-              iframe.width = "250";  // Collapsed rectangle size
-              iframe.height = "70";
-          }
+    if (event.data.type === "chatState") {
+      const iframe = document.getElementById("chatIframe");
+      if (event.data.expanded) {
+        iframe.width = "375";  // Expanded chatbox size
+        iframe.height = "650";
+      } else {
+        iframe.width = "250";  // Collapsed rectangle size
+        iframe.height = "70";
       }
+    }
   });
-
+  
 </script>
+
+<!-- Embbed messenger chatbox -->
+
+<!-- Messenger Chat Button -->
+<!-- Messenger Chat Button -->
+<!-- Messenger Chat Button -->
+<!-- Messenger Chat Button -->
+<div class="messenger-chat-button" style="position: fixed; bottom: 150px; right: 20px; z-index: 1000;">
+  <a href="https://www.messenger.com/t/689637057556206" target="_blank" rel="noopener noreferrer" style="display: block; width: 60px; height: 60px; text-decoration: none;">
+      <img src="images/messicon.png" alt="Messenger Chat" width="60" height="60" style="width: 100%; height: 100%; object-fit: contain;">
+  </a>
+</div>
+
 
 <div id="#top"></div>
 <section id="home">
