@@ -1,0 +1,1 @@
+get everything between the 2 marker: "cOdE" and "CoDe"
