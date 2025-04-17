@@ -80,18 +80,62 @@
             padding: 8px;
             border-radius: 5px;
             margin-bottom: 5px;
-            max-width: 100%;
+            max-width: 80%;
+            word-break: normal;
+            overflow-wrap: break-word;
+            white-space: normal;
+            margin-right: auto;
+            text-align: left;
         }
         .user-message { 
-            text-align: right; 
             background: rgba(100,98,86,0.8); 
             color: white; 
+            max-width: 80%;
+            word-break: normal;
+            overflow-wrap: break-word;
+            white-space: normal;
+            margin-left: auto;
+            margin-right: 0;
+            text-align: left;
         }
-        .message img {
-            max-width: 100%;
-            border-radius: 5px;
-            display: block;
+        /* Container for images */
+        .message .image-container {
             margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        /* For a single image, full width */
+        .message .image-container.single img {
+            max-width: 100%;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 0;
+        }
+        /* For exactly 2 images, side by side */
+        .message .image-container.pair {
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        .message .image-container.pair img {
+            width: calc(50% - 2.5px); /* Total width including 5px gap equals full width */
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        /* For 3 or more images, small squares in rows of 3 */
+        .message .image-container.multiple {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: flex-end;
+        }
+        .message .image-container.multiple img {
+            width: 75px;
+            height: 75px;
+            object-fit: cover; /* Crop image to fit square */
+            border-radius: 5px;
+            cursor: pointer;
         }
         ::placeholder {
             color: #5e5350;
@@ -116,12 +160,48 @@
         .hidden {
             display: none !important;
         }
+
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #2b2b2bde;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .image-modal img {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        .image-modal .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .message a, .user-message a {
+            color: inherit;
+            text-decoration: underline;
+            transition: font-weight 0.7s ease;
+        }
+        .message a:hover, .user-message a:hover {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
     <div id="chatToggle" class="chat-toggle" onclick="toggleChat()">Trợ lý ảo</div>
     <div id="chatbox" class="chatbox-wrapper hidden">
-
         <div class="chat-header">
             Trợ lý ảo An Gia Phú
             <button onclick="toggleChat()">✖</button>
@@ -142,15 +222,91 @@
         }
         getUserId();
 
-        // Initialize chat body with welcome message
         const chatBody = document.getElementById("chatBody");
-        const systemMessageDiv = document.createElement("div");
-        systemMessageDiv.className = "message";
-        systemMessageDiv.innerText = "Xin chào, tôi là trợ lý ảo của công ty An Gia Phú, hãy hỏi tôi bất cứ điều gì!";
-        chatBody.appendChild(systemMessageDiv);
+
+        function loadChatHistory() {
+            const savedChat = localStorage.getItem("chatHistory");
+            if (savedChat) {
+                const messages = JSON.parse(savedChat);
+                messages.forEach(message => {
+                    const messageDiv = document.createElement("div");
+                    messageDiv.className = message.type === "user" ? "message user-message" : "message";
+                    messageDiv.innerHTML = linkifyText(message.text);
+                    
+                    if (message.images && message.images.length > 0) {
+                        const imageContainer = document.createElement("div");
+                        imageContainer.className = "image-container";
+                        if (message.images.length === 1) {
+                            imageContainer.classList.add("single");
+                        } else if (message.images.length === 2) {
+                            imageContainer.classList.add("pair");
+                        } else {
+                            imageContainer.classList.add("multiple");
+                        }
+                        message.images.forEach(url => {
+                            const img = document.createElement("img");
+                            img.src = url;
+                            img.alt = "Assistant image";
+                            imageContainer.appendChild(img);
+                        });
+                        messageDiv.appendChild(imageContainer);
+                    }
+                    
+                    chatBody.appendChild(messageDiv);
+                });
+                chatBody.scrollTop = chatBody.scrollHeight;
+                addImageClickListeners();
+            } else {
+                const systemMessageDiv = document.createElement("div");
+                systemMessageDiv.className = "message";
+                systemMessageDiv.innerHTML = linkifyText("Xin chào, tôi là trợ lý ảo của công ty An Gia Phú, hãy hỏi tôi bất cứ điều gì!");
+                chatBody.appendChild(systemMessageDiv);
+            }
+        }
+
+        function saveChatHistory() {
+            const messages = [];
+            const messageElements = chatBody.querySelectorAll(".message, .user-message");
+            messageElements.forEach(element => {
+                const text = element.innerText;
+                const images = Array.from(element.querySelectorAll(".image-container img")).map(img => img.src);
+                messages.push({
+                    type: element.classList.contains("user-message") ? "user" : "bot",
+                    text: text,
+                    images: images
+                });
+            });
+
+            const maxMessages = 100;
+            if (messages.length > maxMessages) {
+                messages.splice(0, messages.length - maxMessages);
+            }
+
+            localStorage.setItem("chatHistory", JSON.stringify(messages));
+        }
+
+        loadChatHistory();
         
         function handleKey(event) {
             if (event.key === "Enter") sendMessage();
+        }
+
+        function linkifyText(text) {
+            let result = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, displayText, url) => {
+                return `<a href="${url}" target="_blank">${displayText}</a>`;
+            });
+
+            const urlRegex = /(https?:\/\/[^\s<]+)(?=[.,!?]?(\s|$))/g;
+            result = result.replace(urlRegex, (match, url) => {
+                const cleanUrl = url.replace(/[.,!?]$/, '');
+                const isAlreadyLinked = result.includes(`<a href="${cleanUrl}"`) || result.includes(`<a href="${cleanUrl.slice(0, -1)}"`);
+                if (!isAlreadyLinked) {
+                    return `<a href="${cleanUrl}" target="_blank">${cleanUrl}</a>`;
+                }
+                return match;
+            });
+
+            return result;
         }
         
         async function sendMessage() {
@@ -158,13 +314,14 @@
             const message = messageInput.value.trim();
             if (!message) return;
             
-            const chatBody = document.getElementById("chatBody");
             const userMessageDiv = document.createElement("div");
             userMessageDiv.className = "message user-message";
-            userMessageDiv.innerText = message;
+            userMessageDiv.innerHTML = linkifyText(message);
             chatBody.appendChild(userMessageDiv);
             messageInput.value = "";
             chatBody.scrollTop = chatBody.scrollHeight;
+            
+            saveChatHistory();
             
             try {
                 const response = await fetch("https://agent.aah.id.vn/webhook/test-image-send", {
@@ -175,28 +332,14 @@
                 
                 if (!response.ok) throw new Error(`Server error: ${response.status}`);
 
-                // Log raw response text before parsing
-                const rawText = await response.text();
-                console.log("Raw response text:", rawText);
-                
-                // Parse JSON
-                let result;
-                try {
-                    result = JSON.parse(rawText);
-                } catch (parseError) {
-                    console.error("JSON parse error:", parseError);
-                    throw new Error("Invalid JSON response");
-                }
-                
+                const result = await response.json();
                 console.log("Parsed response:", result);
                 
                 const botMessageDiv = document.createElement("div");
                 botMessageDiv.className = "message";
                 
-                // Normalize response: if it's not an array, wrap it in one
                 const normalizedResult = Array.isArray(result) ? result : [result];
                 
-                // Validate response structure
                 if (normalizedResult.length === 0) {
                     console.warn("Response array is empty");
                     botMessageDiv.innerText = "Error: Empty response";
@@ -205,25 +348,41 @@
                     botMessageDiv.innerText = "Error: Missing output data";
                 } else {
                     const output = normalizedResult[0].output;
-                    // Display outputMessage if it exists and is a string
                     if (typeof output.outputMessage === "string" && output.outputMessage.trim()) {
-                        botMessageDiv.innerText = output.outputMessage;
+                        botMessageDiv.innerHTML = linkifyText(output.outputMessage);
                     } else {
                         console.warn("outputMessage is missing or invalid:", output.outputMessage);
                         botMessageDiv.innerText = "Error: No valid message received";
                     }
                     
-                    // Display photoUrl if it exists and is not empty
-                    if (typeof output.photoUrl === "string" && output.photoUrl.trim() !== "") {
-                        const img = document.createElement("img");
-                        img.src = output.photoUrl;
-                        img.alt = "Assistant image";
-                        botMessageDiv.appendChild(img);
+                    if (Array.isArray(output.photoUrl) && output.photoUrl.length > 0) {
+                        const imageContainer = document.createElement("div");
+                        imageContainer.className = "image-container";
+                        if (output.photoUrl.length === 1) {
+                            imageContainer.classList.add("single");
+                        } else if (output.photoUrl.length === 2) {
+                            imageContainer.classList.add("pair");
+                        } else {
+                            imageContainer.classList.add("multiple");
+                        }
+                        output.photoUrl.forEach(url => {
+                            if (typeof url === "string" && url.trim() !== "") {
+                                const img = document.createElement("img");
+                                img.src = url;
+                                img.alt = "Assistant image";
+                                imageContainer.appendChild(img);
+                            }
+                        });
+                        botMessageDiv.appendChild(imageContainer);
                     }
                 }
                 
                 chatBody.appendChild(botMessageDiv);
                 chatBody.scrollTop = chatBody.scrollHeight;
+
+                saveChatHistory();
+
+                addImageClickListeners();
             } catch (error) {
                 console.error("Error:", error);
                 const errorMessageDiv = document.createElement("div");
@@ -231,6 +390,8 @@
                 errorMessageDiv.innerText = `Error: ${error.message}`;
                 chatBody.appendChild(errorMessageDiv);
                 chatBody.scrollTop = chatBody.scrollHeight;
+
+                saveChatHistory();
             }
         }
         
@@ -242,10 +403,56 @@
             chatToggle.classList.toggle("hidden");
 
             const isExpanded = !chatbox.classList.contains("hidden");
+            if (isExpanded) {
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+
             window.parent.postMessage({
                 type: "chatState",
                 expanded: isExpanded
             }, "*");
+        }
+
+        function addImageClickListeners() {
+            const images = document.querySelectorAll(".message img");
+            images.forEach(img => {
+                img.removeEventListener("click", openImageModal);
+                img.addEventListener("click", openImageModal);
+            });
+        }
+
+        function openImageModal(event) {
+            const src = event.target.src;
+
+            const modal = document.createElement("div");
+            modal.className = "image-modal";
+
+            const img = document.createElement("img");
+            img.src = src;
+            img.alt = "Enlarged image";
+
+            const closeBtn = document.createElement("button");
+            closeBtn.className = "close-btn";
+            closeBtn.innerText = "✖";
+            closeBtn.addEventListener("click", closeImageModal);
+
+            modal.appendChild(img);
+            modal.appendChild(closeBtn);
+
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) {
+                    closeImageModal();
+                }
+            });
+
+            document.body.appendChild(modal);
+        }
+
+        function closeImageModal() {
+            const modal = document.querySelector(".image-modal");
+            if (modal) {
+                modal.remove();
+            }
         }
     </script>
 </body>
