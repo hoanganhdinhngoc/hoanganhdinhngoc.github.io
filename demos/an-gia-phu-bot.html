@@ -192,7 +192,7 @@
         .message a, .user-message a {
             color: inherit;
             text-decoration: underline;
-            transition: font-weight 0.7s ease;
+            transition: font-weight 0.2s ease;
         }
         .message a:hover, .user-message a:hover {
             font-weight: bold;
@@ -292,7 +292,9 @@
         }
 
         function linkifyText(text) {
-            let result = text.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, displayText, url) => {
+            let result = text.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br>');
+
+            result = result.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, (match, displayText, url) => {
                 return `<a href="${url}" target="_blank">${displayText}</a>`;
             });
 
