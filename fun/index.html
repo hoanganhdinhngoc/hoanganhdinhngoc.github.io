@@ -353,24 +353,6 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <!-- Add Tomoko AI Assistant -->
-  <iframe src="https://hoanganhdinhngoc.github.io/cdn/tomoko-assistant/" style="position: fixed; z-index: 9999; bottom: 0px; right: 0px; border: none; overflow: hidden;" width="170" height="70" id="chatIframe"></iframe>
-
-  <script>
-      window.addEventListener("message", (event) => {
-          if (event.data.type === "chatState") {
-              const iframe = document.getElementById("chatIframe");
-              if (event.data.expanded) {
-                  iframe.width = "375";  // Expanded chatbox size
-                  iframe.height = "650";
-              } else {
-                  iframe.width = "170";  // Collapsed rectangle size
-                  iframe.height = "70";
-              }
-          }
-      });
-  </script>
-
   <audio id="tutorial-sound">
     <source src="sounds/core_1.ogg" type="audio/ogg">
   </audio>
