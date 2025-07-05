@@ -86,6 +86,10 @@ function age_of_war_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-2/age-of-war-2.swf', 'ruffle', 1500, 800);
 }
 
+function samurai_rebellion() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 800);
+}
+
 // Grow games EYEZMAZE
 function grow_cube() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/grow/grow-cube/grow-cube.swf', 'ruffle', 1500, 800);
