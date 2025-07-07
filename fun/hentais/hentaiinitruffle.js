@@ -111,75 +111,75 @@ function meet_and_fuck_jessica_fuck_machine() {
 }
 
 function meet_and_fuck_dance_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1000, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_denise_milani() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-denise-milani.swf', 'ruffle', 1000, 820);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-denise-milani.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_detective_rpg() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-detective-rpg.swf', 'ruffle', 1000, 820);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-detective-rpg.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_first_date_sex() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-first-date-sex.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-first-date-sex.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_hawaiian_vacation() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-hawaiian-vacation.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-hawaiian-vacation.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_intensive_therapy() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-intensive-therapy.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-intensive-therapy.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_jessica_vs_holli() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-jessica-vs-holli.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-jessica-vs-holli.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_lavindor_kingdom() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-lavindor-kingdom.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-lavindor-kingdom.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_leila() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-leila.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-leila.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_my_favourite_teacher() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-my-favourite-teacher.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-my-favourite-teacher.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_ocean_cruise() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-ocean-cruise.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-ocean-cruise.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_office_romance() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-office-romance.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-office-romance.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_road_trip() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-road-trip.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-road-trip.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_secret_agent() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-secret-agent.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-secret-agent.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_street_racing() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-street-racing.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-street-racing.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_subway_story() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-subway-story.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-subway-story.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_the_plumber() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-the-plumber.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-the-plumber.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_threesome_fun() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-threesome-fun.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-threesome-fun.swf', 'ruffle', 1000, 750);
 }
 
 function meet_and_fuck_who_framed_jessica_rub_em() {
