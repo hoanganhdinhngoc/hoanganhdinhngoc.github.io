@@ -191,7 +191,7 @@ function private_prescription() {
 }
 
 function seductive_rpg_swim_team() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/seductive-rpg-swim-team.swf', 'ruffle', 1067, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/seductive-rpg-swim-team.swf', 'ruffle', 1500, 1125);
 }
 
 function sex_kitten_maids() {
