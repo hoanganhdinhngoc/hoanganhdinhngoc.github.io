@@ -64,10 +64,6 @@ function tactical_assassin_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/tactical-assassin-2/tactical-assassin-2.swf', 'ruffle', 1500, 800);
 }
 
-function picos_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 550, 350);
-}
-
 function gold_miner() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 550, 350);
 }
@@ -75,6 +71,10 @@ function gold_miner() {
 // Adventure
 function four_hundred_years() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
+}
+
+function picos_school() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 550, 350);
 }
 
 // Strategy
@@ -194,44 +194,3 @@ function businessman_simulato() {
 }
 
 // Visual Novel
-function how_dark_priestess_uriki_got_her_groove_back_by_purplemantis() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/how-dark-priestess-uriki-got-her-groove-back-by-purplemantis/how-dark-priestess-uriki-got-her-groove-back-by-purplemantis.swf', 'ruffle', 1500, 800);
-}
-
-// Frank's Adventure Series - ID: franks-adventure-1
-function franks_adventure_1() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-1/franks-adventure-1.swf', 'ruffle', 1500, 800);
-}
-
-function franks_adventure_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-2/franks-adventure-2.swf', 'ruffle', 1500, 800);
-}
-
-function franks_adventure_3() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-3/franks-adventure-3.swf', 'ruffle', 1500, 800);
-}
-
-function franks_adventure_4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/franks-adventure-4/franks-adventure-4.swf', 'ruffle', 1500, 800);
-}
-
-// Simgirls Series
-function simgirls_5_5() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-5.5/simgirls-5.5.swf', 'ruffle', 1500, 800);
-}
-
-function simgirls_6_6() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-6.6/simgirls-6.6.swf', 'ruffle', 1500, 800);
-}
-
-function simgirls_7_7() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-7.7/simgirls-7.7.swf', 'ruffle', 1500, 800);
-}
-
-function simgirls_rosebery_teaser() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser/simgirls-rosebery-teaser.swf', 'ruffle', 1500, 800);
-}
-
-function simgirls_tomokos_story() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-tomokos-story/706364_simgirls-vn.swf', 'ruffle', 1500, 800);
-}

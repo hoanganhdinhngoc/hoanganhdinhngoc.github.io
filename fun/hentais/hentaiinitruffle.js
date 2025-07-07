@@ -182,8 +182,8 @@ function meet_and_fuck_threesome_fun() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-threesome-fun.swf', 'ruffle', 1500, 800);
 }
 
-function meet_and_fuck_who_framed_jessica_rub_em_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-who-framed-jessica-rub-em-2.swf', 'ruffle', 1500, 800);
+function meet_and_fuck_who_framed_jessica_rub_em() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-who-framed-jessica-rub-em.swf', 'ruffle', 765, 560);
 }
 
 function private_prescription() {
