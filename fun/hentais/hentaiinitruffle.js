@@ -111,7 +111,7 @@ function meet_and_fuck_jessica_fuck_machine() {
 }
 
 function meet_and_fuck_dance_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1000, 820);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1000, 800);
 }
 
 function meet_and_fuck_denise_milani() {
