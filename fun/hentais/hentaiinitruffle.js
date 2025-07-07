@@ -107,11 +107,11 @@ function fuck_for_luck_2() {
 }
 
 function meet_and_fuck_jessica_fuck_machine() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-jessica-fuck-machine.swf', 'ruffle', 900, 200);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-jessica-fuck-machine.swf', 'ruffle', 900, 1500);
 }
 
 function meet_and_fuck_dance_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1500, 1100);
 }
 
 function meet_and_fuck_denise_milani() {
@@ -183,7 +183,7 @@ function meet_and_fuck_threesome_fun() {
 }
 
 function meet_and_fuck_who_framed_jessica_rub_em() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-who-framed-jessica-rub-em.swf', 'ruffle', 765, 560);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-who-framed-jessica-rub-em.swf', 'ruffle', 1500, 1098);
 }
 
 function private_prescription() {
