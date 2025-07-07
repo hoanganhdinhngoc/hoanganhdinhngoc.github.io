@@ -89,7 +89,7 @@ function simgirls_7_7() {
 }
 
 function simgirls_rosebery_teaser() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser/simgirls-rosebery-teaser.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser/simgirls-rosebery-teaser.swf', 'ruffle', 1000, 820);
 }
 
 function simgirls_tomokos_story() {
@@ -111,15 +111,15 @@ function meet_and_fuck_jessica_fuck_machine() {
 }
 
 function meet_and_fuck_dance_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1200, 1000);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-dance-school.swf', 'ruffle', 1000, 820);
 }
 
 function meet_and_fuck_denise_milani() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-denise-milani.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-denise-milani.swf', 'ruffle', 1000, 820);
 }
 
 function meet_and_fuck_detective_rpg() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-detective-rpg.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/archive/meet-and-fuck-detective-rpg.swf', 'ruffle', 1000, 820);
 }
 
 function meet_and_fuck_first_date_sex() {

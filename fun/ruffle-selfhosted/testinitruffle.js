@@ -193,7 +193,7 @@ function simgirls_7_7() {
 }
 
 function simgirls_rosebery_teaser() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser/simgirls-rosebery-teaser.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hentais/simgirls-rosebery-teaser/simgirls-rosebery-teaser.swf', 'ruffle', 1200, 1000);
 }
 
 function simgirls_tomokos_story() {
