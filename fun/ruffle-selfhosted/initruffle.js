@@ -68,6 +68,10 @@ function picos_school() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 550, 350);
 }
 
+function gold_miner() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 550, 350);
+}
+
 // Adventure
 function four_hundred_years() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
@@ -76,6 +80,10 @@ function four_hundred_years() {
 // Strategy
 function mcdonalds() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 800);
+}
+
+function mcdonalds_money_hack() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds-money-hack/mcdonalds-money-hack.swf', 'ruffle', 1500, 800);
 }
 
 function age_of_war_1() {
@@ -88,6 +96,30 @@ function age_of_war_2() {
 
 function samurai_rebellion() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 800);
+}
+
+function battleships() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/battleships/battleships.swf', 'ruffle', 1500, 800);
+}
+
+function starcraft_fa5() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/starcraft-fa-5/starcraft-fa-5.swf', 'ruffle', 1500, 800);
+}
+
+function incursion() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/incursion/incursion.swf', 'ruffle', 1500, 800);
+}
+
+function phage_wars_1() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-1/phage-wars-1.swf', 'ruffle', 1500, 800);
+}
+
+function phage_wars_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-2/phage-wars-2.swf', 'ruffle', 1500, 800);
+}
+
+function i_am_an_insane_rogue_ai() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/i-am-an-insane-rogue-ai/i-am-an-insane-rogue-ai.swf', 'ruffle', 1500, 800);
 }
 
 // Grow games EYEZMAZE
