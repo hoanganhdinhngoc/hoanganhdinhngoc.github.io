@@ -60,7 +60,7 @@ function weapons_of_maths() {
 }
 
 function black_knight() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1067, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1500, 1000);
 }
 
 // Action
