@@ -524,6 +524,7 @@
     function togglePlay() {
       if (themeSong.paused) {
         themeSong.play();
+        themeSong.volume = 0.5;
         onPlay = true;
       } else {
         themeSong.pause();
