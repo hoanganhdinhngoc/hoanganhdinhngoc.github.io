@@ -59,18 +59,30 @@ function weapons_of_maths() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/weapons-of-maths/weapons-of-maths.swf', 'ruffle', 1500, 800);
 }
 
+function black_knight() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1500, 800);
+}
+
 // Action
+function thirteen_days_after() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/13-days-after/13-days-after.swf', 'ruffle', 1500, 800);
+}
+
 function tactical_assassin_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/tactical-assassin-2/tactical-assassin-2.swf', 'ruffle', 1500, 800);
 }
 
 function gold_miner() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 550, 350);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 800);
 }
 
 // Adventure
 function four_hundred_years() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
+}
+
+function seven_days_without_rain() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1500, 800);
 }
 
 function picos_school() {
@@ -120,6 +132,10 @@ function phage_wars_2() {
 
 function i_am_an_insane_rogue_ai() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/i-am-an-insane-rogue-ai/i-am-an-insane-rogue-ai.swf', 'ruffle', 1500, 800);
+}
+
+function castlewars() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/castlewars/castlewars.swf', 'ruffle', 1500, 800);
 }
 
 // Grow games EYEZMAZE
