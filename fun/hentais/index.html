@@ -523,8 +523,8 @@
 
     function togglePlay() {
       if (themeSong.paused) {
+        themeSong.volume = 0.2;
         themeSong.play();
-        themeSong.volume = 0.5;
         onPlay = true;
       } else {
         themeSong.pause();

@@ -60,7 +60,7 @@ function weapons_of_maths() {
 }
 
 function black_knight() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1067, 800);
 }
 
 // Action
@@ -82,7 +82,7 @@ function four_hundred_years() {
 }
 
 function seven_days_without_rain() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1067, 800);
 }
 
 function picos_school() {
