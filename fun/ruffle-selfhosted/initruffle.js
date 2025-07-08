@@ -201,7 +201,7 @@ function chronon() {
 
 // Experience
 function fly_guy() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/fly-guy/flyguy.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/fly-guy/flyguy.swf', 'ruffle', 1500, 900);
 }
 
 // Simulator
