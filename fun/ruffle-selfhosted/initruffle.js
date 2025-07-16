@@ -55,6 +55,10 @@ window.addEventListener('load', resizeRufflePlayer);
 
 
 // Puzzle
+function fire_boy_and_water_girl() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/fire-boy-and-water-girl/fire-boy-and-water-girl.swf', 'ruffle', 1500, 800);
+}
+
 function weapons_of_maths() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/weapons-of-maths/weapons-of-maths.swf', 'ruffle', 1500, 800);
 }
