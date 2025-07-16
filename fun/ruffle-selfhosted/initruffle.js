@@ -76,6 +76,30 @@ function gold_miner() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 800);
 }
 
+function thing_thing() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing.swf', 'ruffle', 1500, 800);
+}
+
+function thing_thing_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-2.swf', 'ruffle', 1500, 800);
+}
+
+function thing_thing_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-3.swf', 'ruffle', 1500, 800);
+}
+
+function thing_thing_4() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-4.swf', 'ruffle', 1500, 800);
+}
+
+function thing_thing_arena() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena.swf', 'ruffle', 1500, 800);
+}
+
+function thing_thing_arena_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena-2.swf', 'ruffle', 1500, 800);
+}
+
 // Adventure
 function four_hundred_years() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
