@@ -252,6 +252,42 @@ function fly_guy() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/fly-guy/flyguy.swf', 'ruffle', 1500, 900);
 }
 
+function xiao_xiao_1() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-1.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-2.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-3.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_4() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-4.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_5() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-5.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_6() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-6.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_7() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-7.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_8() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-8.swf', 'ruffle', 1500, 900);
+}
+
+function xiao_xiao_9() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/xiao-xiao/xiao-xiao-9.swf', 'ruffle', 1500, 900);
+}
+
 // Simulator
 function businessman_simulato() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/businessman-simulato/businessman-simulato.swf', 'ruffle', 1500, 800);
