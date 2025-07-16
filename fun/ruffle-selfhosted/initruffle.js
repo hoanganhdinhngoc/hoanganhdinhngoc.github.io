@@ -134,7 +134,7 @@ function seven_days_without_rain() {
 }
 
 function picos_school() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 550, 350);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 1500, 1000);
 }
 
 // Strategy
