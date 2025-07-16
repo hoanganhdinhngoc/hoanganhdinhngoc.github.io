@@ -67,7 +67,7 @@ function black_knight() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1500, 1000);
 }
 
-// Action
+// Shooter
 function thirteen_days_after() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/13-days-after/13-days-after.swf', 'ruffle', 1500, 800);
 }
@@ -102,6 +102,26 @@ function thing_thing_arena() {
 
 function thing_thing_arena_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena-2.swf', 'ruffle', 1500, 800);
+}
+
+function clear_vision() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision.swf', 'ruffle', 1500, 800);
+}
+
+function clear_vision_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-2.swf', 'ruffle', 1500, 800);
+}
+
+function clear_vision_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-3.swf', 'ruffle', 1500, 800);
+}
+
+function clear_vision_4() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-4.swf', 'ruffle', 1500, 800);
+}
+
+function clear_vision_5() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-5.swf', 'ruffle', 1500, 800);
 }
 
 // Adventure
