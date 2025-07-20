@@ -129,6 +129,26 @@ function four_hundred_years() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/400-years/400-years.swf', 'ruffle', 1500, 800);
 }
 
+function hobo() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo.swf', 'ruffle', 1500, 800);
+}
+
+function hobo_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo2.swf', 'ruffle', 1500, 800);
+}
+
+function hobo_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo3.swf', 'ruffle', 1500, 800);
+}
+
+function hobo_4() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo4.swf', 'ruffle', 1500, 800);
+}
+
+function hobo_5() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo5.swf', 'ruffle', 1500, 800);
+}
+
 function seven_days_without_rain() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1067, 800);
 }
