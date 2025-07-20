@@ -69,59 +69,59 @@ function black_knight() {
 
 // Shooter
 function thirteen_days_after() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/13-days-after/13-days-after.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/13-days-after/13-days-after.swf', 'ruffle', 1500, 1000);
 }
 
 function tactical_assassin_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/tactical-assassin-2/tactical-assassin-2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/tactical-assassin-2/tactical-assassin-2.swf', 'ruffle', 1500, 1000);
 }
 
 function gold_miner() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 1000);
 }
 
 function thing_thing() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing.swf', 'ruffle', 1500, 1000);
 }
 
 function thing_thing_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-2.swf', 'ruffle', 1500, 1000);
 }
 
 function thing_thing_3() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-3.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-3.swf', 'ruffle', 1500, 1000);
 }
 
 function thing_thing_4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-4.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-4.swf', 'ruffle', 1500, 1000);
 }
 
 function thing_thing_arena() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena.swf', 'ruffle', 1500, 1000);
 }
 
 function thing_thing_arena_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena-2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena-2.swf', 'ruffle', 1500, 1000);
 }
 
 function clear_vision() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision.swf', 'ruffle', 1500, 1000);
 }
 
 function clear_vision_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-2.swf', 'ruffle', 1500, 1000);
 }
 
 function clear_vision_3() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-3.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-3.swf', 'ruffle', 1500, 1000);
 }
 
 function clear_vision_4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-4.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-4.swf', 'ruffle', 1500, 1000);
 }
 
 function clear_vision_5() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-5.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/clear-vision/clear-vision-5.swf', 'ruffle', 1500, 1000);
 }
 
 // Adventure
@@ -130,27 +130,27 @@ function four_hundred_years() {
 }
 
 function hobo() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo.swf', 'ruffle', 1500, 1000);
 }
 
 function hobo_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo2.swf', 'ruffle', 1500, 1000);
 }
 
 function hobo_3() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo3.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo3.swf', 'ruffle', 1500, 1000);
 }
 
 function hobo_4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo4.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo4.swf', 'ruffle', 1500, 1000);
 }
 
 function hobo_5() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo5.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/hobo/hobo5.swf', 'ruffle', 1500, 1000);
 }
 
 function seven_days_without_rain() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1067, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1500, 1000);
 }
 
 function picos_school() {
@@ -159,47 +159,47 @@ function picos_school() {
 
 // Strategy
 function mcdonalds() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 1000);
 }
 
 function mcdonalds_money_hack() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds-money-hack/mcdonalds-money-hack.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds-money-hack/mcdonalds-money-hack.swf', 'ruffle', 1500, 1000);
 }
 
 function age_of_war_1() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-1/age-of-war-1.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-1/age-of-war-1.swf', 'ruffle', 1500, 1000);
 }
 
 function age_of_war_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-2/age-of-war-2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-2/age-of-war-2.swf', 'ruffle', 1500, 1000);
 }
 
 function samurai_rebellion() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 1000);
 }
 
 function battleships() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/battleships/battleships.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/battleships/battleships.swf', 'ruffle', 1500, 1000);
 }
 
 function starcraft_fa5() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/starcraft-fa-5/starcraft-fa-5.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/starcraft-fa-5/starcraft-fa-5.swf', 'ruffle', 1500, 1000);
 }
 
 function incursion() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/incursion/incursion.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/incursion/incursion.swf', 'ruffle', 1500, 1000);
 }
 
 function phage_wars_1() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-1/phage-wars-1.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-1/phage-wars-1.swf', 'ruffle', 1500, 1000);
 }
 
 function phage_wars_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-2/phage-wars-2.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-2/phage-wars-2.swf', 'ruffle', 1500, 1000);
 }
 
 function i_am_an_insane_rogue_ai() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/i-am-an-insane-rogue-ai/i-am-an-insane-rogue-ai.swf', 'ruffle', 1500, 800);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/i-am-an-insane-rogue-ai/i-am-an-insane-rogue-ai.swf', 'ruffle', 1500, 1000);
 }
 
 function castlewars() {
