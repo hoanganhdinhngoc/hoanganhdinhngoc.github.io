@@ -69,10 +69,6 @@ function black_knight() {
 
 // Acade
 
-function defend_your_castle() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/defend-your-castle/defend-your-castle.swf', 'ruffle', 1300, 1000);
-}
-
 function gold_miner() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 1000);
 }
@@ -200,6 +196,10 @@ function age_of_war_2() {
 
 function samurai_rebellion() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 1000);
+}
+
+function defend_your_castle() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/defend-your-castle/defend-your-castle.swf', 'ruffle', 1300, 1000);
 }
 
 function battleships() {
