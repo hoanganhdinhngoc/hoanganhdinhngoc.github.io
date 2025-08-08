@@ -187,7 +187,7 @@ function feed_us_5() {
 
 // Strategy
 function ten_sixty_six() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/1066/1066.swf', 'ruffle', 1000, 1000);
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/1066/1066.swf', 'ruffle', 1166, 1000);
 }
 
 function age_of_war_1() {
