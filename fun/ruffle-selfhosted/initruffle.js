@@ -67,6 +67,16 @@ function black_knight() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1500, 1000);
 }
 
+// Acade
+
+function defend_your_castle() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/defend-your-castle/defend-your-castle.swf', 'ruffle', 1500, 1000);
+}
+
+function gold_miner() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 1000);
+}
+
 // Shooter
 function thirteen_days_after() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/13-days-after/13-days-after.swf', 'ruffle', 1500, 1000);
@@ -74,34 +84,6 @@ function thirteen_days_after() {
 
 function tactical_assassin_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/tactical-assassin-2/tactical-assassin-2.swf', 'ruffle', 1500, 1000);
-}
-
-function gold_miner() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/gold-miner/gold-miner.swf', 'ruffle', 1500, 1000);
-}
-
-function thing_thing() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing.swf', 'ruffle', 1500, 1000);
-}
-
-function thing_thing_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-2.swf', 'ruffle', 1500, 1000);
-}
-
-function thing_thing_3() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-3.swf', 'ruffle', 1500, 1000);
-}
-
-function thing_thing_4() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-4.swf', 'ruffle', 1500, 1000);
-}
-
-function thing_thing_arena() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena.swf', 'ruffle', 1500, 1000);
-}
-
-function thing_thing_arena_2() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena-2.swf', 'ruffle', 1500, 1000);
 }
 
 function clear_vision() {
@@ -153,17 +135,59 @@ function seven_days_without_rain() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/7-days-without-rain/7-days-without-rain.swf', 'ruffle', 1500, 1000);
 }
 
+function thing_thing() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing.swf', 'ruffle', 1500, 1000);
+}
+
+function thing_thing_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-2.swf', 'ruffle', 1500, 1000);
+}
+
+function thing_thing_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-3.swf', 'ruffle', 1500, 1000);
+}
+
+function thing_thing_4() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-4.swf', 'ruffle', 1500, 1000);
+}
+
+function thing_thing_arena() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena.swf', 'ruffle', 1500, 1000);
+}
+
+function thing_thing_arena_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/thing-thing/thing-thing-arena-2.swf', 'ruffle', 1500, 1000);
+}
+
 function picos_school() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/picos-school/picos-school.swf', 'ruffle', 1500, 1000);
 }
 
-// Strategy
-function mcdonalds() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 1000);
+// Survival
+
+function feed_us() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/feed-us/feed-us.swf', 'ruffle', 1500, 1000);
 }
 
-function mcdonalds_money_hack() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds-money-hack/mcdonalds-money-hack.swf', 'ruffle', 1500, 1000);
+function feed_us_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/feed-us/feed-us-2.swf', 'ruffle', 1500, 1000);
+}
+
+function feed_us_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/feed-us/feed-us-3.swf', 'ruffle', 1500, 1000);
+}
+
+function feed_us_4() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/feed-us/feed-us-4.swf', 'ruffle', 1500, 1000);
+}
+
+function feed_us_5() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/feed-us/feed-us-5.swf', 'ruffle', 1500, 1000);
+}
+
+// Strategy
+function ten_sixty_six() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/1066/1066.swf', 'ruffle', 1500, 1000);
 }
 
 function age_of_war_1() {
@@ -188,6 +212,10 @@ function starcraft_fa5() {
 
 function incursion() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/incursion/incursion.swf', 'ruffle', 1500, 1000);
+}
+
+function pandemic_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/pandemic-2/pandemic-2.swf', 'ruffle', 1500, 1000);
 }
 
 function phage_wars_1() {
@@ -268,6 +296,10 @@ function chronon() {
 }
 
 // Experience
+function a_duck_has_an_adventure() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/a-duck-has-an-adventure/a-duck-has-an-adventure.swf', 'ruffle', 1500, 900);
+}
+
 function fly_guy() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/experience/fly-guy/flyguy.swf', 'ruffle', 1500, 900);
 }
@@ -311,6 +343,14 @@ function xiao_xiao_9() {
 // Simulator
 function businessman_simulato() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/businessman-simulato/businessman-simulato.swf', 'ruffle', 1500, 800);
+}
+
+function mcdonalds() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds/mcdonalds.swf', 'ruffle', 1500, 1000);
+}
+
+function mcdonalds_money_hack() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/mcdonalds-money-hack/mcdonalds-money-hack.swf', 'ruffle', 1500, 1000);
 }
 
 // Visual Novel
