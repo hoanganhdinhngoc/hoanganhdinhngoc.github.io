@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="HoangAnhDinhNgoc" />
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100..900&display=swap" rel="stylesheet">
+    <title>CDN || Stopwatch Timer</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ccc6b0;
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #timer {
+            color: rgba(100, 98, 86, 0.7);
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            line-height: 1;
+            max-width: 80vw;
+            text-align: center;
+            font-size: calc(70vh / 2);
+            white-space: nowrap;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: colorGlitch 2s infinite;
+        }
+
+        #timer.ready {
+            /* 50% less transparent (0.7 * 0.5) when pressing in stopped state */
+            color: rgba(100, 98, 86, 1) !important;
+        }
+
+        #timer.stopped-pressing {
+            /* 25% more transparent (0.7 * 0.75) in ready state */
+            /* opacity: 0.35; */
+            opacity: 0.7; 
+            
+        }
+
+        #timer span.milliseconds {
+            font-size: 0.5em;
+        }
+
+        .infoText {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            max-width: 80vw;
+            margin-top: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .infoText h4 {
+            color: rgba(100, 98, 86, 0.7);
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            font-size: 32px;
+            margin: 10px 0;
+            text-align: center;
+            animation: colorGlitch 2s infinite;
+        }
+
+        /* Screen Glitch Effect */
+        .glitch-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+        }
+
+        .glitch-screen.active {
+            opacity: 1;
+            animation: screenGlitch 0.04s linear;
+            background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAIAAAACCAYAAABytg0kAAAAFElEQVQIW2NkYGD4z8DAwMCAQ0IBTAG9fgEsQf7SrwAAAABJRU5ErkJggg==') repeat;
+            mix-blend-mode: overlay;
+        }
+
+        @keyframes screenGlitch {
+            0% { transform: skew(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+            25% { transform: skew(5deg); clip-path: polygon(0 20%, 100% 20%, 100% 80%, 0 80%); }
+            50% { transform: skew(-5deg); clip-path: polygon(0 40%, 100% 40%, 100% 60%, 0 60%); }
+            75% { transform: skew(5deg); clip-path: polygon(0 10%, 100% 10%, 100% 90%, 0 90%); }
+            100% { transform: skew(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        }
+
+        /* Text Color Glitch Effect */
+        #timer, .infoText h4 {
+            text-shadow: 
+                -2px 0 2px rgba(255, 0, 0, 0.3),
+                2px 0 2px rgba(0, 255, 255, 0.3);
+        }
+
+        #timer.red-glitch, .infoText h4.red-glitch {
+            animation: glitchRed 0.3s infinite;
+        }
+
+        #timer.cyan-glitch, .infoText h4.cyan-glitch {
+            animation: glitchCyan 0.3s infinite;
+        }
+
+        @keyframes colorGlitch {
+            0% { transform: translate(0, 0); }
+            20% { transform: translate(-5px, 5px); }
+            40% { transform: translate(5px, -5px); }
+            60% { transform: translate(-5px, 5px); }
+            80% { transform: translate(5px, -5px); }
+            100% { transform: translate(0, 0); }
+        }
+
+        @keyframes glitchRed {
+            0% { text-shadow: -6px 3 4px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            25% { text-shadow: -7px 3px 4px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            50% { text-shadow: -6px -11px 3px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            75% { text-shadow: -12px -4px 6px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+            100% { text-shadow: -9px 2px 13px rgba(255, 0, 0, 0.3), 2px 0 2px rgba(0, 255, 255, 0.3); }
+        }
+
+        @keyframes glitchCyan {
+            0% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px 0 5px rgba(0, 255, 255, 0.3); }
+            25% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 2px -1px 4px rgba(0, 255, 255, 0.3); }
+            50% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 4px 2px 3px rgba(0, 255, 255, 0.3); }
+            75% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 3px 4px 5px rgba(0, 255, 255, 0.3); }
+            100% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px -3px 4px rgba(0, 255, 255, 0.3); }
+        }
+
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            #timer {
+                font-size: clamp(1rem, calc(80vw / 20), calc(70vh / 2));
+            }
+            .infoText h4 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="timer" class="red-glitch cyan-glitch">0<span class="milliseconds">.0</span></div>
+    <div class="infoText">
+        <h4 class="red-glitch cyan-glitch">Hold space to reset, hit space again to stop</h4>
+    </div>
+    <div class="glitch-screen"></div>
+
+    <script>
+        const timerElement = document.getElementById('timer');
+        const glitchScreen = document.querySelector('.glitch-screen');
+        let startTime = null;
+        let elapsedTime = 0;
+        let timerInterval = null;
+        let isReady = false;
+        let isStopped = true;
+        let holdTimer = null;
+        const HOLD_DURATION = 1000;
+
+        function formatTime(ms) {
+            let hours = Math.floor(ms / 3600000);
+            let minutes = Math.floor((ms % 3600000) / 60000);
+            let seconds = Math.floor((ms % 60000) / 1000);
+            let tenths = Math.floor((ms % 1000) / 100);
+
+            let timeStr = '';
+            if (hours > 0) timeStr += hours + '.';
+            if (minutes > 0 || hours > 0) timeStr += minutes + '.';
+            timeStr += seconds;
+            timeStr += `<span class="milliseconds">.${tenths}</span>`;
+            return timeStr;
+        }
+
+        function updateTimer() {
+            if (startTime !== null) {
+                elapsedTime = Date.now() - startTime;
+                timerElement.innerHTML = formatTime(elapsedTime);
+            }
+        }
+
+        function resetTimer() {
+            startTime = null;
+            elapsedTime = 0;
+            timerElement.innerHTML = formatTime(0);
+            timerElement.classList.add('ready');
+            timerElement.classList.remove('stopped-pressing');
+            isReady = true;
+            isStopped = false;
+            clearInterval(timerInterval);
+            timerInterval = null;
+        }
+
+        function startTimer() {
+            if (isReady) {
+                startTime = Date.now();
+                timerInterval = setInterval(updateTimer, 10);
+                timerElement.classList.remove('ready');
+                isReady = false;
+            }
+        }
+
+        function stopTimer() {
+            if (startTime !== null) {
+                elapsedTime = Date.now() - startTime;
+                clearInterval(timerInterval);
+                timerInterval = null;
+                startTime = null;
+                timerElement.innerHTML = formatTime(elapsedTime);
+                isStopped = true;
+            }
+        }
+
+        // Screen Glitch Effect
+        function triggerScreenGlitch() {
+            glitchScreen.classList.add('active');
+            setTimeout(() => {
+                glitchScreen.classList.remove('active');
+            }, 40);
+            const nextGlitchDelay = Math.random() * 3000 + 1000;
+            setTimeout(triggerScreenGlitch, nextGlitchDelay);
+        }
+
+        triggerScreenGlitch();
+
+        // Desktop - Keyboard events
+        document.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                event.preventDefault();
+                if (!event.repeat) {
+                    if (timerInterval) {
+                        stopTimer();
+                    } else {
+                        if (isStopped) {
+                            timerElement.classList.add('stopped-pressing');
+                        }
+                        holdTimer = setTimeout(() => {
+                            resetTimer();
+                        }, HOLD_DURATION);
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.code === 'Space') {
+                clearTimeout(holdTimer);
+                if (isReady) {
+                    startTimer();
+                } else if (isStopped) {
+                    timerElement.classList.remove('stopped-pressing');
+                }
+            }
+        });
+
+        // Mobile - Touch events
+        let touchStartTime;
+
+        document.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            if (timerInterval) {
+                stopTimer();
+            } else {
+                if (isStopped) {
+                    timerElement.classList.add('stopped-pressing');
+                }
+                holdTimer = setTimeout(() => {
+                    resetTimer();
+                }, HOLD_DURATION);
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', (event) => {
+            event.preventDefault();
+            clearTimeout(holdTimer);
+            if (isReady) {
+                startTimer();
+            } else if (isStopped) {
+                timerElement.classList.remove('stopped-pressing');
+            }
+        }, { passive: false });
+
+        document.addEventListener('contextmenu', (event) => {
+            event.preventDefault();
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                timerElement.style.fontSize = `clamp(1rem, calc(80vw / 20), calc(70vh / 2))`;
+            }
+        });
+
+        // Initial state
+        elapsedTime = 0;
+        timerElement.innerHTML = formatTime(0);
+        isStopped = true;
+        isReady = false;
+        timerElement.classList.remove('ready');
+        timerElement.classList.remove('stopped-pressing');
+    </script>
+</body>
+</html>
