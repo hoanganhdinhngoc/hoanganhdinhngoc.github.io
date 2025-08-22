@@ -48,15 +48,11 @@
         }
 
         #timer.ready {
-            /* 50% less transparent (0.7 * 0.5) when pressing in stopped state */
             color: rgba(100, 98, 86, 1) !important;
         }
 
         #timer.stopped-pressing {
-            /* 25% more transparent (0.7 * 0.75) in ready state */
-            /* opacity: 0.35; */
-            opacity: 0.7; 
-            
+            opacity: 0.7;
         }
 
         #timer span.milliseconds {
@@ -84,7 +80,6 @@
             animation: colorGlitch 2s infinite;
         }
 
-        /* Screen Glitch Effect */
         .glitch-screen {
             position: absolute;
             top: 0;
@@ -111,7 +106,6 @@
             100% { transform: skew(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
         }
 
-        /* Text Color Glitch Effect */
         #timer, .infoText h4 {
             text-shadow: 
                 -2px 0 2px rgba(255, 0, 0, 0.3),
@@ -151,11 +145,18 @@
             100% { text-shadow: -2px 0 2px rgba(255, 0, 0, 0.3), 5px -3px 4px rgba(0, 255, 255, 0.3); }
         }
 
-        /* Media query for mobile devices */
         @media (max-width: 768px) {
             #timer {
-                /* font-size: clamp(1rem, calc(80vw / 20), calc(70vh / 2)); */
-                font-size: 10em;
+                font-size: 8em;
+            }
+            #timer.long-time {
+                font-size: 5em;
+            }
+            #timer span.milliseconds {
+                font-size: 0.5em;
+            }
+            #timer.long-time span.milliseconds {
+                font-size: 0.2em;
             }
             .infoText h4 {
                 font-size: 24px;
@@ -187,10 +188,18 @@
             let seconds = Math.floor((ms % 60000) / 1000);
             let tenths = Math.floor((ms % 1000) / 100);
 
+            if (window.innerWidth <= 768) {
+                if (minutes >= 10 || hours > 0) {
+                    timerElement.classList.add('long-time');
+                } else {
+                    timerElement.classList.remove('long-time');
+                }
+            }
+
             let timeStr = '';
-            if (hours > 0) timeStr += hours + '.';
-            if (minutes > 0 || hours > 0) timeStr += minutes + '.';
-            timeStr += seconds;
+            if (hours > 0) timeStr += hours + ':';
+            if (minutes > 0 || hours > 0) timeStr += (minutes < 10 && hours > 0 ? '0' : '') + minutes + ':';
+            timeStr += (seconds < 10 && (minutes > 0 || hours > 0) ? '0' : '') + seconds;
             timeStr += `<span class="milliseconds">.${tenths}</span>`;
             return timeStr;
         }
@@ -234,7 +243,6 @@
             }
         }
 
-        // Screen Glitch Effect
         function triggerScreenGlitch() {
             glitchScreen.classList.add('active');
             setTimeout(() => {
@@ -246,7 +254,6 @@
 
         triggerScreenGlitch();
 
-        // Desktop - Keyboard events
         document.addEventListener('keydown', (event) => {
             if (event.code === 'Space') {
                 event.preventDefault();
@@ -276,9 +283,6 @@
             }
         });
 
-        // Mobile - Touch events
-        let touchStartTime;
-
         document.addEventListener('touchstart', (event) => {
             event.preventDefault();
             if (timerInterval) {
@@ -307,13 +311,12 @@
             event.preventDefault();
         });
 
-        // window.addEventListener('resize', () => {
-        //     if (window.innerWidth <= 768) {
-        //         timerElement.style.fontSize = `clamp(1rem, calc(80vw / 20), calc(70vh / 2))`;
-        //     }
-        // });
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                timerElement.innerHTML = formatTime(elapsedTime);
+            }
+        });
 
-        // Initial state
         elapsedTime = 0;
         timerElement.innerHTML = formatTime(0);
         isStopped = true;
