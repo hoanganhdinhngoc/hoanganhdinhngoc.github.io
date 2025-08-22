@@ -154,7 +154,8 @@
         /* Media query for mobile devices */
         @media (max-width: 768px) {
             #timer {
-                font-size: clamp(1rem, calc(80vw / 20), calc(70vh / 2));
+                /* font-size: clamp(1rem, calc(80vw / 20), calc(70vh / 2)); */
+                font-size: 10em;
             }
             .infoText h4 {
                 font-size: 24px;
@@ -306,11 +307,11 @@
             event.preventDefault();
         });
 
-        window.addEventListener('resize', () => {
-            if (window.innerWidth <= 768) {
-                timerElement.style.fontSize = `clamp(1rem, calc(80vw / 20), calc(70vh / 2))`;
-            }
-        });
+        // window.addEventListener('resize', () => {
+        //     if (window.innerWidth <= 768) {
+        //         timerElement.style.fontSize = `clamp(1rem, calc(80vw / 20), calc(70vh / 2))`;
+        //     }
+        // });
 
         // Initial state
         elapsedTime = 0;
