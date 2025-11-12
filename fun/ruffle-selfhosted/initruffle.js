@@ -194,24 +194,24 @@ function age_of_war_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/age-of-war-2/age-of-war-2.swf', 'ruffle', 1500, 1000);
 }
 
-function samurai_rebellion() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 1000);
+function battleships() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/battleships/battleships.swf', 'ruffle', 1500, 1000);
+}
+
+function castlewars() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/castlewars/castlewars.swf', 'ruffle', 1500, 800);
 }
 
 function defend_your_castle() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/defend-your-castle/defend-your-castle.swf', 'ruffle', 1300, 1000);
 }
 
-function battleships() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/battleships/battleships.swf', 'ruffle', 1500, 1000);
-}
-
-function starcraft_fa5() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/starcraft-fa-5/starcraft-fa-5.swf', 'ruffle', 1500, 1000);
-}
-
 function incursion() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/incursion/incursion.swf', 'ruffle', 1500, 1000);
+}
+
+function i_am_an_insane_rogue_ai() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/i-am-an-insane-rogue-ai/i-am-an-insane-rogue-ai.swf', 'ruffle', 1500, 1000);
 }
 
 function pandemic_2() {
@@ -226,12 +226,16 @@ function phage_wars_2() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/phage-wars-2/phage-wars-2.swf', 'ruffle', 1500, 1000);
 }
 
-function i_am_an_insane_rogue_ai() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/i-am-an-insane-rogue-ai/i-am-an-insane-rogue-ai.swf', 'ruffle', 1500, 1000);
+function samurai_rebellion() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/samurai-rebellion/samurai-rebellion.swf', 'ruffle', 1500, 1000);
 }
 
-function castlewars() {
-    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/castlewars/castlewars.swf', 'ruffle', 1500, 800);
+function starcraft_fa5() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/starcraft-fa-5/starcraft-fa-5.swf', 'ruffle', 1500, 1000);
+}
+
+function the_blade_of_innocence() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/strategy/the-blade-of-innocence/the-blade-of-innocence.swf', 'ruffle', 1500, 1000);
 }
 
 // Grow games EYEZMAZE
