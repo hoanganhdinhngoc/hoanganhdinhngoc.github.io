@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<game-list>
+	<game id="8">
+                <path>game8/game.swf</path>
+                <preload>game8/assets.swf</preload>
+                <preload>game8/characters.swf</preload>
+                <preload>game8/audio.swf</preload>
+                <preload>game8/interface.swf</preload>
+		<preload>game8/levels.xml</preload>
+                <total_size>1801666</total_size>
+                <lang_path>game8/xml_lang</lang_path>
+		<version>1024</version>
+		<preload_version>1024</preload_version>
+        </game>
+        <game id="9">
+                <path>game9/FGcs3.swf</path>
+                <total_size>3808833</total_size>
+                <lang_path>game9/xml_lang</lang_path>
+		<version>1024</version>
+		<preload_version>1024</preload_version>
+		<unload_and_stop>true</unload_and_stop>
+        </game>
+	<game id="10">
+                <path>game10/GDD.swf</path>
+                <total_size>2761741</total_size>
+                <lang_path>game10/xml_lang</lang_path>
+                <version>060111</version>
+                <preload_version>1024</preload_version>
+        </game>
+	<game id="11">
+                <path>game11/HalloweenGame.swf</path>
+                <total_size>1796853</total_size>
+                <lang_path>game11/xml_lang</lang_path>
+                <version>1</version>
+                <preload_version>1</preload_version>
+        </game>
+        <game id="12">
+                <path>game12/SnowGame.swf</path>
+                <total_size>2096561</total_size>
+                <lang_path>game12/xml_lang</lang_path>
+                <version>1</version>
+                <preload_version>1</preload_version>
+        </game>
+        <game id="13">
+                <path>game13/loveTest.swf</path>
+                <total_size>2579680</total_size>
+                <lang_path>game13/xml_lang</lang_path>
+                <version>1</version>
+                <preload_version>1</preload_version>
+        </game>
+	<game id="14">
+                <path>game14/SpotDiff.swf</path>
+                <total_size>4717422</total_size>
+                <lang_path>game14/xml_lang</lang_path>
+                <version>2</version>
+                <preload_version>1</preload_version>
+        </game>
+        <game id="15">
+	                <path>game15/nailShop.swf</path>
+	                <total_size>3598943</total_size>
+	                <lang_path>game15/xml_lang</lang_path>
+	                <version>2</version>
+	                <preload_version>1</preload_version>
+        </game>
+        <game id="16">
+	                <path>game16/colorWinx.swf</path>
+	                <total_size>2872090</total_size>
+	                <lang_path>game16/xml_lang</lang_path>
+	                <version>4</version>
+	                <preload_version>1</preload_version>
+        </game>
+        <game id="17">
+	                <path>game17/petRescue.swf</path>
+	                <total_size>6045970</total_size>
+	                <lang_path>game17/xml_lang</lang_path>
+	                <version>1</version>
+	                <preload_version>1</preload_version>
+        </game>
+        <game id="18">
+	                <path>game18/potion.swf</path>
+	                <total_size>3715970</total_size>
+	                <lang_path>game18/xml_lang</lang_path>
+	                <version>1</version>
+	                <preload_version>1</preload_version>
+        </game>
+        <game id="19">
+			<path>game19/sliderPuzzle.swf</path>
+			<total_size>2030967</total_size>
+			<lang_path>game19/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+        <game id="20">
+			<path>game20/sliderPuzzle.swf</path>
+			<total_size>2303092</total_size>
+			<lang_path>game20/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+        <game id="21">
+			<path>game21/fashionGame.swf</path>
+			<total_size>2457471</total_size>
+			<lang_path>game21/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+        <game id="22">
+			<path>game22/GP.swf</path>
+			<total_size>3665471</total_size>
+			<lang_path>game22/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+	<game id="23">
+			<path>game23/makeUp.swf</path>
+			<total_size>4675916</total_size>
+			<lang_path>game23/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+	<game id="24">
+			<path>game24/DragDrop.swf</path>
+			<total_size>2215046</total_size>
+			<lang_path>game24/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+	<game id="25">
+			<path>game25/winx_bollabie_game_v7.swf</path>
+			<total_size>2798308</total_size>
+			<lang_path>game25/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+	<game id="26">
+			<path>game26/winx_Puzzle.swf</path>
+			<total_size>1302725</total_size>
+			<lang_path>game26/xml_lang</lang_path>
+			<version>1</version>
+			<preload_version>1</preload_version>
+        </game>
+</game-list>

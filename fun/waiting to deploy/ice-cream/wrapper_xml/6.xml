@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="GamePopUp_Des_01"><![CDATA[Para entrar tus puntuaciones más altas en las mesas de clasificación, por favor, regístrate con nosotros ¡para disfrutar de ventajas especiales!]]></str>
+	<str id="GamePopUp_Top_02"><![CDATA[¡Por favor #inicia la sesión# para presentar tu puntuación!]]></str>
+	<str id="WebAva_Btn_01"><![CDATA[Registrarse]]></str>
+	<str id="WebAva_Des_01"><![CDATA[¡Crea tu propio MiniWinx uniéndote a nuestra divertida y excitante familia Winx! ]]></str>
+	<str id="GamePopUp_Btn_02"><![CDATA[Registrarse]]></str>
+	<str id="GamePopUp_Btn_01"><![CDATA[Cancelar]]></str>
+	<str id="GamePopUp_Title_01"><![CDATA[Aviso]]></str>
+</minigame-text>

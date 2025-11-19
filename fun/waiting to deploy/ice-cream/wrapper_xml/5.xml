@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="GamePopUp_Des_01"><![CDATA[Чтобы ваши лучшие результаты отразились в рейтинге, пожалуйста, зарегистрируйтесь  и воспользуйтесь прочими преимуществами!]]></str>
+	<str id="GamePopUp_Top_02"><![CDATA[Пожалуйста, #зарегистрируйтесь#, чтобы сохранить очки!]]></str>
+	<str id="WebAva_Btn_01"><![CDATA[Регистрация]]></str>
+	<str id="WebAva_Des_01"><![CDATA[Создайте свой собственный MiniWinx - для этого присоединяйтесь к нашей веселой и необычной Семье Винкс!]]></str>
+	<str id="GamePopUp_Btn_02"><![CDATA[Регистрация]]></str>
+	<str id="GamePopUp_Btn_01"><![CDATA[Отмена]]></str>
+	<str id="GamePopUp_Title_01"><![CDATA[Предупреждение]]></str>
+</minigame-text>

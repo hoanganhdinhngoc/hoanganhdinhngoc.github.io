@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="CODE_LANG01_ICE_0018"><![CDATA[Tag #]]></str>
+	<str id="CODE_LANG01_ICE_0017"><![CDATA[# Münzen]]></str>
+	<str id="CODE_LANG01_ICE_0019"><![CDATA[Wiederholen]]></str>
+	<str id="CODE_LANG01_TITlE_015"><![CDATA[Mokka-Meister]]></str>
+	<str id="CODE_LANG01_ICE_0014"><![CDATA[nochmal spielen]]></str>
+	<str id="CODE_LANG01_TITlE_014"><![CDATA[Profi Milchshake-Mixer]]></str>
+	<str id="CODE_LANG01_ICE_0013"><![CDATA[Game Over!]]></str>
+	<str id="CODE_LANG01_TITlE_013"><![CDATA[Bananensplit Spezialist]]></str>
+	<str id="CODE_LANG01_ICE_0016"><![CDATA[Glückwunsch! Du hast alle Level erfolgreich beendet!]]></str>
+	<str id="CODE_LANG01_TITlE_012"><![CDATA[Fürst-Pückler Spezialist]]></str>
+	<str id="CODE_LANG01_ICE_0015"><![CDATA[Pause]]></str>
+	<str id="CODE_LANG01_TITlE_011"><![CDATA[Neuheiten-Erfinder]]></str>
+	<str id="CODE_LANG01_ICE_0010"><![CDATA[freigespielte Titel:]]></str>
+	<str id="CODE_LANG01_TITlE_010"><![CDATA[Waffelhörnchen-Experte]]></str>
+	<str id="CODE_LANG01_ICE_0012"><![CDATA[Wiederholen]]></str>
+	<str id="CODE_LANG01_TITlE_020"><![CDATA[Eiscreme Gourmet]]></str>
+	<str id="CODE_LANG01_ICE_0011"><![CDATA[Ende]]></str>
+	<str id="CODE_LANG01_TITlE_018"><![CDATA[Parfait-Meister]]></str>
+	<str id="CODE_LANG01_TITlE_019"><![CDATA[Eisliebhaber]]></str>
+	<str id="CODE_LANG01_TITlE_016"><![CDATA[Sorbetfiguren-Künstler]]></str>
+	<str id="CODE_LANG01_TITlE_017"><![CDATA[Fruchtlimo Profi]]></str>
+	<str id="CODE_LANG01_ICE_0009"><![CDATA[Summe der Verkäufe:]]></str>
+	<str id="CODE_LANG01_ICE_0008"><![CDATA[Anzahl glücklicher Kunden:]]></str>
+	<str id="CODE_LANG01_ICE_0007"><![CDATA[Tagesangebot:]]></str>
+	<str id="CODE_LANG01_ICE_0006"><![CDATA[Tag # vollständig!]]></str>
+	<str id="CODE_LANG01_ICE_0005"><![CDATA[Start]]></str>
+	<str id="CODE_LANG01_TITlE_002"><![CDATA[Hörnchenkuchen-Anfänger]]></str>
+	<str id="CODE_LANG01_ICE_0004"><![CDATA[Verdiene mehr als # Münzen um in das nächste Level zu kommen!]]></str>
+	<str id="CODE_LANG01_TITlE_001"><![CDATA[Zuckerwaffel-Anfänger]]></str>
+	<str id="CODE_LANG01_ICE_0003"><![CDATA[Tag #: %JobTitle%]]></str>
+	<str id="CODE_LANG01_TITlE_004"><![CDATA[Waffeleisbecher -Wunder]]></str>
+	<str id="CODE_LANG01_ICE_0002"><![CDATA[Tutorial]]></str>
+	<str id="CODE_LANG01_TITlE_003"><![CDATA[Softeis Profi]]></str>
+	<str id="CODE_LANG01_ICE_0001"><![CDATA[Spielen]]></str>
+	<str id="CODE_LANG01_TITlE_009"><![CDATA[Verzierungskünstler]]></str>
+	<str id="CODE_LANG01_ICE_0020"><![CDATA[Spiel betreten]]></str>
+	<str id="CODE_LANG01_TITlE_005"><![CDATA[Eisbecher Spezialist]]></str>
+	<str id="CODE_LANG01_TITlE_006"><![CDATA[Süßigkeiten Spezialist]]></str>
+	<str id="CODE_LANG01_TITlE_007"><![CDATA[Kapitän Schokolade]]></str>
+	<str id="CODE_LANG01_TITlE_008"><![CDATA[Kirsch-Erfrischer]]></str>
+</minigame-text>

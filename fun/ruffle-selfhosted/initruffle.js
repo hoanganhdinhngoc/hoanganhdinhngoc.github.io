@@ -67,6 +67,31 @@ function black_knight() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/black-knight/black-knight.swf', 'ruffle', 1500, 1000);
 }
 
+function crimson_room() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/room-escape/crimson-room.swf', 'ruffle', 1500, 1000);
+}
+
+function the-blue-chamber() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/room-escape/the-blue-chamber.swf', 'ruffle', 1500, 1000);
+}
+
+function viridian-room() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/room-escape/viridian-room.swf', 'ruffle', 1500, 1000);
+}
+
+function alice_is_dead_1() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/alice-is-dead/alice-is-dead-1.swf', 'ruffle', 1500, 1000);
+}
+
+function alice_is_dead_2() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/alice-is-dead/alice-is-dead-2.swf', 'ruffle', 1500, 1000);
+}
+
+function alice_is_dead_3() {
+    embedSWF('https://hoanganhdinhngoc.github.io/fun/alice-is-dead/alice-is-dead-3.swf', 'ruffle', 1500, 1000);
+}
+
+
 // Acade
 
 function gold_miner() {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<wrapper_config>
+	<!-- the splash component -->
+	<splash>RM-MG_Splash2D.swf</splash>
+	<!-- debug console -->
+	<console>
+		<show>false</show>
+		<left>400</left>
+		<top>0</top>
+		<width>200</width>
+		<height>200</height>
+		<transparency>0.5</transparency>
+	</console>
+	<!-- show notification bar -->
+	<show_notification>false</show_notification>
+	<!-- session validation timeout -->
+	<validation_timeout>10000</validation_timeout>
+	<!-- heartbeat rate -->
+	<heartbeat>1500000</heartbeat>
+	<!-- standard, offline -->
+	<mode>standard</mode>
+	<!-- below are only useful in offline mode -->
+	<game>8</game>
+	<language>5</language>
+</wrapper_config>

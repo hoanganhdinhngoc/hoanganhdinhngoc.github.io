@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="CODE_LANG01_ICE_0018"><![CDATA[Día #]]></str>
+	<str id="CODE_LANG01_ICE_0017"><![CDATA[# monedas]]></str>
+	<str id="CODE_LANG01_ICE_0019"><![CDATA[Repetir]]></str>
+	<str id="CODE_LANG01_TITlE_015"><![CDATA[Maestro del Mochi]]></str>
+	<str id="CODE_LANG01_ICE_0014"><![CDATA[Jugar otra vez]]></str>
+	<str id="CODE_LANG01_TITlE_014"><![CDATA[Batidor profesional]]></str>
+	<str id="CODE_LANG01_ICE_0013"><![CDATA[¡Juego Acabado!]]></str>
+	<str id="CODE_LANG01_TITlE_013"><![CDATA[Experto en Banana Split]]></str>
+	<str id="CODE_LANG01_ICE_0016"><![CDATA[¡Felicidades! ¡Has completado todos los niveles!]]></str>
+	<str id="CODE_LANG01_TITlE_012"><![CDATA[Especialista Napolitano]]></str>
+	<str id="CODE_LANG01_ICE_0015"><![CDATA[Pausa]]></str>
+	<str id="CODE_LANG01_TITlE_011"><![CDATA[Creador de Novedades]]></str>
+	<str id="CODE_LANG01_ICE_0010"><![CDATA[Título aspirante:]]></str>
+	<str id="CODE_LANG01_TITlE_010"><![CDATA[Jefe en conos de Gofre]]></str>
+	<str id="CODE_LANG01_ICE_0012"><![CDATA[Continuar]]></str>
+	<str id="CODE_LANG01_TITlE_020"><![CDATA[Gourmet heladero]]></str>
+	<str id="CODE_LANG01_ICE_0011"><![CDATA[Abandonar]]></str>
+	<str id="CODE_LANG01_TITlE_018"><![CDATA[Maestro en Copas ]]></str>
+	<str id="CODE_LANG01_TITlE_019"><![CDATA[Experto heladero]]></str>
+	<str id="CODE_LANG01_TITlE_016"><![CDATA[Escultor de sorbetes]]></str>
+	<str id="CODE_LANG01_TITlE_017"><![CDATA[Sorbetero de Frutas]]></str>
+	<str id="CODE_LANG01_ICE_0009"><![CDATA[Total de Ventas:]]></str>
+	<str id="CODE_LANG01_ICE_0008"><![CDATA[Número de Clientes satisfechos:]]></str>
+	<str id="CODE_LANG01_ICE_0007"><![CDATA[Ventas de hoy:]]></str>
+	<str id="CODE_LANG01_ICE_0006"><![CDATA[¡Día # Completado!]]></str>
+	<str id="CODE_LANG01_ICE_0005"><![CDATA[Comenzar]]></str>
+	<str id="CODE_LANG01_TITlE_002"><![CDATA[Aprendiz de Conos cremosos]]></str>
+	<str id="CODE_LANG01_ICE_0004"><![CDATA[¡Gana más de # monedas para subir de nivel!]]></str>
+	<str id="CODE_LANG01_TITlE_001"><![CDATA[Aprendiz de Cucuruchos]]></str>
+	<str id="CODE_LANG01_ICE_0003"><![CDATA[Día #: %JobTitle%]]></str>
+	<str id="CODE_LANG01_TITlE_004"><![CDATA[Dependiente de cucuruchos]]></str>
+	<str id="CODE_LANG01_ICE_0002"><![CDATA[Tutorial]]></str>
+	<str id="CODE_LANG01_TITlE_003"><![CDATA[Heladero profesional]]></str>
+	<str id="CODE_LANG01_ICE_0001"><![CDATA[Jugar]]></str>
+	<str id="CODE_LANG01_TITlE_009"><![CDATA[Experto en ingredientes]]></str>
+	<str id="CODE_LANG01_ICE_0020"><![CDATA[Entrar en el juego]]></str>
+	<str id="CODE_LANG01_TITlE_005"><![CDATA[Creador de helados]]></str>
+	<str id="CODE_LANG01_TITlE_006"><![CDATA[Especialista en dulces]]></str>
+	<str id="CODE_LANG01_TITlE_007"><![CDATA[Capitán del chocolate]]></str>
+	<str id="CODE_LANG01_TITlE_008"><![CDATA[Restaurador de cerezas]]></str>
+</minigame-text>

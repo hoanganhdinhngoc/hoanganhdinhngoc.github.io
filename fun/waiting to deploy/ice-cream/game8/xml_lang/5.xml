@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="CODE_LANG01_ICE_0018"><![CDATA[День #]]></str>
+	<str id="CODE_LANG01_ICE_0017"><![CDATA[# монет]]></str>
+	<str id="CODE_LANG01_ICE_0019"><![CDATA[Сыграть снова]]></str>
+	<str id="CODE_LANG01_TITlE_015"><![CDATA[Мастер японского Мочи]]></str>
+	<str id="CODE_LANG01_ICE_0014"><![CDATA[Сыграть снова]]></str>
+	<str id="CODE_LANG01_TITlE_014"><![CDATA[Профессионал молочного коктейля]]></str>
+	<str id="CODE_LANG01_ICE_0013"><![CDATA[Игра закончена!]]></str>
+	<str id="CODE_LANG01_TITlE_013"><![CDATA[Размягчитель Бананового сплита]]></str>
+	<str id="CODE_LANG01_ICE_0016"><![CDATA[Поздравляем! Вы прошли все уровни!]]></str>
+	<str id="CODE_LANG01_TITlE_012"><![CDATA[Любитель неаполитанской мороженного]]></str>
+	<str id="CODE_LANG01_ICE_0015"><![CDATA[Пауза]]></str>
+	<str id="CODE_LANG01_TITlE_011"><![CDATA[Изобретатель нового вкуса]]></str>
+	<str id="CODE_LANG01_ICE_0010"><![CDATA[Доступные звания:]]></str>
+	<str id="CODE_LANG01_TITlE_010"><![CDATA[Шеф по вафлям]]></str>
+	<str id="CODE_LANG01_ICE_0012"><![CDATA[Продолжить]]></str>
+	<str id="CODE_LANG01_TITlE_020"><![CDATA[Гурман мороженого]]></str>
+	<str id="CODE_LANG01_ICE_0011"><![CDATA[Выход]]></str>
+	<str id="CODE_LANG01_TITlE_018"><![CDATA[Мастер Парфэ]]></str>
+	<str id="CODE_LANG01_TITlE_019"><![CDATA[Знаток Желато]]></str>
+	<str id="CODE_LANG01_TITlE_016"><![CDATA[Скульптор шербета]]></str>
+	<str id="CODE_LANG01_TITlE_017"><![CDATA[Мастер фруктового шербета]]></str>
+	<str id="CODE_LANG01_ICE_0009"><![CDATA[Общий объем продаж:]]></str>
+	<str id="CODE_LANG01_ICE_0008"><![CDATA[Количество счастливых клиентов:]]></str>
+	<str id="CODE_LANG01_ICE_0007"><![CDATA[Продаж за сегодня:]]></str>
+	<str id="CODE_LANG01_ICE_0006"><![CDATA[День # завершен!]]></str>
+	<str id="CODE_LANG01_ICE_0005"><![CDATA[Старт]]></str>
+	<str id="CODE_LANG01_TITlE_002"><![CDATA[Новичок по тортам]]></str>
+	<str id="CODE_LANG01_ICE_0004"><![CDATA[Заработай # монет, чтобы перейти на новый уровень!]]></str>
+	<str id="CODE_LANG01_TITlE_001"><![CDATA[Сахарный Новичок ]]></str>
+	<str id="CODE_LANG01_ICE_0003"><![CDATA[День #: %JobTitle% ]]></str>
+	<str id="CODE_LANG01_TITlE_004"><![CDATA[Поклонник мороженого]]></str>
+	<str id="CODE_LANG01_ICE_0002"><![CDATA[Справочник]]></str>
+	<str id="CODE_LANG01_TITlE_003"><![CDATA[Профессионал сервировки]]></str>
+	<str id="CODE_LANG01_ICE_0001"><![CDATA[Играть]]></str>
+	<str id="CODE_LANG01_TITlE_009"><![CDATA[Эксперт по начинкам]]></str>
+	<str id="CODE_LANG01_ICE_0020"><![CDATA[Старт]]></str>
+	<str id="CODE_LANG01_TITlE_005"><![CDATA[Производитель мороженого с фруктами]]></str>
+	<str id="CODE_LANG01_TITlE_006"><![CDATA[Специалист по леденцам]]></str>
+	<str id="CODE_LANG01_TITlE_007"><![CDATA[Шоколадный Мастер]]></str>
+	<str id="CODE_LANG01_TITlE_008"><![CDATA[Освежитель вишен]]></str>
+</minigame-text>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="GamePopUp_Des_01"><![CDATA[Veux-tu sauveguarder ton score et entrer dans le classement?  Inscris-toi maintenant!]]></str>
+	<str id="GamePopUp_Top_02"><![CDATA[Il faut que tu te #connectes# à Winx Club pour envoyer ton score!]]></str>
+	<str id="WebAva_Btn_01"><![CDATA[Inscris-toi ]]></str>
+	<str id="WebAva_Des_01"><![CDATA[Inscris-toi avec Winx Club pour créer un MiniWinx!]]></str>
+	<str id="GamePopUp_Btn_02"><![CDATA[Inscris-toi ]]></str>
+	<str id="GamePopUp_Btn_01"><![CDATA[Annuler]]></str>
+	<str id="GamePopUp_Title_01"><![CDATA[Attention]]></str>
+</minigame-text>

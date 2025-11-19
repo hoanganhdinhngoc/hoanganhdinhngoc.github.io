@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<levels>
+	<level id="CODE_LANG01_TITlE_001" default="Sugar Cone Novice" goal="150" scoops="1" toppings="1" waitingTime="13" duration="90" />
+	<level id="CODE_LANG01_TITlE_002" default="Cake Cone Novice" goal="200" scoops="1" toppings="1" waitingTime="13" duration="90" />
+	<level id="CODE_LANG01_TITlE_003" default="Soft Serve Pro" goal="250" scoops="1" toppings="1" waitingTime="13" duration="90" />
+	<level id="CODE_LANG01_TITlE_004" default="Sundae Cone Wonder" goal="300" scoops="1" toppings="1" waitingTime="13" duration="100" />
+	<level id="CODE_LANG01_TITlE_005" default="Sundae Maker" goal="350" scoops="1" toppings="1" waitingTime="13" duration="100" />
+	<level id="CODE_LANG01_TITlE_006" default="Candy Specialist" goal="400" scoops="1" toppings="2" waitingTime="12" duration="100" />
+	<level id="CODE_LANG01_TITlE_007" default="Captain Chocolate" goal="450" scoops="1" toppings="2" waitingTime="12" duration="120" />
+	<level id="CODE_LANG01_TITlE_008" default="Cherry Refresher" goal="500" scoops="1" toppings="2" waitingTime="12" duration="120" />
+	<level id="CODE_LANG01_TITlE_009" default="Toppings Expert" goal="550" scoops="1" toppings="2" waitingTime="12" duration="120" />
+	<level id="CODE_LANG01_TITlE_010" default="Waffle Cone Chef" goal="600" scoops="1" toppings="2" waitingTime="12" duration="140" />
+	<level id="CODE_LANG01_TITlE_011" default="Novelty Inventor" goal="650" scoops="2" toppings="2" waitingTime="11" duration="140" />
+	<level id="CODE_LANG01_TITlE_012" default="Neapolitan Infuser" goal="700" scoops="2" toppings="2" waitingTime="11" duration="140" />
+	<level id="CODE_LANG01_TITlE_013" default="Banana Split Melter" goal="750" scoops="2" toppings="2" waitingTime="11" duration="160" />
+	<level id="CODE_LANG01_TITlE_014" default="Milkshake Mixer Pro" goal="800" scoops="2" toppings="2" waitingTime="11" duration="160" />
+	<level id="CODE_LANG01_TITlE_015" default="Mochi Master" goal="850" scoops="2" toppings="2" waitingTime="11" duration="160" />
+	<level id="CODE_LANG01_TITlE_016" default="Sorbet Sculptor" goal="900" scoops="2" toppings="3" waitingTime="8" duration="180" />
+	<level id="CODE_LANG01_TITlE_017" default="Frutti Sherbet" goal="950" scoops="2" toppings="3" waitingTime="8" duration="180" />
+	<level id="CODE_LANG01_TITlE_018" default="Master of Parfait" goal="1000" scoops="2" toppings="3" waitingTime="8" duration="180" />
+	<level id="CODE_LANG01_TITlE_019" default="Gelato Connoisseur" goal="1100" scoops="2" toppings="3" waitingTime="8" duration="200" />
+	<level id="CODE_LANG01_TITlE_020" default="Ice Cream Gourmet" goal="1200" scoops="2" toppings="3" waitingTime="8" duration="200" />
+</levels>

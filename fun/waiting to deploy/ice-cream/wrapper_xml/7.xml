@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<minigame-text>
+	<str id=""><![CDATA[]]></str>
+	<str id="GamePopUp_Des_01"><![CDATA[Um deine Höchstpunkte in unsere Rangtabelle einzutragen, bitte melde dich an bei uns, um spezielle Vorteile zu bekommen!]]></str>
+	<str id="GamePopUp_Top_02"><![CDATA[Bitte #anmelden# um die Punkte zu übertragen!]]></str>
+	<str id="WebAva_Btn_01"><![CDATA[Anmelden]]></str>
+	<str id="WebAva_Des_01"><![CDATA[Erstelle deinen eigenen MiniWinx, indem du der lustigen & aufregenden Winx Familie beitrittst!]]></str>
+	<str id="GamePopUp_Btn_02"><![CDATA[Anmelden]]></str>
+	<str id="GamePopUp_Btn_01"><![CDATA[Abbrechen]]></str>
+	<str id="GamePopUp_Title_01"><![CDATA[Alarm]]></str>
+</minigame-text>
