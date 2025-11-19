@@ -71,11 +71,11 @@ function crimson_room() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/room-escape/crimson-room.swf', 'ruffle', 1500, 1000);
 }
 
-function the-blue-chamber() {
+function the_blue_chamber() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/room-escape/the-blue-chamber.swf', 'ruffle', 1500, 1000);
 }
 
-function viridian-room() {
+function viridian_room() {
     embedSWF('https://hoanganhdinhngoc.github.io/fun/room-escape/viridian-room.swf', 'ruffle', 1500, 1000);
 }
 
