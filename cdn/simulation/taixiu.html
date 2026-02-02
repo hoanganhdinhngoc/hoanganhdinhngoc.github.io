@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <title>Simulation || Tài Xỉu</title>
+    <style>
+        :root {
+            --primary-color: #01c000;
+            --secondary-color: #cb0303;
+            --bg-color: #f4f7f6;
+            --panel-bg: #ffffff;
+            --gray-btn: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 450px 650px;
+            gap: 20px;
+            background: var(--panel-bg);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            height: 60vh; /* Cố định chiều cao tổng thể */
+        }
+
+        /* Coin Animation */
+        .coin-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #coin {
+            width: 100px;
+            height: 100px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s ease-out;
+        }
+
+        .coin-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 30px;
+            font-weight: bold;
+            backface-visibility: hidden;
+            border: 4px solid #f1c40f;
+        }
+
+        .heads { background: #f39c12; color: white; transform: rotateY(0deg); }
+        .tails { background: #d35400; color: white; transform: rotateY(180deg); }
+
+        .flipping { animation: flip 0.2s infinite linear; }
+
+        @keyframes flip {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        /* Selection Buttons */
+        .selection-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .selection-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--gray-btn);
+            color: #333;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .selection-btn.active-sap { background-color: var(--primary-color) !important; color: white; }
+        .selection-btn.active-ngua { background-color: #cb0303 !important; color: white; }
+
+        /* Left Panel Controls */
+        .betting-panel { border-right: 2px solid #eee; padding-right: 20px; display: flex; flex-direction: column; }
+        .balance-box { font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #2c3e50; text-align: center;}
+        
+        .input-group { margin-bottom: 10px; text-align: center; }
+        input[type="number"] { width: 100%; padding: 12px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: center; }
+
+        /* New Stepper Styles */
+        .stepper-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stepper-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.2s;
+        }
+
+        .stepper-btn:hover { background: #f0f0f0; }
+
+        select#quickAmount {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            cursor: pointer;
+            min-width: 100px;
+        }
+
+        .play-btn { width: 100%; padding: 15px; font-size: 18px; font-weight: bold; color: white; background-color: #2c3e50; border: none; border-radius: 8px; cursor: pointer; margin-top: auto;}
+        .play-btn:disabled { background-color: #bdc3c7; }
+
+        /* Right Panel - Scrollable Table */
+        .stats-panel { display: flex; flex-direction: column; overflow: hidden; }
+        
+        .table-header-container { background: #34495e; border-radius: 8px 8px 0 0; }
+        
+        .table-scroll {
+            flex-grow: 1;
+            overflow-y: auto;
+            border: 1px solid #eee;
+            border-top: none;
+        }
+
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { padding: 12px; text-align: center; font-size: 14px; border-bottom: 1px solid #eee; }
+        th { background: #34495e; color: white; position: sticky; top: 0; z-index: 1; }
+
+        .win { color: var(--primary-color); font-weight: bold; }
+        .loss { color: var(--secondary-color); font-weight: bold; }
+
+        .summary-box { background: #ecf0f1; padding: 15px; border-radius: 0 0 8px 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .summary-value { font-weight: bold; font-size: 16px; display: block; margin-top: 5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="betting-panel">
+        <h2 style="margin: 0 0 15px 0; text-align: center;">SIR'S CASINO</h2>
+        
+        <div class="coin-container">
+            <div id="coin">
+                <div class="coin-face heads">Tài</div>
+                <div class="coin-face tails">Xỉu</div>
+            </div>
+            
+            <div class="selection-group">
+                <button id="btnSap" class="selection-btn" onclick="selectSide('sap')">Chọn Tài</button>
+                <button id="btnNgua" class="selection-btn" onclick="selectSide('ngua')">Chọn Xỉu</button>
+            </div>
+        </div>
+
+        <div class="balance-box">Số dư: <span id="balance">10,000</span> USD</div>
+        
+        <div class="input-group">
+            <label style="display:block; margin-bottom:5px; font-weight:bold;">TIỀN CƯỢC</label>
+            <input type="number" id="betAmount" value="10" min="1">
+        </div>
+
+        <div class="stepper-container">
+            <button class="stepper-btn" onclick="modifyBet('minus')">−</button>
+            <select id="quickAmount">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+                <option value="500">500</option>
+                <option value="1000">1,000</option>
+                <option value="2000">2,000</option>
+                <option value="5000">5,000</option>
+                <option value="10000">10,000</option>
+            </select>
+            <button class="stepper-btn" onclick="modifyBet('plus')">+</button>
+        </div>
+
+        <button class="play-btn" id="playBtn" onclick="startFlip()">CHƠI</button>
+    </div>
+
+    <div class="stats-panel">
+        <h3 style="margin: 0 0 10px 0;">LỊCH SỬ VÁN ĐẤU</h3>
+        
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">Ván</th>
+                        <th style="width: 20%;">Mức cược</th>
+                        <th style="width: 20%;">Chọn</th>
+                        <th style="width: 20%;">Kết quả</th>
+                        <th style="width: 25%;">Lợi nhuận</th>
+                    </tr>
+                </thead>
+                <tbody id="historyBody">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="summary-box">
+            <div>Tổng cược: <span id="totalWagered" class="summary-value">0</span></div>
+            <div>Lợi nhuận: <span id="totalProfit" class="summary-value">0</span></div>
+            <div>Tỷ lệ thắng: <span id="winRate" class="summary-value">0%</span></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let balance = 10000;
+    let roundCount = 0;
+    let totalWagered = 0;
+    let totalProfit = 0;
+    let totalWins = 0;
+    let selectedSide = null;
+
+    const coin = document.getElementById('coin');
+    const playBtn = document.getElementById('playBtn');
+    const btnSap = document.getElementById('btnSap');
+    const btnNgua = document.getElementById('btnNgua');
+    const betInput = document.getElementById('betAmount');
+    const quickAmountSelect = document.getElementById('quickAmount');
+
+    function selectSide(side) {
+        selectedSide = side;
+        btnSap.classList.toggle('active-sap', side === 'sap');
+        btnNgua.classList.toggle('active-ngua', side === 'ngua');
+    }
+
+    // Logic for new Stepper
+    function modifyBet(type) {
+        let currentBet = parseInt(betInput.value) || 0;
+        let changeValue = parseInt(quickAmountSelect.value);
+        
+        if (type === 'plus') {
+            betInput.value = currentBet + changeValue;
+        } else {
+            betInput.value = Math.max(1, currentBet - changeValue);
+        }
+    }
+
+    function startFlip() {
+        const betAmount = parseInt(betInput.value);
+
+        if (!selectedSide) { alert("Sir vui lòng chọn Tài hoặc Xỉu!"); return; }
+        if (isNaN(betAmount) || betAmount <= 0) { alert("Mức cược không hợp lệ!"); return; }
+        if (betAmount > balance) { alert("Sir không đủ số dư!"); return; }
+
+        playBtn.disabled = true;
+        coin.classList.add('flipping');
+
+        const result = Math.random() < 0.5 ? 'sap' : 'ngua';
+
+        setTimeout(() => {
+            coin.classList.remove('flipping');
+            coin.style.transform = (result === 'sap') ? 'rotateY(0deg)' : 'rotateY(180deg)';
+            
+            setTimeout(() => {
+                processResult(result, betAmount);
+                playBtn.disabled = false;
+            }, 300);
+        }, 1000);
+    }
+
+    function processResult(result, betAmount) {
+        roundCount++;
+        totalWagered += betAmount;
+        const isWin = (selectedSide === result);
+        let profit = isWin ? betAmount : -betAmount;
+        
+        balance += profit;
+        if (isWin) totalWins++;
+        totalProfit += profit;
+
+        document.getElementById('balance').innerText = balance.toLocaleString();
+        
+        const row = document.getElementById('historyBody').insertRow(0);
+        row.innerHTML = `
+            <td>#${roundCount}</td>
+            <td>${betAmount.toLocaleString()}</td>
+            <td>${selectedSide === 'sap' ? 'Tài' : 'Xỉu'}</td>
+            <td class="${isWin ? 'win' : 'loss'}">${result === 'sap' ? 'TÀI' : 'XỈU'}</td>
+            <td class="${profit >= 0 ? 'win' : 'loss'}">${profit > 0 ? '+' : ''}${profit.toLocaleString()}</td>
+        `;
+
+        updateSummary();
+    }
+
+    function updateSummary() {
+        document.getElementById('totalWagered').innerText = totalWagered.toLocaleString();
+        const profitEl = document.getElementById('totalProfit');
+        profitEl.innerText = (totalProfit > 0 ? '+' : '') + totalProfit.toLocaleString();
+        profitEl.style.color = totalProfit >= 0 ? '#2ecc71' : '#e74c3c';
+        
+        const winRate = roundCount > 0 ? ((totalWins / roundCount) * 100).toFixed(1) : 0;
+        document.getElementById('winRate').innerText = winRate + "%";
+    }
+</script>
+
+</body>
+</html>
