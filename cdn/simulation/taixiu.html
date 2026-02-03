@@ -2,40 +2,101 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
-    <title>Simulation || Tài Xỉu</title>
+    <title>Nier Simulation || Tài Xỉu</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
         :root {
-            --primary-color: #01c000;
-            --secondary-color: #cb0303;
-            --bg-color: #f4f7f6;
-            --panel-bg: #ffffff;
-            --gray-btn: #ecf0f1;
+            --primary-color: #008a008a;
+            --secondary-color: #85000083;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+            --coin-heads:#008a008a;
+            --coin-tails:#85000083;
         }
+
+        * {
+            box-sizing: border-box;
+            scrollbar-color: rgba(100,98,86,0.8) rgba(143, 139, 122, 0.7);
+            margin: 0;
+            padding: 0;
+        }
+
+        ::-moz-selection {
+        /* Code for Firefox */
+        color: #d3cebb;
+        background: rgba(100, 98, 86, 0.8);
+        }
+
+        ::selection {
+        color: #d3cebb;
+        background: rgba(100, 98, 86, 0.8);
+        }
+
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                              linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
             display: flex;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .container {
-            display: grid;
-            grid-template-columns: 450px 650px;
-            gap: 20px;
-            background: var(--panel-bg);
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            height: 60vh; /* Cố định chiều cao tổng thể */
+        .warp-container {
+            margin-top: 5em;
         }
 
-        /* Coin Animation */
+        /* Container chính sử dụng Flexbox */
+        .coreSystem {
+            display: flex;
+            flex-direction: row; /* Desktop nằm ngang */
+            gap: 1em; /* Khoảng cách 5em theo ý Sir */
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+
+        .title-main {
+            width: 100%;
+            font-size: 26px;
+            font-family: 'Montserrat', sans-serif;
+            color: #4b4340;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        /* Tách biệt 2 vùng thành các Section riêng */
+        .section {
+            background: var(--nier-panel);
+            box-shadow: 2px 2px 1px #4f4b42;
+            padding: 20px;
+            border-radius: 0px;
+        }
+
+        .betting-panel {
+            flex: 0 0 400px;
+        }
+
+        .stats-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        /* Coin & UI Elements */
         .coin-container {
             display: flex;
             flex-direction: column;
@@ -44,11 +105,12 @@
         }
 
         #coin {
-            width: 100px;
-            height: 100px;
+            width: 90px;
+            height: 90px;
             position: relative;
             transform-style: preserve-3d;
             transition: transform 1s ease-out;
+            margin-bottom: 15px;
         }
 
         .coin-face {
@@ -59,15 +121,14 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 30px;
+            font-size: 20px;
             font-weight: bold;
             backface-visibility: hidden;
-            border: 4px solid #f1c40f;
+            border: 4px solid var(--nier-dark);
         }
 
-        .heads { background: #f39c12; color: white; transform: rotateY(0deg); }
-        .tails { background: #d35400; color: white; transform: rotateY(180deg); }
-
+        .heads { background: var(--coin-heads); color: var(--nier-text-light); transform: rotateY(0deg); }
+        .tails { background: var(--coin-tails); color: var(--nier-text-light); transform: rotateY(180deg); }
         .flipping { animation: flip 0.2s infinite linear; }
 
         @keyframes flip {
@@ -75,167 +136,286 @@
             100% { transform: rotateY(360deg); }
         }
 
-        /* Selection Buttons */
         .selection-group {
             display: flex;
             gap: 15px;
-            margin: 20px 0;
             width: 100%;
         }
 
         .selection-btn {
             flex: 1;
             padding: 12px;
-            border: none;
-            border-radius: 8px;
+            border: 2px solid var(--nier-dark);
             cursor: pointer;
-            background-color: var(--gray-btn);
-            color: #333;
+            background: transparent;
+            font-family: 'Montserrat', sans-serif;
             font-weight: bold;
             transition: 0.3s;
         }
 
-        .selection-btn.active-sap { background-color: var(--primary-color) !important; color: white; }
-        .selection-btn.active-ngua { background-color: #cb0303 !important; color: white; }
+        .selection-btn.active-sap { background: var(--primary-color) !important; color: #d3cebb; border-color: var(--primary-color); }
+        .selection-btn.active-ngua { background: var(--secondary-color) !important; color: #d3cebb; border-color: var(--secondary-color); }
 
-        /* Left Panel Controls */
-        .betting-panel { border-right: 2px solid #eee; padding-right: 20px; display: flex; flex-direction: column; }
-        .balance-box { font-size: 22px; font-weight: bold; margin-bottom: 15px; color: #2c3e50; text-align: center;}
+        .balance-box { font-size: 22px; font-weight: bold; margin: 20px 0; text-align: center; }
         
-        .input-group { margin-bottom: 10px; text-align: center; }
-        input[type="number"] { width: 100%; padding: 12px; font-size: 18px; border: 2px solid #ddd; border-radius: 8px; box-sizing: border-box; text-align: center; }
+        .toolzone {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            outline: none;
+            border: 2px solid var(--nier-dark);
+            background: rgba(216, 210, 186, .5);
+            color: #4b4340;
+            text-align: center;
+        }
 
-        /* New Stepper Styles */
         .stepper-container {
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 10px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
-        .stepper-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-            background: white;
-            font-size: 20px;
+        .themebutton {
             cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: 0.2s;
+            padding: 10px 15px;
+            font-weight: bold;
+            color: #4b4340;
+            border: none;
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
         }
 
-        .stepper-btn:hover { background: #f0f0f0; }
+        .themebutton:hover {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
+
+        .taibutton {
+            background: linear-gradient(to right, #008a008a 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+        }
+
+        .taibutton:hover {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
+
+        .xiubutton {
+            background: linear-gradient(to right, #85000083 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+        }
+
+        .xiubutton:hover {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
 
         select#quickAmount {
-            padding: 8px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ddd;
-            cursor: pointer;
-            min-width: 100px;
+            padding: 9px;
+            background: var(--nier-panel);
+            border: 2px solid var(--nier-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
         }
 
-        .play-btn { width: 100%; padding: 15px; font-size: 18px; font-weight: bold; color: white; background-color: #2c3e50; border: none; border-radius: 8px; cursor: pointer; margin-top: auto;}
-        .play-btn:disabled { background-color: #bdc3c7; }
+        .play-btn { width: 100%; font-size: 18px; padding: 15px; }
 
-        /* Right Panel - Scrollable Table */
-        .stats-panel { display: flex; flex-direction: column; overflow: hidden; }
-        
-        .table-header-container { background: #34495e; border-radius: 8px 8px 0 0; }
-        
+        /* Bảng Thống Kê */
+        .sectionTitle {
+            padding: 1% 2%;
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
         .table-scroll {
-            flex-grow: 1;
+            max-height: 400px;
             overflow-y: auto;
-            border: 1px solid #eee;
-            border-top: none;
+            border: 1px solid var(--nier-dark);
+            scrollbar-width: thin;
         }
 
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { padding: 12px; text-align: center; font-size: 14px; border-bottom: 1px solid #eee; }
-        th { background: #34495e; color: white; position: sticky; top: 0; z-index: 1; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #4e493a; color: #d3cebb; padding: 12px; position: sticky; top: 0; font-size: 13px; }
+        td { padding: 12px 5px; text-align: center; border-bottom: 1px solid rgba(75, 67, 64, 0.2); font-size: 13px; }
 
         .win { color: var(--primary-color); font-weight: bold; }
         .loss { color: var(--secondary-color); font-weight: bold; }
 
-        .summary-box { background: #ecf0f1; padding: 15px; border-radius: 0 0 8px 8px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .summary-value { font-weight: bold; font-size: 16px; display: block; margin-top: 5px; }
+        .summary-box {
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            padding: 15px;
+            padding-left: 3em;
+            background: rgba(100, 98, 86, 0.1);
+        }
+
+        .summary-value { display: block; font-weight: bold; font-size: 16px; margin-top: 5px; }
+
+        /* RESPONSIVE CHO MOBILE */
+        @media only screen and (max-width: 768px) {
+            body { padding: 10px; }
+            .coreSystem {
+                flex-direction: column; /* Xếp dọc */
+                gap: 2em; /* Giảm khoảng cách cho mobile */
+                padding: 0;
+            }
+
+            .betting-panel, .stats-panel {
+                flex: none;
+                width: 100%;
+            }
+
+            .title-main {
+                font-size: 20px;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
+            .table-scroll {
+                max-height: 300px;
+            }
+
+            th, td {
+                font-size: 11px;
+                padding: 8px 2px;
+            }
+        }
     </style>
+
+    <script>
+    $(document).ready(function () {
+              // Sounds
+      var tutorialSound = document.getElementById("tutorial-sound");
+      var hoverSound = document.getElementById("hover-sound");
+      var clickSound = document.getElementById("click-sound");
+      var openlinkSound = document.getElementById("open-link-sound");
+      $(".dropContent,.tutorial").hover(function () {
+        hoverSound.play();
+      }, function () {
+        hoverSound.load();
+      });
+
+      $(".tutorial").click(function () {
+        tutorialSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
+      $(".themebutton").click(function () {
+        clickSound.play();
+      });
+
+      $(".dropContent").click(function () {
+        tutorialSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
+      // Sounds control
+
+    });
+    </script>
+
 </head>
 <body>
 
-<div class="container">
-    <div class="betting-panel">
-        <h2 style="margin: 0 0 15px 0; text-align: center;">SIR'S CASINO</h2>
-        
-        <div class="coin-container">
-            <div id="coin">
-                <div class="coin-face heads">Tài</div>
-                <div class="coin-face tails">Xỉu</div>
+    <audio id="tutorial-sound">
+    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg" type="audio/ogg">
+  </audio>
+  <audio id="hover-sound">
+    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg">
+  </audio>
+  <audio id="click-sound">
+    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg">
+  </audio>
+  <audio id="open-link-sound">
+    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg" type="audio/ogg">
+  </audio>
+
+
+<div class="warp-container" style="width: 100%; max-width: 1200px;">
+    <h1 class="title-main">TÀI XỈU GIẢ LẬP</h1>
+
+    <div class="coreSystem">
+        <div class="betting-panel section">
+            <div class="coin-container">
+                <div id="coin">
+                    <div class="coin-face heads">Tài</div>
+                    <div class="coin-face tails">Xỉu</div>
+                </div>
+                <div class="selection-group">
+                    <button id="btnSap" class="selection-btn dropContent taibutton" onclick="selectSide('sap')">CHỌN TÀI</button>
+                    <button id="btnNgua" class="selection-btn dropContent xiubutton" onclick="selectSide('ngua')">CHỌN XỈU</button>
+                </div>
             </div>
+
+            <div class="balance-box">Số dư: <span id="balance">10,000</span> USD</div>
             
-            <div class="selection-group">
-                <button id="btnSap" class="selection-btn" onclick="selectSide('sap')">Chọn Tài</button>
-                <button id="btnNgua" class="selection-btn" onclick="selectSide('ngua')">Chọn Xỉu</button>
+            <div class="input-group">
+                <label style="font-weight: bold; margin-bottom: 5px; display: block;">MỨC CƯỢC</label>
+                <input type="number" id="betAmount" class="toolzone" value="10" min="1">
             </div>
+
+            <div class="stepper-container">
+                <button class="themebutton" onclick="modifyBet('minus')">−</button>
+                <select id="quickAmount">
+                    <option value="1">1</option>
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                    <option value="500">500</option>
+                    <option value="1000">1,000</option>
+                </select>
+                <button class="themebutton" onclick="modifyBet('plus')">+</button>
+            </div>
+
+            <button class="themebutton play-btn" id="playBtn" onclick="startFlip()">CHƠI</button>
         </div>
 
-        <div class="balance-box">Số dư: <span id="balance">10,000</span> USD</div>
-        
-        <div class="input-group">
-            <label style="display:block; margin-bottom:5px; font-weight:bold;">TIỀN CƯỢC</label>
-            <input type="number" id="betAmount" value="10" min="1">
-        </div>
+        <div class="stats-panel">
+            <h2 class="sectionTitle">THỐNG KÊ</h2>
+            <div class="section" style="padding: 0;">
+                <div class="table-scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ván</th>
+                                <th>Cược</th>
+                                <th>Chọn</th>
+                                <th>Kết quả</th>
+                                <th>Lợi nhuận</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historyBody"></tbody>
+                    </table>
+                </div>
+            </div>
 
-        <div class="stepper-container">
-            <button class="stepper-btn" onclick="modifyBet('minus')">−</button>
-            <select id="quickAmount">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="5">5</option>
-                <option value="10" selected>10</option>
-                <option value="20">20</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-                <option value="200">200</option>
-                <option value="500">500</option>
-                <option value="1000">1,000</option>
-                <option value="2000">2,000</option>
-                <option value="5000">5,000</option>
-                <option value="10000">10,000</option>
-            </select>
-            <button class="stepper-btn" onclick="modifyBet('plus')">+</button>
-        </div>
-
-        <button class="play-btn" id="playBtn" onclick="startFlip()">CHƠI</button>
-    </div>
-
-    <div class="stats-panel">
-        <h3 style="margin: 0 0 10px 0;">LỊCH SỬ VÁN ĐẤU</h3>
-        
-        <div class="table-scroll">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">Ván</th>
-                        <th style="width: 20%;">Mức cược</th>
-                        <th style="width: 20%;">Chọn</th>
-                        <th style="width: 20%;">Kết quả</th>
-                        <th style="width: 25%;">Lợi nhuận</th>
-                    </tr>
-                </thead>
-                <tbody id="historyBody">
-                    </tbody>
-            </table>
-        </div>
-
-        <div class="summary-box">
-            <div>Tổng cược: <span id="totalWagered" class="summary-value">0</span></div>
-            <div>Lợi nhuận: <span id="totalProfit" class="summary-value">0</span></div>
-            <div>Tỷ lệ thắng: <span id="winRate" class="summary-value">0%</span></div>
+            <div class="summary-box section">
+                <div>Tổng cược<span id="totalWagered" class="summary-value">0</span></div>
+                <div>Tổng lợi nhuận<span id="totalProfit" class="summary-value">0</span></div>
+                <div>Xác xuất thắng<span id="winRate" class="summary-value">0%</span></div>
+            </div>
         </div>
     </div>
 </div>
@@ -248,33 +428,23 @@
     let totalWins = 0;
     let selectedSide = null;
 
-    const coin = document.getElementById('coin');
-    const playBtn = document.getElementById('playBtn');
-    const btnSap = document.getElementById('btnSap');
-    const btnNgua = document.getElementById('btnNgua');
-    const betInput = document.getElementById('betAmount');
-    const quickAmountSelect = document.getElementById('quickAmount');
-
     function selectSide(side) {
         selectedSide = side;
-        btnSap.classList.toggle('active-sap', side === 'sap');
-        btnNgua.classList.toggle('active-ngua', side === 'ngua');
+        document.getElementById('btnSap').classList.toggle('active-sap', side === 'sap');
+        document.getElementById('btnNgua').classList.toggle('active-ngua', side === 'ngua');
     }
 
-    // Logic for new Stepper
     function modifyBet(type) {
+        const betInput = document.getElementById('betAmount');
         let currentBet = parseInt(betInput.value) || 0;
-        let changeValue = parseInt(quickAmountSelect.value);
-        
-        if (type === 'plus') {
-            betInput.value = currentBet + changeValue;
-        } else {
-            betInput.value = Math.max(1, currentBet - changeValue);
-        }
+        let changeValue = parseInt(document.getElementById('quickAmount').value);
+        betInput.value = (type === 'plus') ? currentBet + changeValue : Math.max(1, currentBet - changeValue);
     }
 
     function startFlip() {
-        const betAmount = parseInt(betInput.value);
+        const betAmount = parseInt(document.getElementById('betAmount').value);
+        const playBtn = document.getElementById('playBtn');
+        const coin = document.getElementById('coin');
 
         if (!selectedSide) { alert("Sir vui lòng chọn Tài hoặc Xỉu!"); return; }
         if (isNaN(betAmount) || betAmount <= 0) { alert("Mức cược không hợp lệ!"); return; }
@@ -282,13 +452,11 @@
 
         playBtn.disabled = true;
         coin.classList.add('flipping');
-
         const result = Math.random() < 0.5 ? 'sap' : 'ngua';
 
         setTimeout(() => {
             coin.classList.remove('flipping');
             coin.style.transform = (result === 'sap') ? 'rotateY(0deg)' : 'rotateY(180deg)';
-            
             setTimeout(() => {
                 processResult(result, betAmount);
                 playBtn.disabled = false;
@@ -301,13 +469,11 @@
         totalWagered += betAmount;
         const isWin = (selectedSide === result);
         let profit = isWin ? betAmount : -betAmount;
-        
         balance += profit;
         if (isWin) totalWins++;
         totalProfit += profit;
 
         document.getElementById('balance').innerText = balance.toLocaleString();
-        
         const row = document.getElementById('historyBody').insertRow(0);
         row.innerHTML = `
             <td>#${roundCount}</td>
@@ -316,7 +482,6 @@
             <td class="${isWin ? 'win' : 'loss'}">${result === 'sap' ? 'TÀI' : 'XỈU'}</td>
             <td class="${profit >= 0 ? 'win' : 'loss'}">${profit > 0 ? '+' : ''}${profit.toLocaleString()}</td>
         `;
-
         updateSummary();
     }
 
@@ -324,8 +489,7 @@
         document.getElementById('totalWagered').innerText = totalWagered.toLocaleString();
         const profitEl = document.getElementById('totalProfit');
         profitEl.innerText = (totalProfit > 0 ? '+' : '') + totalProfit.toLocaleString();
-        profitEl.style.color = totalProfit >= 0 ? '#2ecc71' : '#e74c3c';
-        
+        profitEl.style.color = totalProfit >= 0 ? '#008a008a' : '#85000083';
         const winRate = roundCount > 0 ? ((totalWins / roundCount) * 100).toFixed(1) : 0;
         document.getElementById('winRate').innerText = winRate + "%";
     }
