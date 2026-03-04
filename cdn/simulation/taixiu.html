@@ -30,16 +30,14 @@
         }
 
         ::-moz-selection {
-        /* Code for Firefox */
-        color: #d3cebb;
-        background: rgba(100, 98, 86, 0.8);
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
         }
 
         ::selection {
-        color: #d3cebb;
-        background: rgba(100, 98, 86, 0.8);
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
         }
-
 
         body {
             font-family: 'Montserrat', sans-serif;
@@ -48,38 +46,42 @@
                               linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
             background-size: 5px 5px;
             color: var(--nier-dark);
-            display: flex;
-            justify-content: center;
             min-height: 100vh;
+        }
+
+        /* --- LAYOUT THEME CỦA SIR --- */
+        .coreSystem {
+            display: inline-block;
+            width: 100%;
+            min-height: 100vh;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
             padding: 20px;
         }
 
         .warp-container {
-            margin-top: 5em;
-        }
-
-        /* Container chính sử dụng Flexbox */
-        .coreSystem {
-            display: flex;
-            flex-direction: row; /* Desktop nằm ngang */
-            gap: 1em; /* Khoảng cách 5em theo ý Sir */
+            margin-top: 2em;
             width: 100%;
             max-width: 1200px;
-            margin: 0 auto;
-            align-items: flex-start;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .title-main {
-            width: 100%;
             font-size: 26px;
-            font-family: 'Montserrat', sans-serif;
-            color: #4b4340;
             text-shadow: 4px 5px rgba(162, 156, 142, .8);
             margin-bottom: 30px;
             text-align: left;
         }
 
-        /* Tách biệt 2 vùng thành các Section riêng */
+        /* Container cho 2 panel chức năng */
+        .function-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 1em;
+            width: 100%;
+            align-items: flex-start;
+        }
+
         .section {
             background: var(--nier-panel);
             box-shadow: 2px 2px 1px #4f4b42;
@@ -231,9 +233,8 @@
 
         .play-btn { width: 100%; font-size: 18px; padding: 15px; }
 
-        /* Bảng Thống Kê */
         .sectionTitle {
-            padding: 1% 2%;
+            padding: 10px 15px;
             color: #d3cebb;
             background: rgba(100, 98, 86, 0.8);
             font-weight: bold;
@@ -260,19 +261,16 @@
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             padding: 15px;
-            padding-left: 3em;
+            padding-left: 2em;
             background: rgba(100, 98, 86, 0.1);
         }
 
         .summary-value { display: block; font-weight: bold; font-size: 16px; margin-top: 5px; }
 
-        /* RESPONSIVE CHO MOBILE */
         @media only screen and (max-width: 768px) {
-            body { padding: 10px; }
-            .coreSystem {
-                flex-direction: column; /* Xếp dọc */
-                gap: 2em; /* Giảm khoảng cách cho mobile */
-                padding: 0;
+            .function-wrapper {
+                flex-direction: column;
+                gap: 2em;
             }
 
             .betting-panel, .stats-panel {
@@ -281,36 +279,27 @@
             }
 
             .title-main {
-                font-size: 30px;
+                font-size: 22px;
                 text-align: center;
                 margin-bottom: 15px;
-            }
-
-            .table-scroll {
-                max-height: 300px;
-            }
-
-            th, td {
-                font-size: 11px;
-                padding: 8px 2px;
             }
         }
     </style>
 
     <script>
     $(document).ready(function () {
-              // Sounds
-      var tutorialSound = document.getElementById("tutorial-sound");
       var hoverSound = document.getElementById("hover-sound");
       var clickSound = document.getElementById("click-sound");
+      var tutorialSound = document.getElementById("tutorial-sound");
       var openlinkSound = document.getElementById("open-link-sound");
+
       $(".dropContent,.tutorial").hover(function () {
         hoverSound.play();
       }, function () {
         hoverSound.load();
       });
 
-      $(".tutorial").click(function () {
+      $(".tutorial, .dropContent").click(function () {
         tutorialSound.play();
       });
 
@@ -321,100 +310,81 @@
       $(".themebutton").click(function () {
         clickSound.play();
       });
-
-      $(".dropContent").click(function () {
-        tutorialSound.play();
-      });
-
-      $("a").click(function () {
-        openlinkSound.play();
-      });
-
-      // Sounds control
-
     });
     </script>
-
 </head>
 <body>
 
-    <audio id="tutorial-sound">
-    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg" type="audio/ogg">
-  </audio>
-  <audio id="hover-sound">
-    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg">
-  </audio>
-  <audio id="click-sound">
-    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg">
-  </audio>
-  <audio id="open-link-sound">
-    <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg" type="audio/ogg">
-  </audio>
+<audio id="tutorial-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg" type="audio/ogg"></audio>
+<audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+<audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+<audio id="open-link-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg" type="audio/ogg"></audio>
 
+<div class="coreSystem">
+    <div class="warp-container">
+        <h1 class="title-main">TÀI XỈU GIẢ LẬP</h1>
 
-<div class="warp-container" style="width: 100%; max-width: 1200px;">
-    <h1 class="title-main">TÀI XỈU GIẢ LẬP</h1>
-
-    <div class="coreSystem">
-        <div class="betting-panel section">
-            <div class="coin-container">
-                <div id="coin">
-                    <div class="coin-face heads">Tài</div>
-                    <div class="coin-face tails">Xỉu</div>
+        <div class="function-wrapper">
+            <div class="betting-panel section">
+                <div class="coin-container">
+                    <div id="coin">
+                        <div class="coin-face heads">Tài</div>
+                        <div class="coin-face tails">Xỉu</div>
+                    </div>
+                    <div class="selection-group">
+                        <button id="btnSap" class="selection-btn dropContent taibutton" onclick="selectSide('sap')">CHỌN TÀI</button>
+                        <button id="btnNgua" class="selection-btn dropContent xiubutton" onclick="selectSide('ngua')">CHỌN XỈU</button>
+                    </div>
                 </div>
-                <div class="selection-group">
-                    <button id="btnSap" class="selection-btn dropContent taibutton" onclick="selectSide('sap')">CHỌN TÀI</button>
-                    <button id="btnNgua" class="selection-btn dropContent xiubutton" onclick="selectSide('ngua')">CHỌN XỈU</button>
+
+                <div class="balance-box">Số dư: <span id="balance">10,000</span> USD</div>
+                
+                <div class="input-group">
+                    <label style="font-weight: bold; margin-bottom: 5px; display: block;">MỨC CƯỢC</label>
+                    <input type="number" id="betAmount" class="toolzone" value="10" min="1">
                 </div>
-            </div>
 
-            <div class="balance-box">Số dư: <span id="balance">10,000</span> USD</div>
-            
-            <div class="input-group">
-                <label style="font-weight: bold; margin-bottom: 5px; display: block;">MỨC CƯỢC</label>
-                <input type="number" id="betAmount" class="toolzone" value="10" min="1">
-            </div>
-
-            <div class="stepper-container">
-                <button class="themebutton" onclick="modifyBet('minus')">−</button>
-                <select id="quickAmount">
-                    <option value="1">1</option>
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                    <option value="500">500</option>
-                    <option value="1000">1,000</option>
-                </select>
-                <button class="themebutton" onclick="modifyBet('plus')">+</button>
-            </div>
-
-            <button class="themebutton play-btn" id="playBtn" onclick="startFlip()">CHƠI</button>
-        </div>
-
-        <div class="stats-panel">
-            <h2 class="sectionTitle">THỐNG KÊ</h2>
-            <div class="section" style="padding: 0;">
-                <div class="table-scroll">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Ván</th>
-                                <th>Cược</th>
-                                <th>Chọn</th>
-                                <th>Kết quả</th>
-                                <th>Lợi nhuận</th>
-                            </tr>
-                        </thead>
-                        <tbody id="historyBody"></tbody>
-                    </table>
+                <div class="stepper-container">
+                    <button class="themebutton" onclick="modifyBet('minus')">−</button>
+                    <select id="quickAmount">
+                        <option value="1">1</option>
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                        <option value="500">500</option>
+                        <option value="1000">1,000</option>
+                    </select>
+                    <button class="themebutton" onclick="modifyBet('plus')">+</button>
                 </div>
+
+                <button class="themebutton play-btn" id="playBtn" onclick="startFlip()">CHƠI</button>
             </div>
 
-            <div class="summary-box section">
-                <div>Tổng cược<span id="totalWagered" class="summary-value">0</span></div>
-                <div>Tổng lợi nhuận<span id="totalProfit" class="summary-value">0</span></div>
-                <div>Tỷ lệ thắng<span id="winRate" class="summary-value">0%</span></div>
+            <div class="stats-panel">
+                <h2 class="sectionTitle">THỐNG KÊ</h2>
+                <div class="section" style="padding: 0;">
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ván</th>
+                                    <th>Cược</th>
+                                    <th>Chọn</th>
+                                    <th>Kết quả</th>
+                                    <th>Lợi nhuận</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="summary-box section">
+                    <div>Tổng cược<span id="totalWagered" class="summary-value">0</span></div>
+                    <div>Tổng lợi nhuận<span id="totalProfit" class="summary-value">0</span></div>
+                    <div>Tỷ lệ thắng<span id="winRate" class="summary-value">0%</span></div>
+                </div>
             </div>
         </div>
     </div>
