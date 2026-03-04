@@ -283,32 +283,33 @@
         let mousePressed = false;
         let audioContext;
         let gainNode;
-        let currentOscillator;
+        let oscillator;
 
         function initAudio() {
+            if (audioContext) return;
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
             gainNode = audioContext.createGain();
+            gainNode.gain.setValueAtTime(0, audioContext.currentTime);
             gainNode.connect(audioContext.destination);
+
+            oscillator = audioContext.createOscillator();
+            oscillator.type = 'sine';
+            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+            oscillator.start();
+            oscillator.connect(gainNode);
         }
 
         function startBeep() {
             if (!audioContext) initAudio();
             if (audioContext.state === 'suspended') audioContext.resume();
-            currentOscillator = audioContext.createOscillator();
-            currentOscillator.connect(gainNode);
-            currentOscillator.frequency.setValueAtTime(800, audioContext.currentTime);
-            currentOscillator.type = 'sine';
-            currentOscillator.start();
-            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+            // Mở âm lượng ngay lập tức
+            gainNode.gain.setTargetAtTime(0.1, audioContext.currentTime, 0.005);
         }
 
         function stopBeep() {
             if (gainNode) {
-                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
-            }
-            if (currentOscillator) {
-                currentOscillator.stop(audioContext.currentTime + 0.01);
-                currentOscillator = null;
+                // Đóng âm lượng ngay lập tức
+                gainNode.gain.setTargetAtTime(0, audioContext.currentTime, 0.005);
             }
         }
 
@@ -442,6 +443,27 @@
         });
 
         updateDisplay();
+
+        // Add spacebar as transmit button
+
+        let isKeyPressed = false;
+
+        document.addEventListener('keydown', (event) => {
+            if (event.target.id === 'wpmSlider') return;
+
+            if (event.key === " " && !isKeyPressed) {
+                event.preventDefault();
+                isKeyPressed = true;
+                onPressStart();
+            }
+        });
+
+        document.addEventListener('keyup', (event) => {
+            if (event.key === " ") {
+                isKeyPressed = false;
+                onRelease();
+            }
+        });
     </script>
 </body>
 </html>

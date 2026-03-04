@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <title>CDN || Aspect Ratio Calculator</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #85000083;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                              linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .warp-container { margin-top: 5em; width: 100%; max-width: 1200px; }
+        .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 30px; text-transform: uppercase; }
+
+        .coreSystem { display: flex; flex-direction: row; gap: 2em; align-items: flex-start; }
+        .section { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 25px; }
+
+        .input-panel { flex: 0 0 450px; }
+        .result-panel { flex: 1; min-width: 0; }
+
+        .sectionTitle { padding: 10px 15px; color: #d3cebb; background: rgba(100, 98, 86, 0.8); font-weight: bold; margin-bottom: 20px; font-size: 14px; }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 12px; }
+
+        .toolzone {
+            width: 100%; padding: 12px; font-family: 'Montserrat', sans-serif; font-size: 18px;
+            border: 2px solid var(--nier-dark); background: rgba(216, 210, 186, .5); color: #4b4340; outline: none;
+        }
+
+        .ratio-inputs { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; }
+        .separator { font-weight: bold; font-size: 20px; margin-top: 15px; }
+
+        .themebutton {
+            cursor: pointer; padding: 12px 20px; font-weight: bold; color: #4b4340; border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%); background-size: 200% 100%;
+            background-position: right bottom; transition: all .2s ease-out; font-family: 'Montserrat', sans-serif; text-transform: uppercase; text-align: center;
+        }
+        .themebutton:hover { color: #d3cebb; background-position: left bottom; }
+
+        .presets-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 15px; }
+        .preset-btn { font-size: 11px; padding: 10px 2px; }
+
+        /* FIX: Container mô phỏng */
+        .visual-container {
+            width: 100%; height: 600px; display: flex; align-items: center; justify-content: center;
+            background: rgba(100, 98, 86, 0.05); border: 1px solid rgba(75, 67, 64, 0.1); padding: 20px;
+        }
+
+        #visualBox {
+            border: 2px dashed var(--nier-dark);
+            background: rgba(100, 98, 86, 0.4);
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.3s ease;
+            max-width: 100%;
+            max-height: 100%;
+            /* Chiều rộng và chiều cao sẽ được JS tính toán động để giữ tỷ lệ */
+        }
+
+        .display-text { font-weight: bold; opacity: 0.8; font-size: 1.1rem; pointer-events: none; }
+
+        .summary-box { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; background: rgba(100, 98, 86, 0.1); padding: 20px; }
+        .summary-item span { display: block; font-size: 20px; font-weight: 700; color: var(--nier-dark); }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .coreSystem {
+                flex-direction: column;
+                gap: 1.5em;
+                padding: 0;
+                align-items: center;
+            }
+
+            /* Đảm bảo hai bảng luôn có cùng độ rộng 100% trên mobile */
+            .input-panel, .result-panel {
+                flex: none;
+                width: 100%;
+                max-width: 100%;
+            }
+
+            .visual-container {
+                height: 400px; /* Giảm nhẹ so với 600px của Desktop để không quá dài trên phone */
+            }
+
+            /* SỬA LỖI CÁC NÚT BỊ BÉ TÍ */
+            .presets-grid {
+                grid-template-columns: repeat(2, 1fr); /* Chia 2 cột trên mobile sẽ cân đối và to rõ hơn */
+                gap: 10px;
+            }
+
+            .preset-btn {
+                font-size: 13px; /* Tăng font chữ một chút cho dễ đọc */
+                padding: 15px 5px; /* Tăng diện tích bấm */
+                width: 100%; /* Ép nút chiếm hết ô lưới */
+                display: block;
+            }
+
+            /* Giữ nút 1:1 luôn chiếm trọn chiều ngang */
+            .presets-grid button:first-child {
+                grid-column: span 2 !important;
+            }
+
+            .title-main {
+                font-size: 22px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+<audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+
+<div class="warp-container">
+    <h1 class="title-main">Aspect Ratio Calculator</h1>
+    <div class="coreSystem">
+        <div class="input-panel section">
+            <h2 class="sectionTitle">THÔNG SỐ CẤU HÌNH</h2>
+            <div class="control-group">
+                <label>TỶ LỆ (RATIO)</label>
+                <div class="ratio-inputs">
+                    <input type="number" id="ratioW" class="toolzone" value="16">
+                    <span class="separator">:</span>
+                    <input type="number" id="ratioH" class="toolzone" value="9">
+                </div>
+            </div>
+            <div class="control-group">
+                <label>KÍCH THƯỚC (PIXELS)</label>
+                <div class="ratio-inputs">
+                    <input type="number" id="pixelW" class="toolzone" value="1920">
+                    <span class="separator">×</span>
+                    <input type="number" id="pixelH" class="toolzone" value="1080">
+                </div>
+            </div>
+            <label>CÁC TỶ LỆ PHỔ BIẾN</label>
+            <div class="presets-grid">
+                <button class="themebutton preset-btn" onclick="setPreset(1, 1)" style="grid-column: span 4;">1 : 1</button>
+                <button class="themebutton preset-btn" onclick="setPreset(21, 9)">21 : 9</button>
+                <button class="themebutton preset-btn" onclick="setPreset(9, 21)">9 : 21</button>
+                <button class="themebutton preset-btn" onclick="setPreset(2, 1)">2 : 1</button>
+                <button class="themebutton preset-btn" onclick="setPreset(1, 2)">1 : 2</button>
+                <button class="themebutton preset-btn" onclick="setPreset(16, 9)">16 : 9</button>
+                <button class="themebutton preset-btn" onclick="setPreset(9, 16)">9 : 16</button>
+                <button class="themebutton preset-btn" onclick="setPreset(3, 2)">3 : 2</button>
+                <button class="themebutton preset-btn" onclick="setPreset(2, 3)">2 : 3</button>
+                <button class="themebutton preset-btn" onclick="setPreset(7, 5)">7 : 5</button>
+                <button class="themebutton preset-btn" onclick="setPreset(5, 7)">5 : 7</button>
+                <button class="themebutton preset-btn" onclick="setPreset(4, 3)">4 : 3</button>
+                <button class="themebutton preset-btn" onclick="setPreset(3, 4)">3 : 4</button>
+                <button class="themebutton preset-btn" onclick="setPreset(5, 4)">5 : 4</button>
+                <button class="themebutton preset-btn" onclick="setPreset(4, 5)">4 : 5</button>
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <div class="section">
+                <h2 class="sectionTitle">MÔ PHỎNG TRỰC QUAN</h2>
+                <div class="visual-container">
+                    <div id="visualBox">
+                        <div class="display-text" id="visualText">16:9</div>
+                    </div>
+                </div>
+                <div class="summary-box">
+                    <div class="summary-item"><label>TỶ LỆ THẬT</label><span id="resRatio">1.78:1</span></div>
+                    <div class="summary-item"><label>ĐỊNH DẠNG</label><span id="resType">Widescreen</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const rw = document.getElementById('ratioW'), rh = document.getElementById('ratioH');
+    const pw = document.getElementById('pixelW'), ph = document.getElementById('pixelH');
+    const visualBox = document.getElementById('visualBox'), visualText = document.getElementById('visualText');
+    const hoverSound = document.getElementById("hover-sound"), clickSound = document.getElementById("click-sound");
+
+    $(document).on('mouseenter', '.themebutton, .toolzone', () => { hoverSound.currentTime = 0; hoverSound.play(); });
+
+    function updateUI() {
+        const w = parseFloat(rw.value) || 1, h = parseFloat(rh.value) || 1;
+        const container = document.querySelector('.visual-container');
+        const contW = container.clientWidth - 40, contH = container.clientHeight - 40;
+
+        // Tính toán kích thước hiển thị tối ưu để giữ đúng tỷ lệ trong khung giới hạn
+        if ((w / h) > (contW / contH)) {
+            visualBox.style.width = contW + 'px';
+            visualBox.style.height = (contW * h / w) + 'px';
+        } else {
+            visualBox.style.height = contH + 'px';
+            visualBox.style.width = (contH * w / h) + 'px';
+        }
+        
+        visualText.innerText = `${w}:${h}`;
+        const decimal = (w / h).toFixed(2);
+        document.getElementById('resRatio').innerText = `${decimal}:1`;
+        
+        let type = "Custom";
+        if (decimal > 2.0) type = "Ultrawide";
+        else if (decimal > 1.1) type = "Landscape";
+        else if (decimal >= 0.9 && decimal <= 1.1) type = "Square";
+        else type = "Portrait";
+        document.getElementById('resType').innerText = type;
+    }
+
+    function calculateFromRatio() {
+        const w = parseFloat(rw.value), h = parseFloat(rh.value), curW = parseFloat(pw.value);
+        if (w && h && curW) { ph.value = Math.round((curW * h) / w); updateUI(); }
+    }
+    function calculateFromWidth() {
+        const w = parseFloat(rw.value), h = parseFloat(rh.value), val = parseFloat(pw.value);
+        if (w && h && val) { ph.value = Math.round((val * h) / w); updateUI(); }
+    }
+    function calculateFromHeight() {
+        const w = parseFloat(rw.value), h = parseFloat(rh.value), val = parseFloat(ph.value);
+        if (w && h && val) { pw.value = Math.round((val * w) / h); updateUI(); }
+    }
+    function setPreset(w, h) { clickSound.play(); rw.value = w; rh.value = h; calculateFromRatio(); }
+
+    [rw, rh].forEach(el => el.addEventListener('input', calculateFromRatio));
+    pw.addEventListener('input', calculateFromWidth);
+    ph.addEventListener('input', calculateFromHeight);
+    window.addEventListener('resize', updateUI);
+
+    updateUI();
+
+    window.addEventListener('resize', updateUI);
+updateUI();
+</script>
+</body>
+</html>
