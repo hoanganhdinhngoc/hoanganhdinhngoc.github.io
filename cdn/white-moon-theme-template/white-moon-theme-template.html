@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Raw Coarse-Fiber Theme - Anti-Zoom - Sir</title>
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <style>
+        :root {
+            --paper-base: #c2bbbb;
+            --ink-black: #1a1a1a;
+            --font-main: "Times New Roman", Times, serif;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--paper-base);
+            font-family: var(--font-main);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        ::-moz-selection {
+            /* Code for Firefox */
+            color: #dadada;
+            background: rgba(77, 77, 77, 0.8);
+        }
+
+        ::selection {
+             color: #dadada;
+            background: rgba(77, 77, 77, 0.8);
+        }
+
+        .master-noise {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            pointer-events: none;
+            z-index: 100;
+            filter: url(#fine-monochrome-filter);
+            opacity: 0.3;
+            transform: translateZ(0) rotate(0.01deg);
+            will-change: transform;
+        }
+
+        .coarse-fibers {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+            filter: url(#raw-fiber-filter);
+            opacity: 0.4;
+        }
+
+        .paper-imperfections {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.07) 0%, transparent 45%),
+                radial-gradient(circle at 80% 90%, rgba(0, 0, 0, 0.06) 0%, transparent 40%),
+                radial-gradient(circle at 40% 50%, rgba(0, 0, 0, 0.03) 0%, transparent 12%),
+                radial-gradient(circle at 60% 30%, rgba(0, 0, 0, 0.03) 0%, transparent 10%),
+                radial-gradient(circle at 20% 70%, rgba(0, 0, 0, 0.02) 0%, transparent 8%),
+                radial-gradient(circle at 95% 5%, rgba(0, 0, 0, 0.02) 0%, transparent 6%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .main-container {
+            position: relative;
+            width: 90%;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 20;
+            filter: contrast(1) brightness(0.9);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            color: var(--ink-black);
+            text-shadow: 0.3px 0.3px 1px rgba(0, 0, 0, 0.2);
+        }
+
+        .title-left {
+            font-size: 32px;
+            letter-spacing: 6px;
+        }
+
+        .title-right {
+            text-align: right;
+        }
+
+        .title-right h1 {
+            font-size: 36px;
+            margin: 0;
+            letter-spacing: 4px;
+            font-weight: normal;
+        }
+
+        .title-right p {
+            font-size: 14px;
+            margin: 0;
+            letter-spacing: 3px;
+            opacity: 0.9;
+        }
+
+        footer {
+            font-size: 13px;
+            color: var(--ink-black);
+            letter-spacing: 1px;
+            line-height: 1.6;
+        }
+
+        .active-track {
+            font-weight: bold;
+            text-decoration: line-through;
+        }
+
+        #gameCanvas {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        svg {
+            position: absolute;
+            width: 0;
+            height: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="master-noise"></div>
+    <div class="coarse-fibers"></div>
+    <div class="paper-imperfections"></div>
+
+    <svg>
+        <filter id="fine-monochrome-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="2.97" numOctaves="1" result="noise1" />
+            <feTurbulence type="fractalNoise" baseFrequency="3.02" numOctaves="1" result="noise2" />
+            <feBlend in="noise1" in2="noise2" mode="screen" result="noise" />
+
+            <feColorMatrix type="saturate" values="0" result="mono" />
+            <feComponentTransfer>
+                <feFuncR type="linear" slope="50" intercept="-0.2" />
+                <feFuncG type="linear" slope="50" intercept="-0.2" />
+                <feFuncB type="linear" slope="50" intercept="-0.2" />
+            </feComponentTransfer>
+            <feBlend in="SourceGraphic" in2="mono" mode="overlay" />
+        </filter>
+
+        <filter id="raw-fiber-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" result="fibers" />
+            <feColorMatrix type="saturate" values="0" result="monoFibers" />
+            <feComponentTransfer>
+                <feFuncR type="linear" slope="50" intercept="-1.1" />
+                <feFuncG type="linear" slope="50" intercept="-1.1" />
+                <feFuncB type="linear" slope="50" intercept="-1.1" />
+            </feComponentTransfer>
+            <feBlend in="SourceGraphic" in2="monoFibers" mode="multiply" />
+        </filter>
+    </svg>
+
+    <div class="main-container">
+        <header>
+            <div class="title-left">TWO LANES</div>
+            <div class="title-right">
+                <h1>REFLECTIONS</h1>
+                <p>PIANO VERSIONS</p>
+            </div>
+        </header>
+
+        <canvas id="gameCanvas"></canvas>
+
+        <footer>
+            <div>1. Transcend (Piano Version) &nbsp; 2. Reflections (Piano Version)</div>
+            <div><span class="active-track">3. From Within</span> &nbsp; 4. Veiled &nbsp; 5. Frei &nbsp; 6. November
+                &nbsp; 7. Epilogue</div>
+        </footer>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = 800; canvas.height = 800;
+        const moonPhases = [100, 75, 50, 25, 0, -75, -50, -25];
+
+        let angle = 0;
+        const orbitRadius = 160;
+        const moonSize = 13;
+
+        function drawMoonByPercent(ctx, x, y, size, percent) {
+            ctx.save();
+            ctx.translate(x, y);
+
+            ctx.fillStyle = "#1a1a1a";
+            ctx.strokeStyle = "#1a1a1a";
+            ctx.lineWidth = 1.2;
+            ctx.beginPath();
+            ctx.arc(0, 0, size, 0, Math.PI * 2);
+            ctx.stroke();
+
+            const absPercent = Math.abs(percent);
+            if (absPercent <= 0) { ctx.restore(); return; }
+
+            let ratio = (absPercent - 50) / 50;
+            let isLeftCrescent = percent < 0;
+            ctx.beginPath();
+            if (percent >= 0) {
+                ctx.arc(0, 0, size, Math.PI / 2, 3 * Math.PI / 2, false);
+                ctx.ellipse(0, 0, size * Math.abs(ratio), size, 0, 3 * Math.PI / 2, Math.PI / 2, ratio < 0);
+            } else {
+                ctx.arc(0, 0, size, 3 * Math.PI / 2, Math.PI / 2, false);
+                ctx.ellipse(0, 0, size * Math.abs(ratio), size, 0, Math.PI / 2, 3 * Math.PI / 2, ratio > 0);
+            }
+            ctx.fill();
+
+            ctx.globalCompositeOperation = 'destination-out';
+            for (let i = 0; i < 10; i++) {
+                ctx.beginPath();
+                ctx.arc((Math.random() - 0.5) * size * 1.6, (Math.random() - 0.5) * size * 1.6, 0.4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            for (let i = 0; i < 8; i++) {
+                const currentAngle = angle + (i * Math.PI * 2) / 8;
+                const x = cx + Math.cos(currentAngle) * orbitRadius;
+                const y = cy + Math.sin(currentAngle) * orbitRadius;
+
+                drawMoonByPercent(ctx, x, y, moonSize, moonPhases[i]);
+            }
+
+            angle += 0.001  ; //  turning speed
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+
+</html>
