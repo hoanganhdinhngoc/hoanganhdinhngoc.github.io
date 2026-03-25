@@ -216,7 +216,7 @@
             <div class="sc-item"><kbd>←</kbd>/<kbd>→</kbd><span>Seek -/+ 5s</span></div>
             <div class="sc-item"><kbd>Shift</kbd>+<kbd>↑</kbd>/<kbd>↓</kbd><span>Volume Up / Down</span></div>
             <div class="sc-item"><kbd>Shift</kbd>+<kbd>S</kbd><span>Toggle Shuffle</span></div>
-            <div class="sc-item"><kbd>Shift</kbd>+<kbd>R</kbd><span>Toggle Repeat</span></div>
+            <div class="sc-item"><kbd>Shift</kbd>+<kbd>L</kbd><span>Toggle Repeat</span></div>
             <div class="sc-item"><kbd>Shift</kbd>+<kbd>M</kbd><span>Mute / Unmute</span></div>
             <div class="sc-item"><kbd>Shift</kbd>+<kbd>/</kbd><span>Show Shortcuts</span></div>
         </div>
@@ -533,7 +533,7 @@
                 showVolumeBar(); hideVolumeBar(); 
             }
             if (e.key.toLowerCase() === "s") document.getElementById('shuffle-btn').click();
-            if (e.key.toLowerCase() === "r") document.getElementById('repeat-btn').click();
+            if (e.key.toLowerCase() === "l") document.getElementById('repeat-btn').click();
             if (e.key.toLowerCase() === "m") { e.preventDefault(); toggleMute(); }
         }
     };
