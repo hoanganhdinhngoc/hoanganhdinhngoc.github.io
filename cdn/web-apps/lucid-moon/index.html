@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lucid Moon - Dashboard</title>
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper-base: #c2bbbb;
+            --ink-black: #1a1a1a;
+            --ink-grey: #8a8a8a;
+            --font-main: 'Lora', Times, serif;
+            --font-title: 'Lora', "Noto Serif", "Yu Mincho", "Batang", serif;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--paper-base);
+            font-family: var(--font-main);
+            overflow: hidden; 
+            display: flex; flex-direction: column;
+        }
+
+        ::-moz-selection { color: #e6e6e6; background: rgba(85, 85, 85, 0.8); }
+        ::selection { color: #e6e6e6; background: rgba(85, 85, 85, 0.8); }
+
+        /* FILTERS */
+        .master-noise { position: fixed; top: -10%; left: -10%; width: 120%; height: 120%; pointer-events: none; z-index: 100; filter: url(#fine-monochrome-filter); opacity: 0.3; transform: translateZ(0) rotate(0.01deg); }
+        .coarse-fibers { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; filter: url(#raw-fiber-filter); opacity: 0.4; }
+        .paper-imperfections { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.07) 0%, transparent 45%), radial-gradient(circle at 80% 90%, rgba(0, 0, 0, 0.06) 0%, transparent 40%); pointer-events: none; z-index: 1; }
+
+        .main-wrapper {
+            position: relative; display: flex; flex-direction: column;
+            width: 100%; height: 100vh;
+            z-index: 20; filter: contrast(1) brightness(0.9);
+            overflow-y: auto; 
+            scroll-behavior: smooth;
+            /* Ẩn scrollbar gốc */
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        .main-wrapper::-webkit-scrollbar { display: none; }
+
+        /* HEADER */
+        header { padding: 30px 5%; display: flex; justify-content: space-between; color: var(--ink-black); flex-shrink: 0; }
+        .header-left { display: flex; flex-direction: column; }
+        .header-right { display: flex; flex-direction: column; text-align: right; }
+        .header-logo-link { text-decoration: none; color: inherit; cursor: pointer; transition: opacity 0.3s; }
+        .header-logo-link:hover { opacity: 0.7; }
+        .title-left { font-size: 32px; letter-spacing: 6px; font-weight: bold; }
+        .subtitle-left { font-size: 12px; letter-spacing: 3px; margin-top: 6px; opacity: 0.7; }
+        .title-right h1 { font-family: var(--font-title); font-size: 28px; margin: 0; letter-spacing: 4px; font-weight: 600; }
+        .subtitle-right { font-size: 12px; letter-spacing: 3px; margin-top: 6px; opacity: 0.7; }
+
+        /* KHU VỰC BÀI TẬP */
+        .dashboard-stage { flex-grow: 1; padding: 10px 5% 80px 5%; display: flex; flex-direction: column; gap: 40px; }
+        .category-block { display: flex; flex-direction: column; gap: 15px; position: relative; } /* Thêm relative cho scroll ngang */
+        .category-title { font-size: 20px; font-weight: 600; letter-spacing: 2px; color: var(--ink-black); width: fit-content; }
+
+        .cards-row {
+            display: flex; gap: 30px; overflow-x: auto;
+            padding: 15px 0 20px 0; 
+            scroll-behavior: smooth;
+            cursor: grab; 
+            /* Ẩn scrollbar gốc */
+            scrollbar-width: none; 
+            -ms-overflow-style: none; 
+        }
+        .cards-row::-webkit-scrollbar { display: none; }
+        .cards-row:active { cursor: grabbing; scroll-behavior: auto; }
+
+        .card-item {
+            display: flex; flex-direction: column; align-items: center; gap: 12px;
+            text-decoration: none; color: var(--ink-black);
+            flex-shrink: 0; transition: transform 0.3s ease;
+            user-select: none; -webkit-user-drag: none; 
+        }
+        .card-item:hover { transform: translateY(-8px); }
+
+        .card-box {
+            width: 180px; height: 110px; border: 2px solid var(--ink-black); border-radius: 16px; 
+            display: flex; justify-content: center; align-items: center;
+            background: rgba(255, 255, 255, 0.1); transition: background 0.3s ease, box-shadow 0.3s ease;
+            pointer-events: none; 
+        }
+        .card-item:hover .card-box { background: rgba(255, 255, 255, 0.3); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+        .card-icon { font-size: 32px; color: var(--ink-black); opacity: 0.9; }
+        .card-label { font-size: 18px; font-family: var(--font-title); font-style: italic; font-weight: 500; pointer-events: none; }
+
+        svg { position: absolute; width: 0; height: 0; }
+
+        /* ========================================= */
+        /* UI CHO CUSTOM SCROLLBAR (GIẢ LẬP)         */
+        /* ========================================= */
+        .custom-scrollbar {
+            position: absolute;
+            opacity: 0;
+            /* Thời gian khi BIẾN MẤT (từ opacity 1 về 0) */
+            transition: opacity 500ms ease-in-out; 
+            pointer-events: none; 
+            z-index: 100;
+        }
+        
+        .custom-scrollbar.show { 
+            opacity: 1; 
+            /* Thời gian khi HIỆN RA (từ opacity 0 lên 1) */
+            transition: opacity 100ms ease-in-out; 
+        }
+        
+        .custom-thumb {
+            background: rgba(0, 0, 0, 0.2); 
+            border-radius: 10px;
+        }
+        /* Scroll dọc */
+        .scroll-y { position: fixed; top: 0; right: 4px; width: 8px; height: 100vh; z-index: 999; }
+        .scroll-y .custom-thumb { width: 100%; }
+        
+        /* Scroll ngang */
+        .scroll-x { bottom: 0; left: 0; width: 100%; height: 6px; }
+        .scroll-x .custom-thumb { height: 100%; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            header { padding: 20px 5%; flex-direction: row; align-items: flex-start; }
+            .title-left { font-size: 22px; letter-spacing: 4px; }
+            .subtitle-left { font-size: 10px; }
+            .title-right h1 { font-size: 20px; }
+            .dashboard-stage { padding: 10px 5% 50px 5%; gap: 30px; }
+            .category-block { gap: 10px; }
+            .category-title { font-size: 18px; } 
+            .cards-row { gap: 15px; padding: 10px 0 15px 0; }
+            .card-box { width: 130px; height: 85px; border-radius: 12px; }
+            .card-icon { font-size: 24px; }
+            .card-label { font-size: 15px; gap: 8px; }
+            .card-item:hover { transform: translateY(-4px); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="master-noise"></div>
+    <div class="coarse-fibers"></div>
+    <div class="paper-imperfections"></div>
+
+    <svg>
+        <filter id="fine-monochrome-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="2.97" numOctaves="1" result="noise1" />
+            <feTurbulence type="fractalNoise" baseFrequency="3.02" numOctaves="1" result="noise2" />
+            <feBlend in="noise1" in2="noise2" mode="screen" result="noise" />
+            <feColorMatrix type="saturate" values="0" result="mono" />
+            <feComponentTransfer><feFuncR type="linear" slope="50" intercept="-0.2" /><feFuncG type="linear" slope="50" intercept="-0.2" /><feFuncB type="linear" slope="50" intercept="-0.2" /></feComponentTransfer>
+            <feBlend in="SourceGraphic" in2="mono" mode="overlay" />
+        </filter>
+        <filter id="raw-fiber-filter">
+            <feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" result="fibers" />
+            <feColorMatrix type="saturate" values="0" result="monoFibers" />
+            <feComponentTransfer><feFuncR type="linear" slope="50" intercept="-1.1" /><feFuncG type="linear" slope="50" intercept="-1.1" /><feFuncB type="linear" slope="50" intercept="-1.1" /></feComponentTransfer>
+            <feBlend in="SourceGraphic" in2="monoFibers" mode="multiply" />
+        </filter>
+    </svg>
+
+    <div class="main-wrapper" id="main-scroll-area">
+        <header>
+            <div class="header-left">
+                <a href="index.html" class="header-logo-link">
+                    <div class="title-left">LUCID MOON</div>
+                    <div class="subtitle-left">Cognitive Training</div>
+                </a>
+            </div>
+            <div class="header-right">
+                <div class="title-right"><h1></h1></div>
+                <div class="subtitle-right"></div>
+            </div>
+        </header>
+
+        <div class="dashboard-stage">
+            <div class="category-block">
+                <div class="category-title">1. Tập Luyện Trí Nhớ</div>
+                <div class="cards-row">
+                    <a href="bai1.html" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-brain card-icon"></i></div>
+                        <div class="card-label">Bài 1</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-moon card-icon"></i></div>
+                        <div class="card-label">Bài 2</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-star card-icon"></i></div>
+                        <div class="card-label">Bài 3</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-circle-nodes card-icon"></i></div>
+                        <div class="card-label">Bài 4</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-seedling card-icon"></i></div>
+                        <div class="card-label">Bài 5</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-leaf card-icon"></i></div>
+                        <div class="card-label">Bài 6</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-clock card-icon"></i></div>
+                        <div class="card-label">Bài 7</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-compass card-icon"></i></div>
+                        <div class="card-label">Bài 8</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-gem card-icon"></i></div>
+                        <div class="card-label">Bài 9</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-key card-icon"></i></div>
+                        <div class="card-label">Bài 10</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-book-open card-icon"></i></div>
+                        <div class="card-label">Bài 11</div>
+                    </a>
+                    <a href="#" target="_blank" class="card-item">
+                        <div class="card-box"><i class="fa-solid fa-infinity card-icon"></i></div>
+                        <div class="card-label">Bài 12</div>
+                    </a>
+                </div>
+            </div>
+
+            <div class="category-block">
+                <div class="category-title">2. Rèn Luyện Tập Trung</div>
+                <div class="cards-row">
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-eye card-icon"></i></div><div class="card-label">Bài 1</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-bullseye card-icon"></i></div><div class="card-label">Bài 2</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-arrows-to-dot card-icon"></i></div><div class="card-label">Bài 3</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-crosshairs card-icon"></i></div><div class="card-label">Bài 4</div></a>
+                </div>
+            </div>
+
+            <div class="category-block">
+                <div class="category-title">3. Phối Hợp Tay - Mắt</div>
+                <div class="cards-row">
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-hand-pointer card-icon"></i></div><div class="card-label">Bài 1</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-computer-mouse card-icon"></i></div><div class="card-label">Bài 2</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-gamepad card-icon"></i></div><div class="card-label">Bài 3</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-regular fa-hand card-icon"></i></div><div class="card-label">Bài 4</div></a>
+                </div>
+            </div>
+
+            <div class="category-block">
+                <div class="category-title">4. Tư Duy Logic</div>
+                <div class="cards-row">
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-puzzle-piece card-icon"></i></div><div class="card-label">Bài 1</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-lightbulb card-icon"></i></div><div class="card-label">Bài 2</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-diagram-project card-icon"></i></div><div class="card-label">Bài 3</div></a>
+                    <a href="#" target="_blank" class="card-item"><div class="card-box"><i class="fa-solid fa-scale-balanced card-icon"></i></div><div class="card-label">Bài 4</div></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+    // =========================================================
+    // HỆ THỐNG CUSTOM SCROLLBAR (Xử lý Transition mượt mà)
+    // =========================================================
+    function injectCustomScrollbar(element, isVertical) {
+        const track = document.createElement('div');
+        const thumb = document.createElement('div');
+        track.className = `custom-scrollbar ${isVertical ? 'scroll-y' : 'scroll-x'}`;
+        thumb.className = 'custom-thumb';
+        track.appendChild(thumb);
+        
+        if (isVertical) {
+            document.body.appendChild(track);
+        } else {
+            element.parentElement.appendChild(track);
+        }
+
+        let hideTimeout;
+
+        function updateScroll() {
+            // Tính toán độ dài nội dung để biết có cần hiện thanh cuộn không
+            const clientSize = isVertical ? element.clientHeight : element.clientWidth;
+            const scrollSize = isVertical ? element.scrollHeight : element.scrollWidth;
+            const scrollPos = isVertical ? element.scrollTop : element.scrollLeft;
+            
+            const ratio = clientSize / scrollSize;
+            if (ratio >= 1) { track.style.display = 'none'; return; } // Nếu nội dung ngắn, ẩn hẳn
+            
+            track.style.display = 'block';
+            const thumbSize = Math.max(ratio * clientSize, 30); // Thumb tối thiểu 30px
+            const maxScroll = scrollSize - clientSize;
+            const scrollPerc = scrollPos / maxScroll;
+            const thumbPos = scrollPerc * (clientSize - thumbSize);
+
+            if (isVertical) {
+                thumb.style.height = `${thumbSize}px`;
+                thumb.style.transform = `translateY(${thumbPos}px)`;
+            } else {
+                thumb.style.width = `${thumbSize}px`;
+                thumb.style.transform = `translateX(${thumbPos}px)`;
+            }
+
+            // Kích hoạt hiệu ứng hiện rõ dần (100ms)
+            track.classList.add('show');
+            clearTimeout(hideTimeout);
+            
+            // Sau 1s ngừng scroll -> Mờ dần (100ms)
+            hideTimeout = setTimeout(() => {
+                track.classList.remove('show');
+            }, 1000);
+        }
+
+        element.addEventListener('scroll', updateScroll);
+        window.addEventListener('resize', updateScroll);
+        // Chạy lần đầu để set vị trí ẩn
+        updateScroll(); 
+        track.classList.remove('show'); 
+    }
+
+    // Khởi tạo Scrollbar dọc
+    const mainWrapper = document.getElementById('main-scroll-area');
+    injectCustomScrollbar(mainWrapper, true);
+
+    // =========================================================
+    // KÉO THẢ NGANG & KHỞI TẠO SCROLLBAR NGANG
+    // =========================================================
+    const sliders = document.querySelectorAll('.cards-row');
+    sliders.forEach(slider => {
+        injectCustomScrollbar(slider, false); // Khởi tạo thanh scroll ngang giả lập
+
+        let isDown = false, startX, scrollLeft, isDragging = false; 
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true; isDragging = false;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+
+        slider.addEventListener('mouseleave', () => { isDown = false; });
+        slider.addEventListener('mouseup', () => { isDown = false; });
+
+        slider.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 1.5; 
+            if (Math.abs(walk) > 5) isDragging = true; 
+            slider.scrollLeft = scrollLeft - walk; // Lệnh này tự trigger event 'scroll' ở trên
+        });
+
+        // Hủy mở tab nếu người dùng chỉ đang kéo vuốt chứ không chủ ý click
+        slider.querySelectorAll('.card-item').forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (isDragging) e.preventDefault(); 
+            });
+        });
+    });
+</script>
+</body>
+</html>
