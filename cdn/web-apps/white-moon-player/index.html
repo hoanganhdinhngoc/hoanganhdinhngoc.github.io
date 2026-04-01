@@ -61,10 +61,10 @@
         .header-left { display: flex; flex-direction: column; }
         .header-right { display: flex; flex-direction: column; text-align: right; }
         
-        .title-left { font-size: 32px; letter-spacing: 6px; font-weight: bold; }
+        .title-left { font-size: 36px; letter-spacing: 6px; font-weight: bold; }
         .subtitle-left { font-size: 12px; letter-spacing: 3px; margin-top: 6px; opacity: 0.7; }
         
-        .title-right h1 { font-size: 36px; margin: 0; letter-spacing: 4px; font-weight: normal; }
+        .title-right h1 { font-size: 32px; margin: 0; letter-spacing: 4px; font-weight: normal; }
         .subtitle-right { font-size: 12px; letter-spacing: 3px; margin-top: 6px; opacity: 0.7; }
 
         /* PLAYLIST */
@@ -229,7 +229,7 @@
                 <div class="subtitle-left">Aesthetic Audio Experience</div>
             </div>
             <div class="header-right">
-                <div class="title-right"><h1>REFLECTIONS SOUNDS</h1></div>
+                <div class="title-right"><h1>SERENADE SOUNDS</h1></div>
                 <div class="subtitle-right">Developed by hoanganhdinhngoc</div>
             </div>
         </header>
@@ -428,13 +428,13 @@
         volPopup.classList.add('show');
     }
 
-    function hideVolumeBar() {
-        clearTimeout(volHideTimer);
-        volHideTimer = setTimeout(() => { volPopup.classList.remove('show'); }, 500);
-    }
+function hideVolumeBar(delay = 100) {
+        clearTimeout(volHideTimer);
+        volHideTimer = setTimeout(() => { volPopup.classList.remove('show'); }, delay);
+    }
 
-    volArea.onmouseenter = showVolumeBar;
-    volArea.onmouseleave = hideVolumeBar;
+    volArea.onmouseenter = showVolumeBar;
+    volArea.onmouseleave = () => hideVolumeBar(100);
 
     function updateVolumeIcon(vol) {
         if (vol == 0) volIcon.className = 'fa-solid fa-volume-xmark';
@@ -521,17 +521,17 @@
             if (e.key === "ArrowRight") nextSong();
             if (e.key === "ArrowLeft") document.getElementById('prev-btn').click();
             if (e.key === "ArrowUp") { 
-                e.preventDefault();
-                audio.volume = Math.min(1, audio.volume + 0.1); 
-                volSlider.value = audio.volume; updateVolumeIcon(audio.volume);
-                showVolumeBar(); hideVolumeBar(); 
-            }
-            if (e.key === "ArrowDown") { 
-                e.preventDefault();
-                audio.volume = Math.max(0, audio.volume - 0.1); 
-                volSlider.value = audio.volume; updateVolumeIcon(audio.volume);
-                showVolumeBar(); hideVolumeBar(); 
-            }
+                e.preventDefault();
+                audio.volume = Math.min(1, audio.volume + 0.1); 
+                volSlider.value = audio.volume; updateVolumeIcon(audio.volume);
+                showVolumeBar(); hideVolumeBar(500); 
+            }
+            if (e.key === "ArrowDown") { 
+                e.preventDefault();
+                audio.volume = Math.max(0, audio.volume - 0.1); 
+                volSlider.value = audio.volume; updateVolumeIcon(audio.volume);
+                showVolumeBar(); hideVolumeBar(500); 
+            }
             if (e.key.toLowerCase() === "s") document.getElementById('shuffle-btn').click();
             if (e.key.toLowerCase() === "l") document.getElementById('repeat-btn').click();
             if (e.key.toLowerCase() === "m") { e.preventDefault(); toggleMute(); }
@@ -539,7 +539,7 @@
     };
 
     // --- MOON RENDER ---
-    const moonPhases = [100, 75, 40, 25, 0, -75, -40, -25];
+    const moonPhases = [100, 67, 45, 25, 0, -75, -45, -30];
     function drawMoon(ctx, x, y, size, percent) {
         ctx.save(); ctx.translate(x, y);
         ctx.fillStyle = "#1a1a1a"; ctx.strokeStyle = "#1a1a1a"; ctx.lineWidth = 1.2;
