@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
-    <title>CDN || Bulk Image Downloader</title>
+    <title>CDN || N8N Bulk Image Downloader</title>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -202,6 +202,7 @@
         .log-area div { margin-bottom: 4px; }
         .success { color: #2e7d32; }
         .error { color: #c62828; }
+        .warning { color: #d84315; }
 
         @media (max-width: 920px) {
             .function-wrapper { flex-direction: column; gap: 1.5em; align-items: center; }
@@ -233,7 +234,7 @@
                     </div>
 
                     <div class="control-group">
-                        <label>Folder Name (Default: Downloaded images)</label>
+                        <label>Target Folder Name</label>
                         <input type="text" id="folderName" class="toolzone" placeholder="Downloaded images">
                     </div>
 
@@ -246,7 +247,7 @@
                         
                         <div class="summary-box">
                             <div class="summary-item"><label>URLs Detected</label><span id="urlCount">0</span></div>
-                            <div class="summary-item"><label>Completed</label><span id="downloadStatus">0 / 0</span></div>
+                            <div class="summary-item"><label>Processed</label><span id="downloadStatus">0 / 0</span></div>
                         </div>
 
                         <div class="progress-container">
@@ -255,7 +256,7 @@
                         </div>
 
                         <div class="log-area" id="logArea">
-                            <div>[SYSTEM] Waiting for input...</div>
+                            <div>[SYSTEM] Awaiting input...</div>
                         </div>
                     </div>
                 </div>
@@ -276,20 +277,16 @@
         const progressText = document.getElementById('progressText');
         const logArea = document.getElementById('logArea');
 
-        // Hiệu ứng âm thanh khi di chuột
         $(document).on('mouseenter', '.themebutton, .toolzone', () => { 
             hoverSound.currentTime = 0; 
             hoverSound.play(); 
         });
 
-        // Hàm phân tích URL từ Textarea
         function getUrls() {
             const text = urlInput.value;
-            // Tách bằng dấu phẩy, dấu cách theo sau phẩy, hoặc xuống dòng
             return text.split(/[\n,]+/).map(u => u.trim()).filter(u => u !== '');
         }
 
-        // Cập nhật số lượng URL được nhận diện theo thời gian thực
         urlInput.addEventListener('input', () => {
             const urls = getUrls();
             urlCountEl.innerText = urls.length;
@@ -301,10 +298,9 @@
             div.textContent = msg;
             if(type) div.className = type;
             logArea.appendChild(div);
-            logArea.scrollTop = logArea.scrollHeight; // Tự động cuộn xuống
+            logArea.scrollTop = logArea.scrollHeight;
         }
 
-        // Xử lý khi ấn nút Download
         downloadBtn.addEventListener('click', async () => {
             clickSound.play();
             const urls = getUrls();
@@ -315,66 +311,132 @@
             }
 
             const folderName = folderNameInput.value.trim() || "Downloaded images";
-            const zip = new JSZip();
-            const folder = zip.folder(folderName);
             
             downloadBtn.disabled = true;
             urlInput.disabled = true;
-            logArea.innerHTML = '<div>[SYSTEM] Commencing download protocol...</div>';
             
-            let successCount = 0;
-            let errorCount = 0;
-            const total = urls.length;
+            logArea.innerHTML = ''; // Clear log
+            logMessage(`[SYSTEM] Initiating local client-side extraction...`);
+            progressText.innerText = "LOCAL PROCESSING...";
+            
+            progressBar.style.background = "var(--nier-dark)";
+            progressBar.style.width = '5%'; 
 
-            // Xử lý từng URL một cách song song (dùng Promise.allSettled)
-            const fetchPromises = urls.map(async (url, index) => {
-                try {
-                    // Lấy định dạng file từ URL (nếu có)
-                    let filename = url.substring(url.lastIndexOf('/') + 1).split('?')[0];
-                    if (!filename || !filename.includes('.')) {
-                        filename = `image_${index + 1}.jpg`; // Tên mặc định nếu không parse được
-                    }
+            let localSuccess = true;
+            const zip = new JSZip();
+            const folder = zip.folder(folderName);
+            let downloadedCount = 0;
 
+            // --- PHASE 1: CLIENT-SIDE JAVASCRIPT DOWNLOAD ATTEMPT ---
+            try {
+                // Chạy ngầm các request bằng Promise.all. 
+                // Nếu 1 request bị dính CORS, Promise.all sẽ lập tức ném ra lỗi.
+                await Promise.all(urls.map(async (url, index) => {
                     const response = await fetch(url);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    if (!response.ok) throw new Error("HTTP_ERROR");
                     
                     const blob = await response.blob();
+                    
+                    let filename = url.split('/').pop().split('?')[0];
+                    if (!filename || !filename.includes('.')) {
+                        filename = `image_${index + 1}.jpg`;
+                    }
+                    
                     folder.file(filename, blob);
+                    downloadedCount++;
                     
-                    successCount++;
-                    logMessage(`[SUCCESS] Fetched: ${filename}`, 'success');
-                } catch (error) {
-                    errorCount++;
-                    logMessage(`[ERROR] Failed to fetch: ${url} (CORS or Invalid URL)`, 'error');
-                } finally {
-                    // Cập nhật thanh tiến trình
-                    const completed = successCount + errorCount;
-                    const percent = Math.round((completed / total) * 100);
-                    
-                    progressBar.style.width = percent + '%';
-                    progressText.innerText = `PROCESSING ${percent}%`;
-                    downloadStatusEl.innerText = `${completed} / ${total}`;
-                }
-            });
+                    // Cập nhật UI an toàn
+                    if (localSuccess) {
+                        const percent = Math.round((downloadedCount / urls.length) * 100);
+                        progressBar.style.width = percent + '%';
+                        downloadStatusEl.innerText = `${downloadedCount} / ${urls.length}`;
+                    }
+                }));
 
-            // Chờ tất cả quá trình fetch hoàn tất
-            await Promise.allSettled(fetchPromises);
-
-            if (successCount > 0) {
-                logMessage(`[SYSTEM] Compressing files into ${folderName}.zip...`);
+                // Nếu chạy hết đoạn trên mà không bị lỗi (catch), nghĩa là Local tải thành công 100%
+                logMessage(`[SYSTEM] Local extraction successful. Compressing data...`, 'success');
                 progressText.innerText = "ZIPPING DATA...";
                 
-                // Nén và tải file
-                zip.generateAsync({ type: "blob" }).then(function(content) {
-                    saveAs(content, `${folderName}.zip`);
-                    logMessage(`[SYSTEM] Task complete. ${successCount} images saved.`, 'success');
+                const zipContent = await zip.generateAsync({ type: "blob" });
+                saveAs(zipContent, `${folderName}.zip`);
+
+                logMessage(`[SYSTEM] Sequence complete. Archive secured locally.`, 'success');
+                progressText.innerText = "COMPLETE 100%";
+                progressBar.style.width = '100%';
+
+            } catch (error) {
+                // --- PHASE 2: FALLBACK TO N8N SERVER ---
+                localSuccess = false;
+                
+                logMessage(`[ERROR] CORS policy violation or network barrier detected. Halting local sequence.`, 'error');
+                logMessage(`[SYSTEM] Rerouting request to Core Server (n8n) for remote execution...`, 'warning');
+
+                progressText.innerText = "SERVER PROCESSING...";
+                progressBar.style.width = '50%'; 
+                downloadStatusEl.innerText = `0 / ${urls.length}`;
+
+                try {
+                    const serverAPI = 'https://interdata.kurotheblackbear.io.vn/webhook/bulk-image-downloader'; 
+                    
+                    // Thêm AbortController để xử lý lỗi Timeout nếu server treo quá lâu (vd: 60 giây)
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 60000); 
+
+                    const response = await fetch(serverAPI, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            urls: urls,
+                            folder_name: folderName
+                        }),
+                        signal: controller.signal
+                    });
+
+                    clearTimeout(timeoutId);
+
+                    // Xử lý chi tiết các mã lỗi HTTP trả về
+                    if (!response.ok) {
+                        let errorDetail = `Status ${response.status} ${response.statusText}`;
+                        if (response.status === 404) errorDetail += " (Webhook URL not found or Workflow inactive)";
+                        if (response.status === 500) errorDetail += " (Internal Server Error / Workflow crashed)";
+                        if (response.status === 502 || response.status === 504) errorDetail += " (Bad Gateway / Timeout)";
+                        throw new Error(`HTTP_ERR: ${errorDetail}`);
+                    }
+
+                    logMessage(`[SYSTEM] Core data received. Decrypting binary packet...`);
+                    progressText.innerText = "DOWNLOADING ZIP...";
+                    progressBar.style.width = '90%';
+
+                    const blob = await response.blob();
+                    
+                    // Kiểm tra xem dữ liệu trả về có thực sự là file Zip không (phòng trường hợp n8n trả về text báo lỗi)
+                    if (blob.type !== 'application/zip' && blob.type !== 'application/x-zip-compressed' && blob.type !== 'application/octet-stream') {
+                        throw new Error("Invalid payload. Expected a ZIP archive but received different content type.");
+                    }
+
+                    saveAs(blob, `${folderName}.zip`);
+
+                    logMessage(`[SYSTEM] Sequence complete. Archive secured via Server.`, 'success');
                     progressText.innerText = "COMPLETE 100%";
-                    downloadBtn.disabled = false;
-                    urlInput.disabled = false;
-                });
-            } else {
-                logMessage(`[SYSTEM] Task failed. No images could be downloaded.`, 'error');
-                progressText.innerText = "FAILED";
+                    progressBar.style.width = '100%';
+                    downloadStatusEl.innerText = `${urls.length} / ${urls.length}`;
+
+                } catch (serverError) {
+                    let finalErrorMsg = serverError.message;
+                    
+                    // Phân tích kỹ các lỗi do Javascript ném ra
+                    if (serverError.name === 'AbortError') {
+                        finalErrorMsg = "Connection timed out. Core Server took too long to respond (> 60s).";
+                    } else if (finalErrorMsg.includes("Failed to fetch")) {
+                        finalErrorMsg = "Network block. Possible causes: n8n Server is down, incorrect URL, or n8n Webhook CORS is not enabled (Missing Allowed Origins: *).";
+                    }
+
+                    logMessage(`[ERROR] Server uplink failed: ${finalErrorMsg}`, 'error');
+                    progressText.innerText = "UPLINK FAILED";
+                    progressBar.style.background = "var(--secondary-color)";
+                }
+
+            } finally {
                 downloadBtn.disabled = false;
                 urlInput.disabled = false;
             }
