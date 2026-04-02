@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài 1: Chuỗi Ký Ức Mặt Trăng - Lucid Moon</title>
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --paper-base: #c2bbbb;
+            --ink-black: #1a1a1a;
+            --font-main: 'Lora', Times, serif;
+            /* Màu nháy: đỏ nâu đậm */
+            --flash-color: #660000; 
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background-color: var(--paper-base);
+            font-family: var(--font-main);
+            overflow: hidden; 
+            display: flex; flex-direction: column;
+            user-select: none; /* Tránh bôi đen khi click nhanh */
+        }
+
+        /* FILTERS GIẤY */
+        .master-noise { position: fixed; top: -10%; left: -10%; width: 120%; height: 120%; pointer-events: none; z-index: 100; filter: url(#fine-monochrome-filter); opacity: 0.3; transform: translateZ(0); }
+        .coarse-fibers { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; filter: url(#raw-fiber-filter); opacity: 0.4; }
+        .paper-imperfections { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at 10% 10%, rgba(0, 0, 0, 0.07) 0%, transparent 45%), radial-gradient(circle at 80% 90%, rgba(0, 0, 0, 0.06) 0%, transparent 40%); pointer-events: none; z-index: 1; }
+
+        .main-wrapper {
+            position: relative; display: flex; flex-direction: column;
+            width: 100%; height: 100vh; z-index: 20; filter: contrast(1) brightness(0.9);
+        }
+
+        /* HEADER */
+        header { padding: 20px 5%; display: flex; justify-content: space-between; color: var(--ink-black); flex-shrink: 0; }
+        .header-left { display: flex; flex-direction: column; }
+        .header-right { display: flex; flex-direction: column; text-align: right; }
+        
+        /* Cụm Logo không còn ấn được */
+        .header-logo-group { text-decoration: none; color: inherit; pointer-events: none; }
+        .title-left { font-size: 24px; letter-spacing: 4px; font-weight: bold; }
+        .subtitle-left { font-size: 11px; letter-spacing: 2px; margin-top: 4px; opacity: 0.7; }
+        
+        /* Title Phải: Tên nhóm (Viết hoa hết), Subtitle Phải: Tên bài (Không hoa hết) */
+        .title-right h1 { font-family: var(--font-main); font-size: 24px; margin: 0; letter-spacing: 2px; font-weight: 600; }
+        .subtitle-right { font-size: 11px; letter-spacing: 2px; margin-top: 4px; opacity: 0.7; }
+
+        /* Nút quay lại Menu bài tập, cập nhật link và chữ */
+        .back-btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            font-size: 14px; color: var(--ink-black); text-decoration: none;
+            margin-bottom: 10px; opacity: 0.8; transition: 0.2s; font-weight: 600;
+        }
+        .back-btn:hover { opacity: 1; transform: translateX(-5px); }
+
+        /* KHU VỰC GAME */
+        .game-stage {
+            flex-grow: 1; display: flex; justify-content: center; align-items: center; 
+            position: relative;
+        }
+        .canvas-wrapper {
+            width: 100%; max-width: 800px; aspect-ratio: 1/1; 
+            display: flex; justify-content: center; align-items: center;
+        }
+        canvas {
+            width: 100%; height: 100%; cursor: pointer;
+            -webkit-tap-highlight-color: transparent; 
+        }
+
+        svg { position: absolute; width: 0; height: 0; }
+
+        @media (max-width: 768px) {
+            header { padding: 15px 5%; flex-direction: row; align-items: flex-start; }
+            .title-left { font-size: 18px; }
+            .title-right h1 { font-size: 18px; }
+            .canvas-wrapper { max-width: 95vw; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="master-noise"></div><div class="coarse-fibers"></div><div class="paper-imperfections"></div>
+    <svg>
+        <filter id="fine-monochrome-filter"><feTurbulence type="fractalNoise" baseFrequency="2.97" numOctaves="1" result="noise1" /><feTurbulence type="fractalNoise" baseFrequency="3.02" numOctaves="1" result="noise2" /><feBlend in="noise1" in2="noise2" mode="screen" result="noise" /><feColorMatrix type="saturate" values="0" result="mono" /><feComponentTransfer><feFuncR type="linear" slope="50" intercept="-0.2" /><feFuncG type="linear" slope="50" intercept="-0.2" /><feFuncB type="linear" slope="50" intercept="-0.2" /></feComponentTransfer><feBlend in="SourceGraphic" in2="mono" mode="overlay" /></filter>
+        <filter id="raw-fiber-filter"><feTurbulence type="fractalNoise" baseFrequency="1" numOctaves="1" result="fibers" /><feColorMatrix type="saturate" values="0" result="monoFibers" /><feComponentTransfer><feFuncR type="linear" slope="50" intercept="-1.1" /><feFuncG type="linear" slope="50" intercept="-1.1" /><feFuncB type="linear" slope="50" intercept="-1.1" /></feComponentTransfer><feBlend in="SourceGraphic" in2="monoFibers" mode="multiply" /></filter>
+    </svg>
+
+    <div class="main-wrapper">
+        <header>
+            <div class="header-left">
+                <a href="https://hoanganhdinhngoc.github.io/cdn/web-apps/lucid-moon/" class="back-btn"><i class="fa-solid fa-arrow-left"></i> Trở về menu bài tập</a>
+                <div class="header-logo-group">
+                    <div class="title-left">LUCID MOON</div>
+                    <div class="subtitle-left">Cognitive Training</div>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="title-right"><h1>TẬP LUYỆN TRÍ NHỚ</h1></div>
+                <div class="subtitle-right">Chuỗi ký ức</div>
+            </div>
+        </header>
+
+        <div class="game-stage">
+            <div class="canvas-wrapper">
+                <canvas id="gameCanvas" width="800" height="800"></canvas>
+            </div>
+        </div>
+    </div>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // --- AUDIO ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    let audioCtx;
+    const frequencies = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25]; // C4 D4 E4 G4 A4 C5 D5 E5
+
+    function initAudio() {
+        if(!audioCtx) audioCtx = new AudioContext();
+        if(audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playTone(index, isError = false) {
+        if(!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (isError) {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(150, audioCtx.currentTime); 
+            gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.5);
+        } else {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(frequencies[index % 8], audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.4, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 1.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 1.2);
+        }
+    }
+
+    // --- SETUP MẶT TRĂNG ĐỨNG YÊN ---
+    const moons = [];
+    const numMoons = 8;
+    const circleRadius = 240; 
+    const moonRadius = 35; 
+    const moonPhases = [100, 67, 45, 25, 0, -75, -45, -30];
+    
+    // Generate craters ngẫu nhiên nhưng cố định cho từng mặt trăng
+    function generateFixedCraters() {
+        let craters = [];
+        for(let i=0; i<6; i++) {
+            craters.push({
+                cx: (Math.random()-0.5)*moonRadius*1.5,
+                cy: (Math.random()-0.5)*moonRadius*1.5,
+                r: 0.4 // Kích thước hố nhỏ, cố định
+            });
+        }
+        return craters;
+    }
+
+    for (let i = 0; i < numMoons; i++) {
+        let angle = (i * Math.PI * 2) / numMoons - Math.PI / 2;
+        let x = 400 + Math.cos(angle) * circleRadius;
+        let y = 400 + Math.sin(angle) * circleRadius;
+        moons.push({ id: i, x: x, y: y, phase: moonPhases[i], craters: generateFixedCraters(), active: false });
+    }
+
+    // --- HÀM VẼ MẶT TRĂNG ---
+    function drawMoon(ctx, moon) {
+        ctx.save(); 
+        ctx.translate(moon.x, moon.y);
+        
+        let currentStyle = "#1a1a1a";
+
+        // Bật hiệu ứng nháy đỏ nâu & quầng blur
+        if (moon.active) {
+            currentStyle = getComputedStyle(document.documentElement).getPropertyValue('--flash-color').trim();
+            ctx.shadowColor = currentStyle;
+            ctx.shadowBlur = 20; // Tạo quầng blur ~10px bao quanh
+        } else {
+            ctx.shadowBlur = 0; // Tắt blur khi đứng yên
+        }
+
+        ctx.fillStyle = currentStyle; 
+        ctx.strokeStyle = currentStyle; 
+        ctx.lineWidth = 1.5;
+        
+        // 1. Chỉ vẽ viền tròn, KHÔNG TÔ KÍN NỀN để giữ nguyên độ khuyết
+        ctx.beginPath(); 
+        ctx.arc(0, 0, moonRadius, 0, Math.PI * 2); 
+        ctx.stroke();
+
+        // 2. Vẽ phần bóng khuyết của mặt trăng
+        const absP = Math.abs(moon.phase);
+        if (absP > 0) {
+            let r = (absP - 50) / 50;
+            ctx.beginPath();
+            if (moon.phase >= 0) { 
+                ctx.arc(0, 0, moonRadius, Math.PI/2, 3*Math.PI/2, false); 
+                ctx.ellipse(0, 0, moonRadius * Math.abs(r), moonRadius, 0, 3*Math.PI/2, Math.PI/2, r < 0); 
+            } else { 
+                ctx.arc(0, 0, moonRadius, 3*Math.PI/2, Math.PI/2, false); 
+                ctx.ellipse(0, 0, moonRadius * Math.abs(r), moonRadius, 0, Math.PI/2, 3*Math.PI/2, r > 0); 
+            }
+            ctx.fill();
+        }
+        
+        ctx.restore();
+    }
+
+    // --- GAME LOGIC ---
+    let sequence = [];
+    let playerSequence = [];
+    let level = 1;
+    let gameState = 'START'; // START, SHOWING, WAITING, GAMEOVER
+    let topMessage = "Bấm BẮT ĐẦU để chơi";
+    
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+    async function nextLevel() {
+        gameState = 'SHOWING';
+        playerSequence = [];
+        topMessage = "Hãy quan sát thật kỹ...";
+        
+        sequence.push(Math.floor(Math.random() * numMoons));
+        
+        await sleep(1000); 
+        
+        for (let i = 0; i < sequence.length; i++) {
+            let mId = sequence[i];
+            moons[mId].active = true;
+            playTone(mId);
+            await sleep(500); // Thời gian sáng kéo dài 500ms (cập nhật)
+            moons[mId].active = false;
+            await sleep(400); // Thời gian nghỉ giữa 2 lần nháy
+        }
+        
+        gameState = 'WAITING';
+        topMessage = "Đến lượt bạn lặp lại!";
+    }
+
+    function startGame() {
+        initAudio();
+        sequence = [];
+        level = 1;
+        nextLevel();
+    }
+
+    function gameOver() {
+        gameState = 'GAMEOVER';
+        topMessage = "Sai mất rồi!";
+        playTone(0, true); 
+    }
+
+    // --- XỬ LÝ TƯƠNG TÁC ---
+    canvas.addEventListener('pointerdown', async (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const x = (e.clientX - rect.left) * scaleX;
+        const y = (e.clientY - rect.top) * scaleY;
+
+        // Xử lý nút giữa màn hình (Bắt Đầu / Thử Lại)
+        if (gameState === 'START' || gameState === 'GAMEOVER') {
+            let dx = x - 400, dy = y - 400;
+            if (Math.sqrt(dx*dx + dy*dy) < 80) {
+                startGame();
+            }
+            return;
+        }
+
+        if (gameState === 'WAITING') {
+            for (let i = 0; i < numMoons; i++) {
+                let m = moons[i];
+                let dx = x - m.x, dy = y - m.y;
+                
+                if (Math.sqrt(dx*dx + dy*dy) < 60) {
+                    
+                    m.active = true;
+                    playTone(m.id);
+                    // Lượt bấm cũng nháy sáng 500ms
+                    setTimeout(() => { m.active = false; }, 500); 
+
+                    playerSequence.push(m.id);
+                    let currentIndex = playerSequence.length - 1;
+                    
+                    if (playerSequence[currentIndex] !== sequence[currentIndex]) {
+                        gameOver();
+                    } else if (playerSequence.length === sequence.length) {
+                        gameState = 'SHOWING'; // Khóa click
+                        topMessage = "Tuyệt vời!";
+                        level++;
+                        setTimeout(nextLevel, 1000);
+                    }
+                    break;
+                }
+            }
+        }
+    });
+
+    // --- VÒNG LẶP RENDER ---
+    function animate() {
+        ctx.clearRect(0, 0, 800, 800);
+        
+        moons.forEach(m => drawMoon(ctx, m));
+
+        // Vẽ UI Trung tâm
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = '#1a1a1a';
+        
+        // Vẽ Cụm thông báo cấp độ/nút bấm ở chính giữa vòng tròn trăng
+        if (gameState === 'START') {
+            ctx.font = 'bold 28px Lora';
+            ctx.fillText("BẮT ĐẦU", 400, 400);
+            ctx.font = 'italic 16px Lora';
+            ctx.fillText("(Click vào đây)", 400, 440);
+        } else if (gameState === 'GAMEOVER') {
+            ctx.font = 'bold 28px Lora';
+            ctx.fillText("THỬ LẠI", 400, 380);
+            ctx.font = '18px Lora';
+            ctx.fillText(`Mức đạt được: ${level - 1}`, 400, 420);
+        } else {
+            // Trạng thái đang chơi: Hiện cấp độ
+            ctx.font = '50px Lora';
+            ctx.fillText(level, 400, 400);
+            ctx.font = '16px Lora';
+            ctx.fillText("Cấp độ", 400, 360);
+        }
+
+        // Vẽ Thông điệp trung tâm (nằm dưới cụm cấp độ)
+        ctx.font = 'italic 20px Lora';
+        ctx.fillText(topMessage, 400, 460);
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+</script>
+</body>
+</html>
