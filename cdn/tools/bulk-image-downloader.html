@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
-    <title>CDN || N8N Bulk Image Downloader</title>
+    <title>CDN || Bulk Image Downloader</title>
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -365,11 +365,10 @@
                 progressBar.style.width = '100%';
 
             } catch (error) {
-                // --- PHASE 2: FALLBACK TO N8N SERVER ---
                 localSuccess = false;
                 
                 logMessage(`[ERROR] CORS policy violation or network barrier detected. Halting local sequence.`, 'error');
-                logMessage(`[SYSTEM] Rerouting request to Core Server (n8n) for remote execution...`, 'warning');
+                logMessage(`[SYSTEM] Rerouting request to Core Server for remote execution...`);
 
                 progressText.innerText = "SERVER PROCESSING...";
                 progressBar.style.width = '50%'; 
@@ -409,7 +408,6 @@
 
                     const blob = await response.blob();
                     
-                    // Kiểm tra xem dữ liệu trả về có thực sự là file Zip không (phòng trường hợp n8n trả về text báo lỗi)
                     if (blob.type !== 'application/zip' && blob.type !== 'application/x-zip-compressed' && blob.type !== 'application/octet-stream') {
                         throw new Error("Invalid payload. Expected a ZIP archive but received different content type.");
                     }
@@ -428,7 +426,7 @@
                     if (serverError.name === 'AbortError') {
                         finalErrorMsg = "Connection timed out. Core Server took too long to respond (> 60s).";
                     } else if (finalErrorMsg.includes("Failed to fetch")) {
-                        finalErrorMsg = "Network block. Possible causes: n8n Server is down, incorrect URL, or n8n Webhook CORS is not enabled (Missing Allowed Origins: *).";
+                        finalErrorMsg = "Network block. Possible causes: Server is down, incorrect URL, or Webhook CORS is not enabled (Missing Allowed Origins: *).";
                     }
 
                     logMessage(`[ERROR] Server uplink failed: ${finalErrorMsg}`, 'error');
