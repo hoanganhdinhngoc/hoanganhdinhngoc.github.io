@@ -152,7 +152,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     }
 
     #hexToTextInput,
-    #textToHexInput {
+    #textToHexInput,
+    #encryptInput {
       padding: 10px;
       margin: 10px 0;
       overflow: hidden;
@@ -167,7 +168,8 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     }
 
     #textToHexOutput,
-    #hexToTextOutput {
+    #hexToTextOutput,
+    #encryptOutput {
       padding: 10px;
       margin: 10px 0;
       min-height: 10em;
@@ -384,7 +386,23 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     <!-- Section 2 -->
 
     <div class='section' id='section2'>
-      <h2 class='sectionTitle'>Converters</h2>
+      <h2 class='sectionTitle'>Encrypt & Decrypt</h2>
+
+      <div class='dropContent'>Encrypt by password</div>
+      <ul class='content'>
+        <h3>1. Nhập Password:</h3>
+        <input type="text" id="passInput" class="toolzone" placeholder="Ví dụ: sD4&21nJD@na1Jt13o">
+        
+        <h3>2. Nhập URL Đích:</h3>
+        <input type="text" id="urlInput" class="toolzone" placeholder="Ví dụ: https://drive.google.com/...">
+        <button id="copybutton" class='themebutton toolzone' onclick="copyTextToClipboard()">Encrypt now</button>
+        
+        <h3>3. Kết quả (Copy chuỗi này dán vào protectAlg.js):</h3>
+        <textarea id="resultOutput" rows="6" readonly placeholder="Chuỗi mã hóa sẽ hiện ở đây..."></textarea>
+
+
+      </ul>
+
       <div class='dropContent'>Convert hex to text</div>
       <ul class='content'>
 
