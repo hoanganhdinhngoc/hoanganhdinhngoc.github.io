@@ -204,6 +204,59 @@
         .error { color: #c62828; }
         .warning { color: #d84315; }
 
+        /* Custom Popup Styles */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9998;
+        }
+
+        .popupSection {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(216, 210, 186, .95);
+            font-family: 'Montserrat', sans-serif;
+            color: #4b4340;
+            box-shadow: 2px 2px 10px #4f4b42;
+            z-index: 9999;
+        }
+
+        .popupSectionTitle {
+            padding: 12px 15px;
+            background: rgba(68, 66, 60, 0.98);
+            color: #d3cebb;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .boxContent {
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .boxContent p {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .popup-btn {
+            width: auto;
+            min-width: 150px;
+            display: inline-block;
+            margin-top: 0;
+        }
+
         @media (max-width: 920px) {
             .function-wrapper { flex-direction: column; gap: 1.5em; align-items: center; }
             .input-panel, .result-panel { flex: none; width: 100%; max-width: 100%; }
@@ -219,6 +272,15 @@
     <audio id="click-sound">
         <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg">
     </audio>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popupSection" id="customPopup">
+        <h2 class="popupSectionTitle" id="popupTitle">System Alert</h2>
+        <div class="boxContent">
+            <p id="popupMessage">Alert message goes here.</p>
+            <button id="popupOkBtn" class="themebutton popup-btn">Ok</button>
+        </div>
+    </div>
 
     <div class="coreSystem">
         <div class="warp-container">
@@ -292,20 +354,53 @@
         let finalArchiveBlob = null; 
         let finalArchiveName = "Archive.zip";
 
+        // --- HỆ THỐNG POPUP ---
+        function showPopup(title, message) {
+            clickSound.currentTime = 0;
+            clickSound.play();
+            $('#popupTitle').text(title);
+            $('#popupMessage').text(message);
+            $('#popupOverlay').fadeIn(300);
+            $('#customPopup').fadeIn(300);
+        }
+
+        $('#popupOkBtn, #popupOverlay').click(function() {
+            clickSound.currentTime = 0;
+            clickSound.play();
+            $('#popupOverlay').fadeOut(300);
+            $('#customPopup').fadeOut(300);
+        });
+
+        // Âm thanh hover
         $(document).on('mouseenter', '.themebutton:not(:disabled), .toolzone', () => { 
             hoverSound.currentTime = 0; 
             hoverSound.play(); 
         });
 
-        function getUrls() {
+        // --- LOGIC XỬ LÝ URL ---
+        // Validate URL hợp lệ (phải là http hoặc https)
+        function isValidUrl(string) {
+            try {
+                const url = new URL(string);
+                return url.protocol === "http:" || url.protocol === "https:";
+            } catch (_) {
+                return false;  
+            }
+        }
+
+        // Lấy toàn bộ các dòng text (loại bỏ dòng rỗng)
+        function getRawItems() {
             const text = urlInput.value;
             return text.split(/[\n,]+/).map(u => u.trim()).filter(u => u !== '');
         }
 
+        // Real-time update đếm URL hợp lệ
         urlInput.addEventListener('input', () => {
-            const urls = getUrls();
-            urlCountEl.innerText = urls.length;
-            downloadStatusEl.innerText = `0 / ${urls.length}`;
+            const items = getRawItems();
+            const validUrls = items.filter(isValidUrl);
+            
+            urlCountEl.innerText = validUrls.length;
+            downloadStatusEl.innerText = `0 / ${validUrls.length}`;
         });
 
         function logMessage(msg, type = '') {
@@ -316,23 +411,17 @@
             logArea.scrollTop = logArea.scrollHeight;
         }
 
-        // --- ĐÃ SỬA HÀM NÀY ĐỂ CHỈ LẤY PHẦN TỬ CUỐI CÙNG SAU DẤU / ---
         function generateFileName(url, index, option, folderName) {
             let cleanUrl = url.split('?')[0].trim();
-            // Nếu có dấu / ở cuối cùng (VD: .jpg/), cắt bỏ nó đi
             if (cleanUrl.endsWith('/')) cleanUrl = cleanUrl.slice(0, -1);
             
             let extMatch = cleanUrl.match(/\.(jpg|jpeg|png|gif|webp)/i);
             let ext = extMatch ? extMatch[0] : '.jpg';
             
             if (option === "1") {
-                // Tách theo dấu / và loại bỏ các phần tử rỗng
                 let parts = cleanUrl.split('/').filter(p => p);
-                
-                // Lấy phần tử cuối cùng (VD: từ mảng [..., '17262', '1287665.jpg'] -> lấy '1287665.jpg')
                 let name = parts.pop() || `image_${index + 1}`;
                 
-                // Cấu trúc lại đuôi file nếu url gốc không có sẵn hoặc bị ẩn
                 if (!name.toLowerCase().endsWith(ext.toLowerCase())) name += ext;
                 return name;
             } else {
@@ -351,12 +440,23 @@
 
         downloadBtn.addEventListener('click', async () => {
             clickSound.play();
-            const urls = getUrls();
+            const items = getRawItems();
             
-            if (urls.length === 0) {
-                alert("Sir, please input at least one valid image URL.");
+            // Xử lý báo lỗi bằng Custom Popup thay vì alert
+            if (items.length === 0) {
+                showPopup("Data Missing", "Sir, please input at least one valid image URL to proceed.");
                 return;
             }
+
+            // Lọc ra các chuỗi không phải URL hợp lệ
+            const invalidItems = items.filter(item => !isValidUrl(item));
+            if (invalidItems.length > 0) {
+                showPopup("Syntax Error Detected", "Sir, invalid entries found in the list. Please remove plain text or malformed URLs before initializing sequence.");
+                return;
+            }
+
+            // Nếu qua bước trên, toàn bộ items đều là URLs hợp lệ
+            const urls = items; 
 
             const folderName = folderNameInput.value.trim() || "Downloaded images";
             const namingOption = namingConventionInput.value;
