@@ -120,6 +120,7 @@
             resize: vertical;
         }
         
+        select.toolzone { cursor: pointer; }
         textarea.toolzone { min-height: 150px; }
 
         .themebutton {
@@ -139,10 +140,9 @@
             margin-top: 10px;
         }
 
-        .themebutton:hover { color: #d3cebb; background-position: left bottom; }
-        .themebutton:disabled { opacity: 0.5; cursor: not-allowed; }
+        .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
+        .themebutton:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; }
 
-        /* Khung hiển thị tiến trình mang phong cách Nier */
         .progress-container {
             width: 100%;
             border: 2px solid var(--nier-dark);
@@ -238,6 +238,14 @@
                         <input type="text" id="folderName" class="toolzone" placeholder="Downloaded images">
                     </div>
 
+                    <div class="control-group">
+                        <label>Naming Convention</label>
+                        <select id="namingConvention" class="toolzone">
+                            <option value="1">Original Name (e.g., 1287665.jpg)</option>
+                            <option value="2">Folder Name + Sequence (e.g., Folder 01.jpg)</option>
+                        </select>
+                    </div>
+
                     <button id="downloadBtn" class="themebutton">Initialize Download Sequence</button>
                 </div>
 
@@ -258,6 +266,8 @@
                         <div class="log-area" id="logArea">
                             <div>[SYSTEM] Awaiting input...</div>
                         </div>
+
+                        <button id="saveBtn" class="themebutton" disabled style="margin-top: 20px;">Download Archive</button>
                     </div>
                 </div>
             </div>
@@ -270,14 +280,19 @@
         
         const urlInput = document.getElementById('urlInput');
         const folderNameInput = document.getElementById('folderName');
+        const namingConventionInput = document.getElementById('namingConvention');
         const downloadBtn = document.getElementById('downloadBtn');
+        const saveBtn = document.getElementById('saveBtn');
         const urlCountEl = document.getElementById('urlCount');
         const downloadStatusEl = document.getElementById('downloadStatus');
         const progressBar = document.getElementById('progressBar');
         const progressText = document.getElementById('progressText');
         const logArea = document.getElementById('logArea');
 
-        $(document).on('mouseenter', '.themebutton, .toolzone', () => { 
+        let finalArchiveBlob = null; 
+        let finalArchiveName = "Archive.zip";
+
+        $(document).on('mouseenter', '.themebutton:not(:disabled), .toolzone', () => { 
             hoverSound.currentTime = 0; 
             hoverSound.play(); 
         });
@@ -301,6 +316,39 @@
             logArea.scrollTop = logArea.scrollHeight;
         }
 
+        // --- ĐÃ SỬA HÀM NÀY ĐỂ CHỈ LẤY PHẦN TỬ CUỐI CÙNG SAU DẤU / ---
+        function generateFileName(url, index, option, folderName) {
+            let cleanUrl = url.split('?')[0].trim();
+            // Nếu có dấu / ở cuối cùng (VD: .jpg/), cắt bỏ nó đi
+            if (cleanUrl.endsWith('/')) cleanUrl = cleanUrl.slice(0, -1);
+            
+            let extMatch = cleanUrl.match(/\.(jpg|jpeg|png|gif|webp)/i);
+            let ext = extMatch ? extMatch[0] : '.jpg';
+            
+            if (option === "1") {
+                // Tách theo dấu / và loại bỏ các phần tử rỗng
+                let parts = cleanUrl.split('/').filter(p => p);
+                
+                // Lấy phần tử cuối cùng (VD: từ mảng [..., '17262', '1287665.jpg'] -> lấy '1287665.jpg')
+                let name = parts.pop() || `image_${index + 1}`;
+                
+                // Cấu trúc lại đuôi file nếu url gốc không có sẵn hoặc bị ẩn
+                if (!name.toLowerCase().endsWith(ext.toLowerCase())) name += ext;
+                return name;
+            } else {
+                let seq = String(index + 1).padStart(2, '0');
+                return `${folderName} ${seq}${ext}`;
+            }
+        }
+
+        saveBtn.addEventListener('click', () => {
+            if (finalArchiveBlob) {
+                clickSound.play();
+                saveAs(finalArchiveBlob, finalArchiveName);
+                logMessage(`[SYSTEM] User requested archive download. File saved.`, 'success');
+            }
+        });
+
         downloadBtn.addEventListener('click', async () => {
             clickSound.play();
             const urls = getUrls();
@@ -311,11 +359,15 @@
             }
 
             const folderName = folderNameInput.value.trim() || "Downloaded images";
+            const namingOption = namingConventionInput.value;
+            finalArchiveName = `${folderName}.zip`;
             
             downloadBtn.disabled = true;
+            saveBtn.disabled = true;
             urlInput.disabled = true;
+            finalArchiveBlob = null;
             
-            logArea.innerHTML = ''; // Clear log
+            logArea.innerHTML = ''; 
             logMessage(`[SYSTEM] Initiating local client-side extraction...`);
             progressText.innerText = "LOCAL PROCESSING...";
             
@@ -327,25 +379,17 @@
             const folder = zip.folder(folderName);
             let downloadedCount = 0;
 
-            // --- PHASE 1: CLIENT-SIDE JAVASCRIPT DOWNLOAD ATTEMPT ---
             try {
-                // Chạy ngầm các request bằng Promise.all. 
-                // Nếu 1 request bị dính CORS, Promise.all sẽ lập tức ném ra lỗi.
                 await Promise.all(urls.map(async (url, index) => {
                     const response = await fetch(url);
                     if (!response.ok) throw new Error("HTTP_ERROR");
                     
                     const blob = await response.blob();
-                    
-                    let filename = url.split('/').pop().split('?')[0];
-                    if (!filename || !filename.includes('.')) {
-                        filename = `image_${index + 1}.jpg`;
-                    }
+                    const filename = generateFileName(url, index, namingOption, folderName);
                     
                     folder.file(filename, blob);
                     downloadedCount++;
                     
-                    // Cập nhật UI an toàn
                     if (localSuccess) {
                         const percent = Math.round((downloadedCount / urls.length) * 100);
                         progressBar.style.width = percent + '%';
@@ -353,14 +397,13 @@
                     }
                 }));
 
-                // Nếu chạy hết đoạn trên mà không bị lỗi (catch), nghĩa là Local tải thành công 100%
                 logMessage(`[SYSTEM] Local extraction successful. Compressing data...`, 'success');
                 progressText.innerText = "ZIPPING DATA...";
                 
-                const zipContent = await zip.generateAsync({ type: "blob" });
-                saveAs(zipContent, `${folderName}.zip`);
+                finalArchiveBlob = await zip.generateAsync({ type: "blob" });
+                saveBtn.disabled = false; 
 
-                logMessage(`[SYSTEM] Sequence complete. Archive secured locally.`, 'success');
+                logMessage(`[SYSTEM] Sequence complete. Archive secured in memory. Waiting for user action.`, 'success');
                 progressText.innerText = "COMPLETE 100%";
                 progressBar.style.width = '100%';
 
@@ -377,15 +420,22 @@
                 try {
                     const serverAPI = 'https://interdata.kurotheblackbear.io.vn/webhook/bulk-image-downloader'; 
                     
-                    // Thêm AbortController để xử lý lỗi Timeout nếu server treo quá lâu (vd: 60 giây)
+                    const calculatedTimeout = 30000 + (urls.length * 5000); 
+                    logMessage(`[SYSTEM] Estimated server timeout: ${calculatedTimeout / 1000} seconds.`);
+
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 600000); 
+                    const timeoutId = setTimeout(() => controller.abort(), calculatedTimeout); 
+
+                    const filePayload = urls.map((url, index) => ({
+                        url: url,
+                        filename: generateFileName(url, index, namingOption, folderName)
+                    }));
 
                     const response = await fetch(serverAPI, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
-                            urls: urls,
+                            files: filePayload,
                             folder_name: folderName
                         }),
                         signal: controller.signal
@@ -393,7 +443,6 @@
 
                     clearTimeout(timeoutId);
 
-                    // Xử lý chi tiết các mã lỗi HTTP trả về
                     if (!response.ok) {
                         let errorDetail = `Status ${response.status} ${response.statusText}`;
                         if (response.status === 404) errorDetail += " (Webhook URL not found or Workflow inactive)";
@@ -403,7 +452,7 @@
                     }
 
                     logMessage(`[SYSTEM] Core data received. Decrypting binary packet...`);
-                    progressText.innerText = "DOWNLOADING ZIP...";
+                    progressText.innerText = "DECRYPTING ZIP...";
                     progressBar.style.width = '90%';
 
                     const blob = await response.blob();
@@ -412,9 +461,10 @@
                         throw new Error("Invalid payload. Expected a ZIP archive but received different content type.");
                     }
 
-                    saveAs(blob, `${folderName}.zip`);
+                    finalArchiveBlob = blob;
+                    saveBtn.disabled = false; 
 
-                    logMessage(`[SYSTEM] Sequence complete. Archive secured via Server.`, 'success');
+                    logMessage(`[SYSTEM] Sequence complete. Archive secured via Server. Waiting for user action.`, 'success');
                     progressText.innerText = "COMPLETE 100%";
                     progressBar.style.width = '100%';
                     downloadStatusEl.innerText = `${urls.length} / ${urls.length}`;
@@ -422,11 +472,10 @@
                 } catch (serverError) {
                     let finalErrorMsg = serverError.message;
                     
-                    // Phân tích kỹ các lỗi do Javascript ném ra
                     if (serverError.name === 'AbortError') {
-                        finalErrorMsg = "Connection timed out. Core Server took too long to respond (> 60s).";
+                        finalErrorMsg = `Connection timed out. Core Server took too long to respond (> ${calculatedTimeout / 1000}s).`;
                     } else if (finalErrorMsg.includes("Failed to fetch")) {
-                        finalErrorMsg = "Network block. Possible causes: Server is down, incorrect URL, or Webhook CORS is not enabled (Missing Allowed Origins: *).";
+                        finalErrorMsg = "Network block. Possible causes: Server is down, incorrect URL, or Webhook CORS is not enabled.";
                     }
 
                     logMessage(`[ERROR] Server uplink failed: ${finalErrorMsg}`, 'error');
