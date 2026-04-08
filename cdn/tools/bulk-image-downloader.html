@@ -379,7 +379,7 @@
                     
                     // Thêm AbortController để xử lý lỗi Timeout nếu server treo quá lâu (vd: 60 giây)
                     const controller = new AbortController();
-                    const timeoutId = setTimeout(() => controller.abort(), 60000); 
+                    const timeoutId = setTimeout(() => controller.abort(), 600000); 
 
                     const response = await fetch(serverAPI, {
                         method: 'POST',
