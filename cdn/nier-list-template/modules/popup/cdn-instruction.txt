@@ -1,0 +1,12 @@
+<!--
+//////////////////////////
+Nier list theme materials
+//////////////////////////
+-->
+
+<!-- Popup module -->
+
+  <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+  <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+
+<!-- note: Keep this under jquery and font-awesome cdn -->
