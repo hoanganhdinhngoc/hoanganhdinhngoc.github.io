@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nier UI || Popup Template Module</title>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-text-light: #d3cebb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Giữ nguyên theme background */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
+            min-height: 100vh;
+            padding: 30px; /* Padding cho body để nội dung không sát lề */
+        }
+
+        /* Title góc trên bên trái */
+        .page-title {
+            font-size: 26px;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        /* CSS Nút bấm cơ bản (để popup có thể dùng) */
+        .themebutton {
+            cursor: pointer;
+            padding: 12px 20px;
+            font-weight: bold;
+            color: #4b4340;
+            border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            text-align: center;
+        }
+
+        .themebutton:hover:not(:disabled) { 
+            color: #d3cebb; 
+            background-position: left bottom; 
+        }
+
+        /* =========================================
+           CORE POPUP MODULE STYLES 
+           ========================================= */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 9998;
+        }
+
+        .popupSection {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 500px;
+            background: rgba(216, 210, 186, .95);
+            font-family: 'Montserrat', sans-serif;
+            color: #4b4340;
+            box-shadow: 2px 2px 10px #4f4b42;
+            z-index: 9999;
+        }
+
+        .popupSectionTitle {
+            padding: 12px 15px;
+            background: rgba(68, 66, 60, 0.98);
+            color: #d3cebb;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .popup-boxContent {
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .popup-boxContent p {
+            line-height: 1.6;
+            margin-bottom: 25px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .popup-btn {
+            width: auto;
+            min-width: 150px;
+            display: inline-block;
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <audio id="hover-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg">
+    </audio>
+    <audio id="click-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg">
+    </audio>
+
+    <h1 class="page-title">Popup Module Template</h1>
+    <p style="margin-bottom: 20px; font-weight: 500;">Click the button below to initialize the dialog system.</p>
+    <button id="triggerTestBtn" class="themebutton">Initialize Popup Overlay</button>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popupSection" id="customPopup">
+        <h2 class="popupSectionTitle" id="popupTitle">System Alert</h2>
+        <div class="popup-boxContent">
+            <p id="popupMessage">Alert message goes here.</p>
+            <button id="popupOkBtn" class="themebutton popup-btn">Ok</button>
+        </div>
+    </div>
+
+    <script>
+        // Setup âm thanh
+        const hoverSound = document.getElementById("hover-sound");
+        const clickSound = document.getElementById("click-sound");
+
+        /* =========================================
+           CORE POPUP MODULE JAVASCRIPT
+           ========================================= */
+        
+        // 1. Hàm gọi chức năng Popup (Truyền vào Tiêu đề và Nội dung)
+        function showPopup(title, message) {
+            clickSound.currentTime = 0;
+            clickSound.play();
+            $('#popupTitle').text(title);
+            $('#popupMessage').text(message);
+            $('#popupOverlay').fadeIn(300);
+            $('#customPopup').fadeIn(300);
+        }
+
+        // 2. Logic tắt Popup khi bấm OK hoặc bấm ra ngoài Overlay
+        $('#popupOkBtn, #popupOverlay').click(function() {
+            clickSound.currentTime = 0;
+            clickSound.play();
+            $('#popupOverlay').fadeOut(300);
+            $('#customPopup').fadeOut(300);
+        });
+
+        // 3. Logic âm thanh khi di chuột qua các nút bấm của theme
+        $(document).on('mouseenter', '.themebutton:not(:disabled)', () => { 
+            hoverSound.currentTime = 0; 
+            hoverSound.play(); 
+        });
+
+        /* =========================================
+           TEST TRIGGER (Chỉ dùng để demo)
+           ========================================= */
+        $('#triggerTestBtn').click(function() {
+            showPopup("Module Initialized", "Sir, the standalone popup template is operating normally. Ready for integration into new environments.");
+        });
+    </script>
+</body>
+</html>

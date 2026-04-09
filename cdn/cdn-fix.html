@@ -2,7 +2,6 @@
 <html>
 
 <head>
-  <!-- Template prototype & content definition. Type: Nier-list source: hoanganhdinhngoc.github.io/cdn/nier-list-template -->
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,30 +10,10 @@
   <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
 
 
-  <!--
-//////////////////////////////////////////////////////
-
-MADE with <3 by Hoang Anh Dinh Ngoc
-
-Website: 		http://hoanganhdinhngoc.github.io
-Email: 			hanh2122011@gmail.com
-Twitter: 		https://twitter.com/Hanh2122011
-Facebook: 	https://www.facebook.com/HoangAnhDinhNgoc
-LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
-
-//////////////////////////////////////////////////////
- -->
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-  <!-- Nier list theme materials -->
-  <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/module/popup/nier-popup.css">
-  <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/module/popup/nier-popup.js"></script>
-
   <title>CDN || Main menu</title>
 
-  <!-- Google Tag Manager -->
   <script>(function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
         'gtm.start':
@@ -43,10 +22,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
     })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
-  <!-- End Google Tag Manager -->
-
-  <!-- CSS STYLE SECTION -->
-
   <style>
     @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400');
 
@@ -54,7 +29,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     * {
       margin: 0px;
       padding: 0px;
-      scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+      scrollbar-color: rgba(100,98,86,0.8) rgba(143, 139, 122, 0.7);
       scrollbar-width: auto;
     }
 
@@ -158,11 +133,9 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
     #hexToTextInput,
     #textToHexInput,
-    #encryptPassInput,
-    #encryptUrlInput {
+    #encryptInput {
       padding: 10px;
       margin: 10px 0;
-      height: 0px;
       overflow: hidden;
       box-sizing: border-box;
       resize: none;
@@ -176,7 +149,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
     #textToHexOutput,
     #hexToTextOutput,
-    #encryptResultOutput {
+    #encryptOutput {
       padding: 10px;
       margin: 10px 0;
       min-height: 10em;
@@ -220,6 +193,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       font-size: 2em;
       color: rgba(100, 98, 86, 0.8);
     }
+
 
     /* For mobile */
 
@@ -276,29 +250,23 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 </head>
 
 <body>
-  <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
-  <!-- Add Tomoko AI Assistant -->
-  <iframe src="https://hoanganhdinhngoc.github.io/cdn/tomoko-assistant/"
-    style="position: fixed; z-index: 9999; bottom: 0px; right: 0px; border: none; overflow: hidden;" width="170"
-    height="70" id="chatIframe"></iframe>
+  <iframe src="https://hoanganhdinhngoc.github.io/cdn/tomoko-assistant/" style="position: fixed; z-index: 9999; bottom: 0px; right: 0px; border: none; overflow: hidden;" width="170" height="70" id="chatIframe"></iframe>
 
   <script>
-    window.addEventListener("message", (event) => {
-      if (event.data.type === "chatState") {
-        const iframe = document.getElementById("chatIframe");
-        if (event.data.expanded) {
-          iframe.width = "375";  // Expanded chatbox size
-          iframe.height = "650";
-        } else {
-          iframe.width = "170";  // Collapsed rectangle size
-          iframe.height = "70";
-        }
-      }
-    });
+      window.addEventListener("message", (event) => {
+          if (event.data.type === "chatState") {
+              const iframe = document.getElementById("chatIframe");
+              if (event.data.expanded) {
+                  iframe.width = "375";  // Expanded chatbox size
+                  iframe.height = "650";
+              } else {
+                  iframe.width = "170";  // Collapsed rectangle size
+                  iframe.height = "70";
+              }
+          }
+      });
   </script>
 
   <audio id="tutorial-sound">
@@ -331,9 +299,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <i id="controlButton" class="fas fa-play soundControl"></i>
     </div>
 
-    <!-- System Info -->
-
-
     <div class='section' id='info'>
       <h2 class="tutorial" style='padding: 1% 1%; cursor: pointer;'>Tutorial</h2>
       <ul class='content'>
@@ -344,36 +309,28 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       </ul>
     </div>
 
-    <!-- Section 1 -->
-
     <div class='section' id='section1'>
       <h2 class='sectionTitle'>Utilities</h2>
       <div class='dropContent'>Tools</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/tally-counter-glitch" target="_blank">Tally
-              Counter</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/tally-counter-glitch" target="_blank">Tally Counter</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/stopwatch-timer" target="_blank">Stopwatch timer</a>
-          </p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/stopwatch-timer" target="_blank">Stopwatch timer</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/aspect-ratio-calculator" target="_blank">Aspect Ratio
-              Calculator</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/aspect-ratio-calculator" target="_blank">Aspect Ratio Calculator</a></p>
+        </li>
+          <li>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/bulk-image-downloader" target="_blank">Bulk Image Downloader</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/bulk-image-downloader" target="_blank">Bulk Image
-              Downloader</a></p>
-        </li>
-        <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/convert-JSON-to-table" target="_blank">Convert JSON
-              to
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/convert-JSON-to-table" target="_blank">Convert JSON to
               table of string</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/column-to-list-converter" target="_blank">Convert
-              multiline
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/tools/column-to-list-converter" target="_blank">Convert multiline
               text to list</a></p>
         </li>
         <li>
@@ -381,8 +338,7 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
               directory</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/semi-public-directory" target="_blank">Google Drive semi
-              public
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/semi-public-directory" target="_blank">Google Drive semi public
               directory</a></p>
         </li>
       </ul>
@@ -393,13 +349,10 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p><a href="https://hoanganhdinhngoc.github.io/cdn/web-apps/lucid-moon" target="_blank">Lucid Moon</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/web-apps/white-moon-player" target="_blank">White Moon
-              Player</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/web-apps/white-moon-player" target="_blank">White Moon Player</a></p>
         </li>
       </ul>
     </div>
-
-    <!-- Section 2 -->
 
     <div class='section' id='section2'>
       <h2 class='sectionTitle'>Encrypt & Decrypt</h2>
@@ -407,34 +360,29 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Encrypt by password</div>
       <ul class='content'>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-
-
+        
         <div class="toolTaoShortCode">
-          <b>Tool này giúp generate encrypted string từ password và URL đích dùng cho protectAlg.js trong module
-            Selfmade Password protect</b>
           <p>Nhập Password:</p>
-          <input id="encryptPassInput" class="toolzone" placeholder="Your password for encrypt">
-
+          <input type="text" id="passInput" class="toolzone" placeholder="Ví dụ: pedothepolarbear">
+          
           <p>Nhập URL Đích:</p>
-          <input id="encryptUrlInput" class="toolzone" placeholder="https://drive.google.com/...">
-
+          <input type="text" id="urlInput" class="toolzone" placeholder="Ví dụ: https://drive.google.com/...">
+          
           <button class='themebutton toolzone' style="margin-bottom: 20px;" onclick="generateKey()">Encrypt now</button>
-
-          <p><b>Kết quả (Copy chuỗi này dán vào protectAlg.js): </b>
-            <textarea id="encryptResultOutput" readonly class="toolzone"
-              placeholder="Chuỗi mã hóa sẽ hiện ở đây..."></textarea>
+          
+          <p><b>Kết quả (Copy chuỗi này dán vào protectAlg.js): </b><textarea id="resultOutput" readonly class="toolzone" placeholder="Chuỗi mã hóa sẽ hiện ở đây..."></textarea>
             <button id="copybutton" class='themebutton toolzone' onclick="copyEncryptToClipboard()">Copy Text</button>
           </p>
         </div>
 
         <script>
           function generateKey() {
-            const pass = document.getElementById('encryptPassInput').value;
-            const url = document.getElementById('encryptUrlInput').value;
-            const resultBox = document.getElementById('encryptResultOutput');
+            const pass = document.getElementById('passInput').value;
+            const url = document.getElementById('urlInput').value;
+            const resultBox = document.getElementById('resultOutput');
 
             if (!pass || !url) {
-                showPopup("System Alert", "Vui lòng nhập đủ Password và URL đích!");
+                alert("Vui lòng nhập đủ Password và URL đích!");
                 return;
             }
 
@@ -442,24 +390,23 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
             const cipherText = CryptoJS.AES.encrypt(dataToEncrypt, pass).toString();
 
             resultBox.value = cipherText;
-
+            
             // Tự động kéo dãn textarea cho đẹp
             resultBox.style.height = 'auto';
             resultBox.style.height = resultBox.scrollHeight + 'px';
           }
 
           function copyEncryptToClipboard() {
-            const outputElement = document.getElementById('encryptResultOutput');
+            const outputElement = document.getElementById('resultOutput');
             outputElement.select();
             document.execCommand('copy');
           }
         </script>
-      </ul>
+        </ul>
 
       <div class='dropContent'>Convert hex to text</div>
       <ul class='content'>
 
-        <!-- TOOL CONVERT HEX TO TEX -->
         <div class="toolTaoShortCode">
           <p>Điền hex code vào ô input dưới đây, nó sẽ tự động được convert thành plain text ở ô output.</p>
           <input id="hexToTextInput" class="toolzone" placeholder="Enter hex string" oninput="convertHex()"></input>
@@ -507,7 +454,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
       <div class='dropContent'>Convert text to hex</div>
       <ul class='content'>
 
-        <!-- TOOL CONVERT TEXT TO HEX -->
         <div class="toolTaoShortCode">
           <p>Điền văn bản vào ô input dưới đây, nó sẽ tự động được convert thành hex code ở ô output.</p>
           <textarea id="textToHexInput" class="toolzone" placeholder="Enter plain text"
@@ -561,8 +507,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
 
 
-    <!-- Section 3 -->
-
     <div class='section' id='section3'>
       <h2 class='sectionTitle'>Simulation</h2>
       <div class='dropContent'>Gambling</div>
@@ -571,21 +515,17 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
           <p><a href="https://hoanganhdinhngoc.github.io/cdn/simulation/taixiu" target="_blank">Tai Xiu</a></p>
         </li>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/simulation/gacha" target="_blank">Gachapon Simulator</a>
-          </p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/simulation/gacha" target="_blank">Gachapon Simulator</a></p>
         </li>
       </ul>
       <div class='dropContent'>Mechanics</div>
       <ul class='content'>
         <li>
-          <p><a href="https://hoanganhdinhngoc.github.io/cdn/simulation/morse-transmitter" target="_blank">Morse code
-              transmitter</a></p>
+          <p><a href="https://hoanganhdinhngoc.github.io/cdn/simulation/morse-transmitter" target="_blank">Morse code transmitter</a></p>
         </li>
       </ul>
 
     </div>
-
-    <!-- Section 4 -->
 
     <div class='section' id='section4'>
       <h2 class='sectionTitle'>Xem traffic</h2>
@@ -654,8 +594,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
 
     </div>
 
-    <!-- Section 5 -->
-
     <div class='section' id='section4'>
       <h2 class='sectionTitle'>Dùng tool</h2>
 
@@ -704,8 +642,6 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         </li>
       </ul>
     </div>
-
-    <!-- Section 6 -->
 
     <div class='section' id='section4'>
       <h2 class='sectionTitle'>Các tùy biến khác</h2>
@@ -765,51 +701,47 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
     </div>
 
 
-    <!-- Section 8 -->
-
-    <div class="section fadeIn" id='section8'>
-      <h2 class='sectionTitle'>Other instructions</h2>
-
-      <div class='dropContent'>Commit large file to Github which is larger than 100Mb (Using Git LFS)</div>
-      <ul class='content'>
-
-        <li>
-          <p><b>Step 1: </b>Open CMD command line</p>
-          <br>
-        </li>
-        <li>
-          <p><b>Step 2: </b>Change directory to the folder contains the large file</p>
-          <br>
-        </li>
-        <li>
-          <p><b>Step 3: </b>Write code below</p>
-          <code>git lfs track '*.extensionName'</code>
-          <p>('extensionName' is the extension name type of the large file you tell lfs to track)</p>
-          <br>
-        </li>
-        <li>
-          <p><b>Step 4: </b>Write code below</p>
-          <code>git add .</code>
-          <p>then commit it</p>
-          <code>git commit -m 'fileName'</code>
-          <p>(fileName is the name of the large file you want to commit)</p>
-          <br>
-        </li>
-        <li>
-          <p><b>Step 5: </b>Check Github Desktop to make sure the file has been successfully commited</p>
-          <br>
-        </li>
-        <li>
-          <p>See tutorial <a href="https://www.youtube.com/watch?v=dpZQFTXSfjs" target="_blank">here</a></p>
-        </li>
-      </ul>
-
-    </div>
+       <div class="section fadeIn" id='section8'>
+        <h2 class='sectionTitle'>Other instructions</h2>
+  
+        <div class='dropContent'>Commit large file to Github which is larger than 100Mb (Using Git LFS)</div>
+        <ul class='content'>
+  
+          <li>
+            <p><b>Step 1: </b>Open CMD command line</p>
+            <br>
+          </li>
+          <li>
+            <p><b>Step 2: </b>Change directory to the folder contains the large file</p>
+            <br>
+          </li>
+          <li>
+            <p><b>Step 3: </b>Write code below</p>
+            <code>git lfs track '*.extensionName'</code>
+            <p>('extensionName' is the extension name type of the large file you tell lfs to track)</p>
+            <br>
+          </li>
+          <li>
+            <p><b>Step 4: </b>Write code below</p>
+            <code>git add .</code>
+            <p>then commit it</p>
+            <code>git commit -m 'fileName'</code>
+            <p>(fileName is the name of the large file you want to commit)</p>
+            <br>
+          </li>
+          <li>
+            <p><b>Step 5: </b>Check Github Desktop to make sure the file has been successfully commited</p>
+            <br>
+          </li>
+          <li>
+            <p>See tutorial <a href="https://www.youtube.com/watch?v=dpZQFTXSfjs" target="_blank">here</a></p>
+          </li>
+        </ul>
+  
+      </div>
 
   </div>
 
-
-  <!-- Interactive -->
 
   <script type='text/javascript'>
     // fade in section
@@ -830,11 +762,10 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
   </script>
 
 
-  <!-- Sound control -->
   <script>
     var themeSong = document.getElementById("themeSong");
     var isPlaying;
-
+  
     function togglePlay() {
       if (isPlaying) {
         themeSong.pause();
@@ -844,32 +775,32 @@ LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
         $('#controlButton').removeClass('fa-play').addClass('fa-pause');
       }
     }
-
+  
     $('#controlButton').click(togglePlay);
-
+  
     themeSong.onplaying = function () {
       isPlaying = true;
     };
-
+  
     themeSong.onpause = function () {
       isPlaying = false;
     };
-
-    $(document).keydown(function (event) {
+  
+    $(document).keydown(function(event) {
       if ((event.key === " " || event.keyCode === 32) && !isTyping()) {
         event.preventDefault();
         togglePlay();
       }
     });
-
+  
     function isTyping() {
       const activeElement = document.activeElement;
-      return activeElement.tagName === "INPUT" ||
-        activeElement.tagName === "TEXTAREA" ||
-        activeElement.isContentEditable;
+      return activeElement.tagName === "INPUT" || 
+             activeElement.tagName === "TEXTAREA" || 
+             activeElement.isContentEditable;
     }
   </script>
-
+  
 
 </body>
 
