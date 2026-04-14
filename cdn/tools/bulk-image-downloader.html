@@ -503,7 +503,7 @@
                 finalArchiveBlob = await zip.generateAsync({ type: "blob" });
                 saveBtn.disabled = false; 
 
-                logMessage(`[SYSTEM] Sequence complete. Archive secured in memory. Waiting for user action.`, 'success');
+                logMessage(`[SYSTEM] Sequence complete. Archive secured in memory. Ready for download.`, 'success');
                 progressText.innerText = "COMPLETE 100%";
                 progressBar.style.width = '100%';
 
