@@ -272,20 +272,45 @@
     const ctx = canvas.getContext('2d');
     canvas.width = 800; canvas.height = 800;
 
-    const songs = [
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/SYML%20-%20-In%20Between%20Breaths.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/Idea%2012.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/Ryuchi%20Sakamoto%20-%20Ieta.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/TWO%20LANES%20-%20Epilogue.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/TWO%20LANES%20-%20Frei.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/TWO%20LANES%20-%20From%20Within.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/TWO%20LANES%20-%20November.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/TWO%20LANES%20-%20Transcend%20-%20Piano%20Version.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/Octopath%20Traveler%20OST%20-%20My%20Quiet%20Forest%20Home.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/Ryuichi%20Sakamoto%20-%20Amore.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/Ryuichi%20Sakamoto%20-%20Opus%20-%20ending.mp3" },
-        { url: "https://hoanganhdinhngoc.github.io/cdn/music/Ryuichi%20Sakamoto%20-%20Opus.mp3" }
-    ];
+    let songs = [];
+
+    // URL API trỏ thẳng vào thư mục cdn/music trong repo của Sir
+    const apiUrl = "https://api.github.com/repos/hoanganhdinhngoc/hoanganhdinhngoc.github.io/contents/cdn/music";
+
+    async function fetchSongsFromGitHub() {
+        try {
+            // Thực hiện gọi API
+            const response = await fetch(apiUrl);
+            
+            if (!response.ok) {
+                throw new Error("Lỗi kết nối đến GitHub API.");
+            }
+            
+            // Lấy dữ liệu dạng JSON trả về
+            const data = await response.json();
+            
+            // Lọc ra các file có đuôi .mp3 và ráp thành cấu trúc URL mà player cần
+            songs = data
+                .filter(file => file.name.endsWith('.mp3'))
+                .map(file => ({
+                    // Lấy tên file và ghép vào domain gốc của Sir
+                    url: `https://hoanganhdinhngoc.github.io/cdn/music/${encodeURIComponent(file.name)}`
+                }));
+
+            // Nếu lấy thành công và có nhạc, bắt đầu khởi chạy Player
+            if (songs.length > 0) {
+                initPlaylist(); // Khởi tạo danh sách HTML
+                animate();      // Khởi chạy vòng quay mặt trăng
+            } else {
+                console.warn("Thư mục cdn/music hiện không có file mp3 nào.");
+            }
+        } catch (error) {
+            console.error("Lỗi:", error);
+            const titleEl = document.getElementById('current-title');
+            titleEl.innerText = "Lỗi tải danh sách nhạc.";
+            titleEl.style.opacity = 1;
+        }
+    }
 
     let currentIdx = -1;
     let isShuffle = false;
@@ -574,8 +599,7 @@ function hideVolumeBar(delay = 100) {
         requestAnimationFrame(animate);
     }
 
-    initPlaylist();
-    animate();
+    fetchSongsFromGitHub();
 </script>
 </body>
 </html>
