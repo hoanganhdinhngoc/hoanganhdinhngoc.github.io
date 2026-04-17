@@ -19,7 +19,6 @@
             --font-main: "Times New Roman", Times, serif;
             --font-track: 'Lora', "Noto Serif", "Yu Mincho", "Batang", serif;
             
-            --moon-scale: 85%; 
             --control-scale: 0.75; 
         }
 
@@ -60,8 +59,7 @@
         /* KHU VỰC GIỮA CHỨA SLIDER */
         .middle-section { 
             flex-grow: 1; display: flex; width: 100%; z-index: 10; 
-            min-height: 0; /* SỬA LỖI 1: Ép phần giữa có thể thu nhỏ lại để vừa 100vh trên Desktop */
-            overflow: hidden; 
+            min-height: 0; overflow: hidden; 
         }
         .slider-track { display: flex; width: 100%; height: 100%; }
 
@@ -74,21 +72,47 @@
         #playlist-container::-webkit-scrollbar-thumb { background: var(--ink-grey); border-radius: 10px; }
         .hide-scroll::-webkit-scrollbar-thumb { background: transparent !important; }
 
+        /* SỬA LỖI GIẬT DỨT ĐIỂM CHO PLAYLIST ITEM */
         .playlist-item {
             font-family: var(--font-track);
-            font-size: 16px; padding: 8px 0; color: var(--ink-grey); 
-            cursor: pointer; transition: 0.2s;
+            font-size: 16px; 
+            color: var(--ink-grey); 
+            cursor: pointer; 
+            /* Chỉ làm mượt màu và khoảng cách, KHÔNG làm mượt viền để tránh nhảy pixel */
+            transition: color 0.2s, padding-left 0.2s, border-color 0.2s;
             display: flex; align-items: center;
+            
+            /* Đóng đinh chiều cao tĩnh và box-sizing */
+            height: 38px;
+            box-sizing: border-box;
+            
+            /* Xí trước chỗ cho viền 3px bằng màu trong suốt */
+            border-left: 3px solid transparent; 
+            padding-left: 0;
         }
-        .playlist-item.active { color: var(--ink-black); font-weight: 600; border-left: 3px solid var(--ink-black); padding-left: 10px; }
+        
+        .playlist-item.active { 
+            color: var(--ink-black); 
+            font-weight: 600; 
+            border-left-color: var(--ink-black); /* Hiện màu viền lên mà không làm thay đổi size */
+            padding-left: 10px; 
+        }
         
         .track-num { flex-shrink: 0; white-space: pre; font-family: var(--font-main); font-weight: normal; }
         .track-name-container { flex-grow: 1; overflow: hidden; white-space: nowrap; position: relative; transition: mask-image 0.3s; }
         .track-name { display: inline-block; }
         .faded-edge { mask-image: linear-gradient(to right, transparent 0%, black 15px, black 100%); -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15px, black 100%); }
 
+        /* MOON STAGE VÀ CANVAS */
         .moon-stage { flex-grow: 1; display: flex; justify-content: center; align-items: center; min-height: 0; overflow: hidden; }
-        .canvas-wrapper { transform: scale(var(--moon-scale)); transform-origin: center center; display: flex; justify-content: center; align-items: center; }
+        .canvas-wrapper { display: flex; justify-content: center; align-items: center; }
+        
+        #gameCanvas {
+            width: 680px; 
+            height: 680px;
+            max-width: 100%; 
+            max-height: 100%;
+        }
 
         /* CỤM ĐIỀU KHIỂN */
         .bottom-control-container { width: 100%; padding-bottom: 40px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; z-index: 40; }
@@ -99,13 +123,15 @@
             font-size: 15px; letter-spacing: 1px; color: var(--ink-black); 
             margin-bottom: 15px; font-weight: 600;
             opacity: 0; transition: opacity 0.5s ease-in-out;
+            min-height: 24px; 
+            display: flex; justify-content: center; align-items: center;
         }
         
         .progress-container { width: 100%; height: 5px; background: rgba(0,0,0,0.1); cursor: pointer; position: relative; border-radius: 10px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--ink-black); width: 0%; pointer-events: none; }
 
         .scale-wrapper { transform: scale(var(--control-scale)); transform-origin: bottom center; display: flex; justify-content: center; }
-        .control-capsule { display: inline-flex; align-items: center; gap: 40px; padding: 12px 40px; background: var(--control-bg); border-radius: 100px; color: var(--ink-grey); }
+        .control-capsule { display: inline-flex; align-items: center; gap: 40px; padding: 12px 40px; background: var(--control-bg); border-radius: 100px; color: var(--ink-grey); transition: all 0.3s ease; }
         .btn { cursor: pointer; font-size: 22px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: 0.2s; position: relative; }
         
         .btn.active { color: var(--ink-black); }
@@ -114,7 +140,7 @@
         .repeat-one-badge { position: absolute; font-family: 'Arial Black', Arial, sans-serif; font-size: 10px; font-weight: 900; color: var(--ink-black); width: 13px; height: 13px; border: none; border-radius: 50%; display: none; align-items: center; justify-content: center; top: 49%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 2; user-select: none; }
 
         .volume-wrapper { position: relative; }
-        .volume-slider-container { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%) scale(calc(1 / var(--control-scale))); transform-origin: bottom center; width: 25px; height: 100px; background: var(--paper-base); border: 1px solid var(--ink-black); padding: 15px 0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.5s, visibility 0.5s; }
+        .volume-slider-container { position: absolute; bottom: 60px; left: 50%; transform: translateX(-50%) scale(calc(1 / var(--control-scale))); transform-origin: bottom center; width: 25px; height: 100px; background: var(--paper-base); border: 1px solid var(--ink-black); padding: 15px 0; border-radius: 8px; display: flex; flex-direction: column; align-items: center; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; z-index: 100;}
         .volume-slider-container.show { opacity: 1; visibility: visible; }
         #volume-slider { appearance: none; width: 100px; height: 4px; background: var(--ink-grey); transform: rotate(-90deg) translate(-45px, 0); cursor: pointer; border-radius: 2px; }
         #volume-slider::-webkit-slider-thumb { appearance: none; width: 12px; height: 12px; background: var(--ink-black); border-radius: 50%; }
@@ -132,10 +158,7 @@
         kbd { background: rgba(194, 192, 187, 0.15); border: 1px solid rgba(194, 192, 187, 0.3); border-radius: 4px; padding: 4px 8px; font-family: monospace; font-size: 12px; box-shadow: 0 2px 0 rgba(194, 192, 187, 0.2); margin: 0 3px; color: var(--paper-base); }
         svg { position: absolute; width: 0; height: 0; }
 
-        /* ========================================= */
-        /* HOVER EFFECTS (SỬA LỖI 3)                 */
-        /* Chỉ chạy hover nếu thiết bị hỗ trợ (chuột)*/
-        /* ========================================= */
+        /* HOVER EFFECTS CHO PC */
         @media (hover: hover) {
             .btn:hover { background: rgba(0,0,0,0.1); color: var(--ink-black); }
             .playlist-item:hover { color: var(--ink-black); }
@@ -143,46 +166,67 @@
         }
 
         /* ========================================= */
-        /* RESPONSIVE MOBILE TWEAKS (SỬA LỖI 2)      */
+        /* RESPONSIVE GIAO DIỆN MOBILE / TABLET      */
         /* ========================================= */
         @media (max-width: 1024px) {
-            .main-wrapper { height: 100dvh; } /* 100dvh chống lỗi thanh URL trình duyệt mobile */
+            .main-wrapper { height: 100dvh; } 
 
-            /* Header */
             header { flex-direction: column; align-items: center; justify-content: center; padding: 20px 5%; text-align: center; }
             .header-left { align-items: center; width: 100%; }
             .title-left { font-size: 30px; letter-spacing: 5px; }
             .subtitle-left { font-size: 15px; margin-top: 8px; }
             .header-right { display: none; }
 
-            /* Bottom Controls - Bỏ fixed, đưa vào dòng chảy để chiếm đúng vị trí dưới cùng */
-            .bottom-control-container { 
-                position: relative; 
-                padding-bottom: 25px; 
-                z-index: 50; 
-            }
+            .bottom-control-container { position: relative; padding-bottom: 25px; z-index: 50; }
             .player-info { width: 100vw; }
-            #current-title { margin-bottom: 20px; font-size: 14px; }
+            #current-title { margin-bottom: 20px; font-size: 14px; min-height: 20px; }
             
             .progress-container { width: 100vw; height: 10px; border-radius: 0; margin-bottom: 20px; }
-            .scale-wrapper { transform: scale(0.85); transform-origin: bottom center; }
-
-            /* Middle Section - Tự động lấp khoảng trống ở giữa Header và Controls */
-            .middle-section { position: relative; overflow: hidden; min-height: 0; }
             
-            /* Slide Track - Căn giữa vạn vật theo chiều dọc */
+            .scale-wrapper { transform: none; width: 100vw; }
+            
+            .control-capsule {
+                width: calc(100vw - 40px);
+                max-width: 420px;
+                padding: 10px 0;
+                gap: 0;
+                justify-content: space-evenly;
+                border-radius: 100px;
+                box-sizing: border-box;
+            }
+            .btn { width: 45px; height: 45px; }
+
+            .volume-slider-container { transform: translateX(-50%); }
+
+            .middle-section { position: relative; overflow: hidden; min-height: 0; }
             .slider-track { width: 200vw; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); align-items: center; }
             
-            :root { --moon-scale: calc((100vw - 20px) / 800); }
             .moon-stage { width: 100vw; height: 100%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+            
+            #gameCanvas {
+                width: calc(150vw - 20px);
+                height: calc(150vw - 20px);
+                max-width: 800px;
+                max-height: 800px;
+            }
 
-            /* Playlist Container - Tính toán max-height và tự động căn giữa */
             #playlist-container {
-                position: relative; left: auto; top: auto;
-                width: 100vw; flex-shrink: 0;
-                padding: 0 5%; box-sizing: border-box;
-                /* THAM SỐ CHỈNH GAP: 20px cách control */
-                max-height: calc(100% - 20px); 
+                position: relative; left: auto; top: auto; width: 100vw; flex-shrink: 0;
+                padding: 0 5%; box-sizing: border-box; max-height: calc(100% - 20px); 
+            }
+        }
+
+        /* Khi màn hình quá nhỏ (Mobile hẹp) */
+        @media (max-width: 460px) {
+            #gameCanvas {
+                width: 150vw;   
+                height: 150vw;
+            }
+            
+            .control-capsule {
+                width: 100vw;
+                max-width: none;
+                border-radius: 0;
             }
         }
     </style>
@@ -513,9 +557,6 @@
     function showVolumeBar() { clearTimeout(volHideTimer); volPopup.classList.add('show'); }
     function hideVolumeBar(delay = 100) { clearTimeout(volHideTimer); volHideTimer = setTimeout(() => { volPopup.classList.remove('show'); }, delay); }
 
-    volArea.onmouseenter = showVolumeBar;
-    volArea.onmouseleave = () => hideVolumeBar(100);
-
     function updateVolumeIcon(vol) {
         if (vol == 0) volIcon.className = 'fa-solid fa-volume-xmark';
         else if (vol < 0.5) volIcon.className = 'fa-solid fa-volume-low';
@@ -529,13 +570,44 @@
         updateVolumeIcon(audio.volume);
     }
 
-    document.getElementById('mute-btn').onclick = toggleMute;
+    // Hover trên Desktop
+    volArea.addEventListener('mouseenter', () => { if(window.innerWidth > 1024) showVolumeBar(); });
+    volArea.addEventListener('mouseleave', () => { if(window.innerWidth > 1024) hideVolumeBar(100); });
+
+    // Click/Touch trên Icon Volume
+    document.getElementById('mute-btn').addEventListener('click', (e) => {
+        e.stopPropagation(); 
+        if (window.innerWidth <= 1024) {
+            if (!volPopup.classList.contains('show')) {
+                showVolumeBar(); 
+            } else {
+                toggleMute(); 
+            }
+        } else {
+            toggleMute(); 
+        }
+    });
 
     volSlider.oninput = (e) => {
         audio.volume = e.target.value;
         if (audio.volume > 0) lastVolume = audio.volume;
         updateVolumeIcon(audio.volume);
     };
+
+    volPopup.addEventListener('click', e => e.stopPropagation());
+    volPopup.addEventListener('touchstart', e => e.stopPropagation(), {passive: true});
+
+    document.addEventListener('touchstart', (e) => {
+        if (window.innerWidth <= 1024 && !volArea.contains(e.target)) {
+            hideVolumeBar(150); 
+        }
+    }, {passive: true});
+
+    document.addEventListener('click', (e) => {
+        if (window.innerWidth <= 1024 && !volArea.contains(e.target)) {
+            hideVolumeBar(150);
+        }
+    });
 
     // --- REPEAT & SHUFFLE ---
     document.getElementById('shuffle-btn').onclick = () => { 
@@ -617,14 +689,14 @@
         requestAnimationFrame(animate);
     }
 
-    // --- LOGIC VUỐT (SWIPE) TRÊN MOBILE ---
+    // --- LOGIC VUỐT (SWIPE) ---
     const sliderTrack = document.getElementById('slider-track');
     let touchStartX = 0;
     let currentSlide = 0; 
 
     sliderTrack.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
     sliderTrack.addEventListener('touchend', e => {
-        if (window.innerWidth > 768) return; 
+        if (window.innerWidth > 1024) return; 
         let touchEndX = e.changedTouches[0].screenX;
         let diff = touchStartX - touchEndX;
 
@@ -633,8 +705,12 @@
     });
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) { sliderTrack.style.transform = `translateX(0)`; } 
-        else { sliderTrack.style.transform = currentSlide === 1 ? `translateX(-50%)` : `translateX(0)`; }
+        if (window.innerWidth > 1024) { 
+            sliderTrack.style.transform = ''; 
+        } 
+        else { 
+            sliderTrack.style.transform = currentSlide === 1 ? `translateX(-50%)` : `translateX(0)`; 
+        }
     });
 
     // --- INIT ---
