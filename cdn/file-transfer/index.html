@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="Secured GitHub Cloud Uploader" />
+    <meta name="author" content="HoangAnhDinhNgoc" />
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    
+    <title>CDN || Secured File Transfer</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #85000083;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+            scrollbar-width: auto;
+        }
+
+        ::-moz-selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+        ::selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- STYLES CHO MÀN HÌNH AUTH --- */
+        #authSystem {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100vh;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        .auth-title {
+            padding: 20px;
+            color: #4b4340;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+            text-transform: uppercase;
+            font-size: 26px;
+            margin-bottom: 20px;
+        }
+
+        .auth-section {
+            width: 50%;
+            max-width: 600px;
+            padding: 0 0 1px 0;
+            background: rgba(216, 210, 186, .5);
+            line-height: 20pt;
+            box-shadow: 2px 2px 1px #4f4b42;
+        }
+
+        .auth-sectionTitle {
+            padding: 10px 15px;
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        /* --- STYLES CHO MÀN HÌNH UPLOAD --- */
+        #uploadSystem {
+            display: none; /* Ẩn mặc định */
+            width: 100%;
+            min-height: 100vh;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 5;
+        }
+
+        .warp-container {
+            margin-top: 1em;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .title-main {
+            font-size: 26px;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            padding-left: 10px;
+        }
+
+        .function-wrapper {
+            display: flex;
+            flex-direction: row;
+            gap: 2em;
+            align-items: stretch;
+        }
+
+        .section {
+            background: var(--nier-panel);
+            box-shadow: 2px 2px 1px #4f4b42;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-panel { flex: 0 0 550px; }
+        .result-panel { flex: 1; min-width: 0; }
+
+        .sectionTitle {
+            padding: 10px 15px;
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        /* --- STYLES CHUNG --- */
+        .control-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 12px; text-transform: uppercase; }
+        
+        .toolzone {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            border: 2px solid var(--nier-dark);
+            background: rgba(216, 210, 186, .5);
+            color: #4b4340;
+            outline: none;
+            resize: vertical;
+        }
+        
+        #cheatCodeInput { margin-bottom: 10px; }
+        input[type="file"].toolzone { cursor: pointer; padding: 8px 12px; }
+
+        .themebutton {
+            cursor: pointer;
+            padding: 12px 20px;
+            font-weight: bold;
+            color: #4b4340;
+            border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
+        .themebutton:disabled { opacity: 0.4; cursor: not-allowed; background: transparent; }
+
+        .boxContent { padding: 20px; }
+        
+        /* Tiến trình & Log */
+        .progress-container {
+            width: 100%; border: 2px solid var(--nier-dark); background: rgba(100, 98, 86, 0.2);
+            height: 40px; position: relative; margin-top: 20px; overflow: hidden;
+        }
+        .progress-bar { height: 100%; width: 0%; background: var(--nier-dark); transition: width 0.3s ease; }
+        .progress-text {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            color: #d3cebb; font-weight: bold; font-size: 14px; text-shadow: 1px 1px 2px #000; mix-blend-mode: difference;
+        }
+
+        .summary-box {
+            margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px;
+            background: rgba(100, 98, 86, 0.1); padding: 20px;
+        }
+        .summary-item span { display: block; font-size: 20px; font-weight: 700; color: var(--nier-dark); }
+
+        .log-area {
+            margin-top: 15px; font-size: 11px; font-family: monospace; max-height: 250px;
+            overflow-y: auto; background: rgba(0,0,0,0.05); padding: 10px; border: 1px dashed var(--nier-dark);
+        }
+        .log-area div { margin-bottom: 4px; }
+        .success { color: #2e7d32; font-weight: bold;}
+        .error-log { color: #c62828; font-weight: bold;}
+        .warning { color: #d84315; font-weight: bold;}
+
+        /* --- POPUP --- */
+        .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9998; }
+        .popupSection {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px;
+            background: rgba(216, 210, 186, .95); color: #4b4340; box-shadow: 2px 2px 10px #4f4b42; z-index: 9999;
+        }
+        .popupSectionTitle { padding: 12px 15px; background: rgba(68, 66, 60, 0.98); color: #d3cebb; font-size: 14px; font-weight: bold; text-transform: uppercase; margin: 0; }
+        .popup-btn { width: auto; min-width: 150px; display: inline-block; margin-top: 0; }
+
+        @media only screen and (max-width: 600px) {
+            .auth-section { width: 90%; }
+            .function-wrapper { flex-direction: column; gap: 1.5em; align-items: center; }
+            .input-panel, .result-panel { flex: none; width: 100%; max-width: 100%; }
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+    <audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popupSection" id="customPopup">
+        <h2 class="popupSectionTitle" id="popupTitle">System Alert</h2>
+        <div class="boxContent" style="text-align: center;">
+            <p id="popupMessage" style="margin-bottom: 25px; font-weight: 500;">Alert message goes here.</p>
+            <button id="popupOkBtn" class="themebutton popup-btn">Ok</button>
+        </div>
+    </div>
+
+    <div id="authSystem">
+        <h1 class="auth-title">Semi-public Directory</h1>
+        <div class="auth-section" id="section1">
+            <h2 class="auth-sectionTitle">Enter your password</h2>
+            <div class="boxContent">
+                <p style="margin-bottom: 10px;">Hint: If you were a bear, which bear would you be? (Also one of your brand name lol)</p>
+                <input type="password" id="cheatCodeInput" class="toolzone" placeholder="Enter password" onkeypress="checkPassword(event)">
+                <div id="error-message" style="display: none; color: rgba(135, 32, 19, 0.9); font-weight: bold; margin-bottom: 10px;"></div>
+                <button id="copybutton" class="themebutton" onclick="checkPassword()">Submit</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="uploadSystem">
+        <div class="warp-container">
+            <h1 class="title-main">GitHub Cloud Uploader</h1>
+            
+            <div class="function-wrapper">
+                <div class="input-panel section">
+                    <h2 class="sectionTitle">Uplink Specifications</h2>
+                    
+                    <div class="control-group">
+                        <label>Select Folder to Upload</label>
+                        <input type="file" id="fileInput" class="toolzone" webkitdirectory directory multiple>
+                    </div>
+
+                    <button id="uploadBtn" class="themebutton">Initialize Upload Sequence</button>
+                </div>
+
+                <div class="result-panel">
+                    <div class="section" style="height: 100%;">
+                        <h2 class="sectionTitle">System Status</h2>
+                        
+                        <div class="summary-box">
+                            <div class="summary-item"><label>Files Detected</label><span id="fileCount">0</span></div>
+                            <div class="summary-item"><label>Processed</label><span id="uploadStatus">0 / 0</span></div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div id="progressBar" class="progress-bar"></div>
+                            <div id="progressText" class="progress-text">STANDBY 0%</div>
+                        </div>
+
+                        <div class="log-area" id="logArea">
+                            <div>[SYSTEM] Awaiting input...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        // --- THÔNG SỐ CONFIG ---
+        const REPO_OWNER = 'hoanganhdinhngoc';
+        const REPO_NAME = 'hoanganhdinhngoc.github.io';
+        const TARGET_PATH = 'cdn/file-transfer';
+        const MAGIC_STRING = '[NIER-VERIFIED]';
+        
+        // Chuỗi mã hóa mới của Sir
+        const _0xEncryptedData = "U2FsdGVkX19K1fCpgjz9OYtcweclNmkwpU9fHExDHxNmh1hjM64aoJJcP7o81XvvUVVkvESLLXnbP/mS66Fl4NM0/m3Q6UG5koH4CD2w3Cc="; 
+        
+        let DECRYPTED_SYSTEM_TOKEN = null;
+
+        // --- HỆ THỐNG ÂM THANH & GIAO DIỆN CHUNG ---
+        const hoverSound = document.getElementById("hover-sound");
+        const clickSound = document.getElementById("click-sound");
+        
+        $(document).on('mouseenter', '.themebutton:not(:disabled), .toolzone', () => { 
+            hoverSound.currentTime = 0; hoverSound.play(); 
+        });
+
+        // ==========================================
+        // PHẦN 1: LOGIC BẢO MẬT & GIẢI MÃ
+        // ==========================================
+        function showError() { 
+            $('#error-message').html('Incorrect password. Try again.').stop(true, true).slideDown(300).delay(5000).slideUp(300); 
+        }
+
+        window.checkPassword = function(event) {
+            if (event && event.type === 'keypress' && event.key !== 'Enter') return;
+
+            const userPass = document.getElementById('cheatCodeInput').value;
+            if (!userPass) return;
+
+            try {
+                clickSound.play();
+                const bytes = CryptoJS.AES.decrypt(_0xEncryptedData, userPass);
+                const decryptedContent = bytes.toString(CryptoJS.enc.Utf8);
+
+                // KIỂM TRA CHUỖI MAGIC THEO YÊU CẦU CỦA SIR
+                if (decryptedContent && decryptedContent.includes(MAGIC_STRING)) {
+                    // Trích xuất Token bằng cách loại bỏ MAGIC_STRING
+                    DECRYPTED_SYSTEM_TOKEN = decryptedContent.replace(MAGIC_STRING, "").trim();
+                    
+                    $('#authSystem').fadeOut(600, function() {
+                        $('#uploadSystem').fadeIn(600);
+                        document.getElementById('fileInput').focus();
+                    });
+                } else {
+                    showError();
+                }
+            } catch (e) {
+                showError();
+            }
+        };
+
+        // Bẫy bảo mật (Anti-debugger)
+        (function(){
+            const _check = setInterval(() => {
+                if(typeof CryptoJS === 'undefined') return;
+                clearInterval(_check);
+            }, 100);
+            setInterval(function() {
+                (function(a){return(function(a){return(Function('debugger')())}(a))}(0));
+            }, 1000);
+        })();
+
+        // ==========================================
+        // PHẦN 2: LOGIC UPLOAD FILE
+        // ==========================================
+        const fileInput = document.getElementById('fileInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const fileCountEl = document.getElementById('fileCount');
+        const uploadStatusEl = document.getElementById('uploadStatus');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const logArea = document.getElementById('logArea');
+
+        let selectedFiles = [];
+
+        function showPopup(title, message) {
+            clickSound.currentTime = 0; clickSound.play();
+            $('#popupTitle').text(title);
+            $('#popupMessage').text(message);
+            $('#popupOverlay').fadeIn(300); $('#customPopup').fadeIn(300);
+        }
+
+        $('#popupOkBtn, #popupOverlay').click(function() {
+            clickSound.currentTime = 0; clickSound.play();
+            $('#popupOverlay').fadeOut(300); $('#customPopup').fadeOut(300);
+        });
+
+        function logMessage(msg, type = '') {
+            const div = document.createElement('div');
+            div.textContent = msg;
+            if(type) div.className = type;
+            logArea.appendChild(div);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        fileInput.addEventListener('change', (e) => {
+            selectedFiles = Array.from(e.target.files);
+            fileCountEl.innerText = selectedFiles.length;
+            uploadStatusEl.innerText = `0 / ${selectedFiles.length}`;
+            logMessage(`[SYSTEM] Target acquired: ${selectedFiles.length} files. Folder structure preserved.`);
+        });
+
+        async function uploadToGitHub(file, path) {
+            const reader = new FileReader();
+            
+            const content = await new Promise((resolve, reject) => {
+                reader.onload = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+
+            const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${path}`;
+            let sha = null;
+            
+            try {
+                const res = await fetch(url, {
+                    headers: { 'Authorization': `token ${DECRYPTED_SYSTEM_TOKEN}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    sha = data.sha;
+                }
+            } catch (e) { /* Bỏ qua nếu file chưa tồn tại */ }
+
+            const body = {
+                message: `[Core System] Auto-commit folder structure: ${file.name}`,
+                content: content,
+                sha: sha 
+            };
+
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${DECRYPTED_SYSTEM_TOKEN}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+            }
+        }
+
+        uploadBtn.addEventListener('click', async () => {
+            clickSound.play();
+
+            if (!DECRYPTED_SYSTEM_TOKEN) {
+                showPopup("Security Error", "Sir, critical error: Missing authentication token. Please reload the page and authenticate again.");
+                return;
+            }
+
+            if (selectedFiles.length === 0) {
+                showPopup("Data Missing", "Sir, please select a folder containing files to initialize the upload sequence.");
+                return;
+            }
+
+            uploadBtn.disabled = true;
+            fileInput.disabled = true;
+            
+            logArea.innerHTML = ''; 
+            logMessage(`[SYSTEM] Initiating GitHub API Uplink with secured token...`);
+            progressText.innerText = "UPLOADING...";
+            
+            let uploadedCount = 0;
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                const relativePath = file.webkitRelativePath || file.name;
+                const fullPath = `${TARGET_PATH}/${relativePath}`;
+
+                try {
+                    logMessage(`[SYSTEM] Transmitting: ${relativePath}...`);
+                    await uploadToGitHub(file, fullPath);
+                    
+                    successCount++;
+                    logMessage(`[SUCCESS] File secured: ${relativePath}`, 'success');
+                } catch (error) {
+                    errorCount++;
+                    logMessage(`[ERROR] Failed to transmit ${relativePath} - ${error.message}`, 'error-log');
+                }
+
+                uploadedCount++;
+                
+                const percent = Math.round((uploadedCount / selectedFiles.length) * 100);
+                progressBar.style.width = percent + '%';
+                uploadStatusEl.innerText = `${uploadedCount} / ${selectedFiles.length}`;
+                progressText.innerText = `UPLOADING ${percent}%`;
+            }
+
+            uploadBtn.disabled = false;
+            fileInput.disabled = false;
+
+            if (errorCount === 0) {
+                logMessage(`[SYSTEM] Sequence complete. All data successfully pushed to Cloud.`, 'success');
+                progressText.innerText = "COMPLETE 100%";
+            } else {
+                logMessage(`[SYSTEM] Sequence terminated with ${errorCount} errors. Please review the logs.`, 'warning');
+                progressText.innerText = "COMPLETE WITH ERRORS";
+                progressBar.style.background = "var(--secondary-color)";
+            }
+        });
+    </script>
+</body>
+</html>
