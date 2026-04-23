@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mera Global Infrastructure V8 - Ultimate Crisp</title>
-  <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+  <title>Mera Global Infrastructure V10 - 16K & High-Res Borders</title>
   <script src="https://unpkg.com/three"></script>
   <script src="https://unpkg.com/globe.gl"></script>
   <style>
@@ -42,6 +41,19 @@
   <div id="globeViz"></div>
 
   <script>
+    // --- BƯỚC 1: LOGIC KIỂM TRA THIẾT BỊ VÀ TẢI TEXTURE TƯƠNG ỨNG ---
+    const isDesktop = window.innerWidth > 1024;
+    
+    // THƯA SIR: Anh hãy upload 1 tấm ảnh bản đồ đêm 16K lên host của mình và thay link vào biến texture16K này nhé.
+    // Em đang tạm dùng link 8K để code không bị lỗi 404 khi anh chạy test.
+    // const texture16K = 'https://hoanganhdinhngoc.github.io/demos/mera-site/globe/blackmarble.png';
+    const texture16K = 'https://hoanganhdinhngoc.github.io/demos/mera-site/globe/earth-at-night.jpg';
+    const texture8K = 'https://unpkg.com/three-globe/example/img/earth-night.jpg';
+    
+    const currentTexture = isDesktop ? texture16K : texture8K;
+    const currentBumpMap = 'https://unpkg.com/three-globe/example/img/earth-topology.png';
+
+    // --- DỮ LIỆU ĐIỂM VÀ ĐƯỜNG TRUYỀN ---
     const miraNodes = [
       { lat: 21.0285, lng: 105.8542, name: 'Ha Noi', latOffset: 0.6, lngOffset: -1.6 },
       { lat: 18.6734, lng: 105.6923, name: 'Vinh', latOffset: 0.8, lngOffset: -1.1 },
@@ -65,7 +77,6 @@
       { lat: 22.3193, lng: 114.1694, name: 'Hong Kong', latOffset: 0, lngOffset: 1.8 }
     ];
 
-    // Đã thay đổi tên các điểm Global cho sinh động
     const globalNodes = [
       { lat: 40.7128, lng: -74.0060, name: 'New York', latOffset: 1.5, lngOffset: 0  }, 
       { lat: 37.7749, lng: -122.4194, name: 'San Francisco', latOffset: 1.5, lngOffset: 0  },
@@ -78,33 +89,15 @@
     const allPoints = [...miraNodes, ...globalNodes];
 
     const miraLinksRaw = [
-      { start: 'Ha Noi', end: 'Tan Thanh' },
-      { start: 'Tan Thanh', end: 'Nam Ninh' },
-      { start: 'Nam Ninh', end: 'Hong Kong' },
-      { start: 'Ha Noi', end: 'Quang Ninh' },
-      { start: 'Quang Ninh', end: 'Mong Cai' },
-      { start: 'Mong Cai', end: 'Hong Kong' },
-      { start: 'Ha Noi', end: 'Vinh' },
-      { start: 'Vinh', end: 'Da Nang' },
-      { start: 'Vinh', end: 'Lao Bao' },
-      { start: 'Lao Bao', end: 'Savannakhet' },
-      { start: 'Da Nang', end: 'Po Y' },
-      { start: 'Po Y', end: 'Savannakhet' },
-      { start: 'Savannakhet', end: 'Bangkok' },
-      { start: 'Da Nang', end: 'Quy Nhon' },
-      { start: 'Quy Nhon', end: 'Ho Chi Minh' },
-      { start: 'Ho Chi Minh', end: 'Vung Tau' },
-      { start: 'Ho Chi Minh', end: 'Moc Bai' },
-      { start: 'Moc Bai', end: 'Phnom Penh' },
-      { start: 'Phnom Penh', end: 'Bangkok' },
-      { start: 'Bangkok', end: 'South Thailand' },
-      { start: 'South Thailand', end: 'Malaysia' },
-      { start: 'Malaysia', end: 'Singapore' },
-      { start: 'Hong Kong', end: 'Da Nang' },
-      { start: 'Da Nang', end: 'Quy Nhon' },
-      { start: 'Quy Nhon', end: 'Vung Tau' },
-      { start: 'Vung Tau', end: 'Singapore' },
-      { start: 'South Thailand', end: 'Singapore' }
+      { start: 'Ha Noi', end: 'Tan Thanh' }, { start: 'Tan Thanh', end: 'Nam Ninh' }, { start: 'Nam Ninh', end: 'Hong Kong' },
+      { start: 'Ha Noi', end: 'Quang Ninh' }, { start: 'Quang Ninh', end: 'Mong Cai' }, { start: 'Mong Cai', end: 'Hong Kong' },
+      { start: 'Ha Noi', end: 'Vinh' }, { start: 'Vinh', end: 'Da Nang' }, { start: 'Vinh', end: 'Lao Bao' },
+      { start: 'Lao Bao', end: 'Savannakhet' }, { start: 'Da Nang', end: 'Po Y' }, { start: 'Po Y', end: 'Savannakhet' },
+      { start: 'Savannakhet', end: 'Bangkok' }, { start: 'Da Nang', end: 'Quy Nhon' }, { start: 'Quy Nhon', end: 'Ho Chi Minh' },
+      { start: 'Ho Chi Minh', end: 'Vung Tau' }, { start: 'Ho Chi Minh', end: 'Moc Bai' }, { start: 'Moc Bai', end: 'Phnom Penh' },
+      { start: 'Phnom Penh', end: 'Bangkok' }, { start: 'Bangkok', end: 'South Thailand' }, { start: 'South Thailand', end: 'Malaysia' },
+      { start: 'Malaysia', end: 'Singapore' }, { start: 'Hong Kong', end: 'Da Nang' }, { start: 'Da Nang', end: 'Quy Nhon' },
+      { start: 'Quy Nhon', end: 'Vung Tau' }, { start: 'Vung Tau', end: 'Singapore' }, { start: 'South Thailand', end: 'Singapore' }
     ];
 
     const globalLinksRaw = [
@@ -120,10 +113,7 @@
     const miraLinksCoords = miraLinksRaw.map(link => {
         const s = miraNodes.find(n => n.name === link.start);
         const e = miraNodes.find(n => n.name === link.end);
-        return {
-            startLat: s.lat, startLng: s.lng,
-            endLat: e.lat, endLng: e.lng
-        };
+        return { startLat: s.lat, startLng: s.lng, endLat: e.lat, endLng: e.lng };
     });
 
     const allLinks = [...miraLinksCoords, ...globalLinksRaw];
@@ -133,11 +123,11 @@
         return Math.min(dist * 0.008, 0.15);
     }
 
-    // --- KHỞI TẠO ĐỊA CẦU ---
+    // --- BƯỚC 2: KHỞI TẠO ĐỊA CẦU VỚI TEXTURE ĐỘNG ---
     const world = Globe()
       (document.getElementById('globeViz'))
-      .globeImageUrl('https://unpkg.com/three-globe/example/img/earth-night.jpg')
-      .bumpImageUrl('https://unpkg.com/three-globe/example/img/earth-topology.png')
+      .globeImageUrl(currentTexture)
+      .bumpImageUrl(currentBumpMap)
       .backgroundColor('rgba(0,0,0,0)')
 
       .pointsData(allPoints)
@@ -147,12 +137,11 @@
       .pointAltitude(0.001)
       .pointRadius(0.12)
 
-      // Cập nhật: Truyền allPoints thay vì miraNodes để hiện đủ chữ
       .labelsData(allPoints)
       .labelLat(d => d.lat + (d.latOffset || 0))
       .labelLng(d => d.lng + (d.lngOffset || 0))
       .labelText('name')
-      .labelSize(0.6)
+      .labelSize(0.3)
       .labelDotRadius(0)
       .labelColor(() => '#ffffff')
       .labelResolution(3)
@@ -166,15 +155,44 @@
       .arcDashGap(0.2)
       .arcDashAnimateTime(2500);
 
+    // --- BƯỚC 3: TẢI BẢN ĐỒ BIÊN GIỚI ĐỘ PHÂN GIẢI CAO (Tỷ lệ 50m) ---
+    // Em đã thay link dữ liệu thành ne_50m_admin_0_countries (nét gấp đôi bản cũ 110m).
+    // Nếu website thực tế cần độ chi tiết cực đỉnh hơn nữa, Sir có thể tìm file "ne_10m_admin_0_countries.geojson" 
+    // trên mạng, tải về máy chủ và thay thế vào link fetch dưới đây.
+    fetch('https://hoanganhdinhngoc.github.io/demos/mera-site/globe/ne_10m_admin_0_countries.geojson')
+      .then(res => res.json())
+      .then(countries => {
+        const targetCountries = ['Vietnam', 'Laos', 'Cambodia', 'Thailand', 'Malaysia', 'Singapore'];
+        // Lọc đúng các quốc gia Sir yêu cầu
+        const filteredCountries = countries.features.filter(d => 
+          d.properties.admin && targetCountries.includes(d.properties.admin) || 
+          d.properties.ADMIN && targetCountries.includes(d.properties.ADMIN)
+        );
+        
+        world.polygonsData(filteredCountries)
+          .polygonCapColor(() => 'rgba(0,0,0,0)')
+          .polygonSideColor(() => 'rgba(0,0,0,0)')
+          .polygonStrokeColor(() => '#012a7a') // Màu xanh dương đậm như Sir dặn
+          .polygonAltitude(0.002);             // Giúp đường border nổi lên một chút, không bị chìm
+      });
+
     world.controls().autoRotate = true;
-    world.controls().autoRotateSpeed = 0.2;
+    world.controls().autoRotateSpeed = 0;
 
-    world.pointOfView({ lat: 16, lng: 108, altitude: 1.6 });
+    // --- GÓC NHÌN & ZOOM MỚI CỦA SIR ---
+    world.pointOfView({ lat: 12, lng: 108, altitude: 0.6 });
 
-    // Tinh chỉnh hiển thị siêu nét trên các màn hình phân giải cao (Retina/4K)
+    // Tinh chỉnh hiển thị siêu nét trên các màn hình phân giải cao
     setTimeout(() => {
       world.renderer().setPixelRatio(window.devicePixelRatio);
-    }, 100);
+      const scene = world.scene();
+      scene.traverse(child => {
+        if (child.isMesh && child.material && child.material.map) {
+          child.material.map.anisotropy = world.renderer().capabilities.getMaxAnisotropy();
+          child.material.map.needsUpdate = true;
+        }
+      });
+    }, 500);
   </script>
 </body>
 </html>
