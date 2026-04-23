@@ -46,7 +46,6 @@
     
     // THƯA SIR: Anh hãy upload 1 tấm ảnh bản đồ đêm 16K lên host của mình và thay link vào biến texture16K này nhé.
     // Em đang tạm dùng link 8K để code không bị lỗi 404 khi anh chạy test.
-    // const texture16K = 'https://hoanganhdinhngoc.github.io/demos/mera-site/globe/blackmarble.png';
     const texture16K = 'https://hoanganhdinhngoc.github.io/demos/mera-site/globe/earth-at-night.jpg';
     const texture8K = 'https://unpkg.com/three-globe/example/img/earth-night.jpg';
     
@@ -55,35 +54,35 @@
 
     // --- DỮ LIỆU ĐIỂM VÀ ĐƯỜNG TRUYỀN ---
     const miraNodes = [
-      { lat: 21.0285, lng: 105.8542, name: 'Ha Noi', latOffset: 0.6, lngOffset: -1.6 },
-      { lat: 18.6734, lng: 105.6923, name: 'Vinh', latOffset: 0.8, lngOffset: -1.1 },
-      { lat: 16.0471, lng: 108.2062, name: 'Da Nang', latOffset: 0.2, lngOffset: 2.4 },
-      { lat: 13.7767, lng: 109.2243, name: 'Quy Nhon', latOffset: 0.4, lngOffset: 2.3 },
-      { lat: 11.0825, lng: 106.2081, name: 'Moc Bai', latOffset: 1.6, lngOffset: 0 },
-      { lat: 10.8231, lng: 106.6297, name: 'Ho Chi Minh', latOffset: -0.8, lngOffset: 0 },
-      { lat: 10.3460, lng: 107.0843, name: 'Vung Tau', latOffset: 1, lngOffset: 2.1 },
-      { lat: 11.5564, lng: 104.9282, name: 'Phnom Penh', latOffset: 0.2, lngOffset: -2 },
-      { lat: 14.7397, lng: 107.5753, name: 'Po Y', latOffset: 0.5, lngOffset: -1.5 },
-      { lat: 16.6204, lng: 106.6022, name: 'Lao Bao', latOffset: 1.2, lngOffset: 2 },
-      { lat: 16.5663, lng: 104.7523, name: 'Savannakhet', latOffset: 1.2, lngOffset: -2.8 },
-      { lat: 21.8510, lng: 106.7570, name: 'Tan Thanh', latOffset: 1.2, lngOffset: -1.8 },
-      { lat: 21.0068, lng: 107.2925, name: 'Quang Ninh', latOffset: 0.1, lngOffset: 2.5 },
-      { lat: 21.5297, lng: 107.9558, name: 'Mong Cai', latOffset: 0.8, lngOffset: 2.4 },
-      { lat: 22.8170, lng: 108.3661, name: 'Nam Ninh', latOffset: 1.5, lngOffset: 0 },
-      { lat: 13.7563, lng: 100.5018, name: 'Bangkok', latOffset: 0.5, lngOffset: -1.8 },
-      { lat: 7.0096, lng: 100.4705, name: 'South Thailand', latOffset: 0.5, lngOffset: -3.2 },
-      { lat: 4.2105, lng: 101.9758, name: 'Malaysia', latOffset: 0, lngOffset: -2.0 },
+      { lat: 21.0285, lng: 105.8542, name: 'Ha Noi', latOffset: 0.2, lngOffset: -1.1 },
+      { lat: 18.6734, lng: 105.6923, name: 'Vinh', latOffset: 0.2, lngOffset: -0.8 },
+      { lat: 16.0471, lng: 108.2062, name: 'Da Nang', latOffset: 0.2, lngOffset: 1.3 },
+      { lat: 13.7767, lng: 109.2243, name: 'Quy Nhon', latOffset: 0.3, lngOffset: 1.3 },
+      { lat: 11.0825, lng: 106.2081, name: 'Moc Bai', latOffset: 0.9, lngOffset: 0 },
+      { lat: 10.8231, lng: 106.6297, name: 'Ho Chi Minh', latOffset: -0.1, lngOffset: -1.1 },
+      { lat: 10.3460, lng: 107.0843, name: 'Vung Tau', latOffset: 0.1, lngOffset: 1.3 },
+      { lat: 11.5564, lng: 104.9282, name: 'Phnom Penh', latOffset: 0, lngOffset: -1.2 },
+      { lat: 14.7397, lng: 107.5753, name: 'Po Y', latOffset: -0.1, lngOffset: -0.5 },
+      { lat: 16.6204, lng: 106.6022, name: 'Lao Bao', latOffset: -0.2, lngOffset: 0.3 },
+      { lat: 16.5663, lng: 104.7523, name: 'Savannakhet', latOffset: 0.6, lngOffset: -1.4 },
+      { lat: 21.8510, lng: 106.7570, name: 'Tan Thanh', latOffset: 0.7, lngOffset: -1.2 },
+      { lat: 21.0068, lng: 107.2925, name: 'Quang Ninh', latOffset: -0.1, lngOffset: 1.5 },
+      { lat: 21.5297, lng: 107.9558, name: 'Mong Cai', latOffset: 0.2, lngOffset: 1.4 },
+      { lat: 22.8170, lng: 108.3661, name: 'Nam Ninh', latOffset: 0.6, lngOffset: -0.6 },
+      { lat: 13.7563, lng: 100.5018, name: 'Bangkok', latOffset: 0.5, lngOffset: -1.2 },
+      { lat: 7.0096, lng: 100.4705, name: 'South Thailand', latOffset: 0.5, lngOffset: -1.7 },
+      { lat: 4.2105, lng: 101.9758, name: 'Malaysia', latOffset: 0.4, lngOffset: -1.4 },
       { lat: 1.3521, lng: 103.8198, name: 'Singapore', latOffset: 0, lngOffset: 0 },
       { lat: 22.3193, lng: 114.1694, name: 'Hong Kong', latOffset: 0, lngOffset: 1.8 }
     ];
 
     const globalNodes = [
-      { lat: 40.7128, lng: -74.0060, name: 'New York', latOffset: 1.5, lngOffset: 0  }, 
-      { lat: 37.7749, lng: -122.4194, name: 'San Francisco', latOffset: 1.5, lngOffset: 0  },
-      { lat: 51.5074, lng: -0.1278, name: 'London', latOffset: 1.5, lngOffset: 0  }, 
-      { lat: 50.1109, lng: 8.6821, name: 'Frankfurt', latOffset: 1.5, lngOffset: 0  },
-      { lat: 35.6895, lng: 139.6917, name: 'Tokyo', latOffset: 1.5, lngOffset: 0  }, 
-      { lat: -33.8688, lng: 151.2093, name: 'Sydney', latOffset: 1.5, lngOffset: 0  }
+      { lat: 40.7128, lng: -74.0060, name: 'New York', latOffset: -0.2, lngOffset: 0  }, 
+      { lat: 37.7749, lng: -122.4194, name: 'San Francisco', latOffset: -0.2, lngOffset: 0  },
+      { lat: 51.5074, lng: -0.1278, name: 'London', latOffset: -0.2, lngOffset: 0  }, 
+      { lat: 50.1109, lng: 8.6821, name: 'Frankfurt', latOffset: -0.2, lngOffset: 0  },
+      { lat: 35.6895, lng: 139.6917, name: 'Tokyo', latOffset: -0.2, lngOffset: 0  }, 
+      { lat: -33.8688, lng: 151.2093, name: 'Sydney', latOffset: -0.2, lngOffset: 0  }
     ];
 
     const allPoints = [...miraNodes, ...globalNodes];
@@ -180,7 +179,7 @@
     world.controls().autoRotateSpeed = 0;
 
     // --- GÓC NHÌN & ZOOM MỚI CỦA SIR ---
-    world.pointOfView({ lat: 12, lng: 108, altitude: 0.6 });
+    world.pointOfView({ lat: 12, lng: 108, altitude: 0.5 });
 
     // Tinh chỉnh hiển thị siêu nét trên các màn hình phân giải cao
     setTimeout(() => {
