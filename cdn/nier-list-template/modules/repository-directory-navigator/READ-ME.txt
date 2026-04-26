@@ -1,0 +1,36 @@
+====================================================================
+HƯỚNG DẪN SỬ DỤNG TOOL "NIER MILLER EXPLORER" (REPO NAVIGATOR)
+====================================================================
+
+TÓM TẮT:
+Đây là công cụ dạng "Plug & Play", giúp hiển thị trực quan toàn bộ cấu trúc thư mục (File/Folder) của một GitHub Repository bằng phương pháp Miller Columns. Tích hợp sẵn Nier Theme, âm thanh và chức năng Copy URL nhanh. Hoạt động trên 1 request API duy nhất (không lo bị giới hạn).
+
+--------------------------------------------------------------------
+CÁCH SỬ DỤNG CHO MỘT REPOSITORY MỚI (CHỈ 2 BƯỚC)
+--------------------------------------------------------------------
+
+BƯỚC 1: COPY FILE
+- Copy file `index.html` này và đặt vào bất kỳ thư mục nào trên Web Server / Cloudflare Pages / GitHub Pages của bạn.
+
+BƯỚC 2: CHỈNH SỬA CẤU HÌNH
+- Mở file `index.html` bằng bất kỳ trình soạn thảo code nào.
+- Kéo xuống dòng khoảng 100, tìm khu vực có ghi: "⚙️ CẤU HÌNH (CONFIGURATION)".
+- Thay đổi 6 giá trị trong biến CONFIG cho phù hợp với Repository đích. Cụ thể:
+
+    const CONFIG = {
+        PAGE_TITLE: "Demos Navigator",               -> Tên tiêu đề bạn muốn hiển thị to ở đầu trang.
+        GITHUB_OWNER: "hoanganhdinhngoc",            -> Tên tài khoản GitHub sở hữu repo.
+        GITHUB_REPO: "hoanganhdinhngoc",             -> Tên chính xác của Repository.
+        BRANCH: "main",                              -> Nhánh cần soi dữ liệu (thường là "main" hoặc "master").
+        BASE_FOLDER: "demos",                        -> Thư mục gốc cần hiển thị. Nếu muốn hiện toàn bộ repo từ rễ, để trống: "".
+        PREVIEW_DOMAIN: "https://your-domain.dev"    -> Domain gốc của trang web. Dùng để nối tạo thành link click cho các file con.
+    };
+
+- Lưu file lại. Refresh web và tận hưởng!
+
+--------------------------------------------------------------------
+LƯU Ý QUAN TRỌNG
+--------------------------------------------------------------------
+1. Công cụ này sử dụng Unauthenticated GitHub API, giới hạn 60 lượt tải trang (chứ không phải 60 lượt click) / 1 giờ / 1 IP. Rất an toàn cho nhu cầu sử dụng cá nhân hoặc nội bộ.
+2. Repo GitHub phải ở chế độ PUBLIC thì API mới soi được dữ liệu mà không cần mã Token.
+3. Âm thanh Nier được kéo trực tiếp từ CDN (hoanganhdinhngoc.github.io), nên bạn không cần copy thêm file âm thanh đi kèm.

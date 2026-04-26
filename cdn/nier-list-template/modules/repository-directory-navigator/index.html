@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Loading...</title>
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+        :root { 
+            --nier-dark: #4b4340; 
+            --nier-beige: #ccc6b0; 
+            --nier-panel: rgba(216, 210, 186, .5); 
+            --nier-bg-btn: #4e493a; 
+            --nier-text-light: #d3cebb; 
+            --nier-highlight: rgba(100, 98, 86, 0.8); 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7); scrollbar-width: thin; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--nier-beige); background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%), linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%); background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh; overflow: hidden; }
+        .coreSystem { display: flex; flex-direction: column; width: 100%; height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 30px; }
+        .header-section { margin-bottom: 20px; }
+        .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
+        ::-moz-selection {/* Code for Firefox */color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
+        ::selection {color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
+        
+        .address-bar { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 15px 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; border: 2px solid var(--nier-dark); }
+        .address-container { position: relative; cursor: pointer; display: inline-flex; align-items: center; padding: 2px 5px; transition: background 0.2s, color 0.2s; }
+        .tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-5px); background-color: var(--nier-dark); color: var(--nier-text-light); padding: 6px 12px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.2s ease; pointer-events: none; box-shadow: 2px 2px 0px rgba(0,0,0,0.3); z-index: 10; font-weight: normal; }
+        .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--nier-dark) transparent transparent transparent; }
+        .address-container:hover .tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-10px); }
+
+        .miller-container { flex: 1; display: flex; flex-direction: row; gap: 15px; overflow-x: auto; overflow-y: hidden; padding-bottom: 15px; align-items: flex-start; }
+        .miller-column { flex: 0 0 320px; height: 100%; background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; border: 2px solid var(--nier-dark); display: flex; flex-direction: column; animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+        
+        .miller-header { padding: 12px 15px; color: var(--nier-text-light); background: var(--nier-highlight); font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+        .miller-content { flex: 1; overflow-y: auto; padding: 5px; }
+        .miller-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; margin: 4px 0; cursor: pointer; font-size: 14px; transition: all 0.2s ease-out; }
+        .miller-item:hover, .miller-item.active { background: var(--nier-bg-btn); color: var(--nier-text-light); }
+        .icon-folder { color: var(--nier-highlight); }
+        .miller-item:hover .icon-folder, .miller-item.active .icon-folder { color: var(--nier-text-light); }
+        .loader { display: none; animation: spin 1s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+    <audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+    <audio id="open-link-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg" type="audio/ogg"></audio>
+
+    <div class="coreSystem">
+        <div class="header-section">
+            <h1 class="title-main" id="page-title-display">Loading...</h1>
+            <div class="address-bar" id="address-bar">
+                <i class="fas fa-database"></i> 
+                <div class="address-container" id="address-container">
+                    <span id="breadcrumb-content">...</span>
+                    <span class="tooltip" id="tooltip-text">Copy address</span>
+                </div>
+                <i class="fas fa-circle-notch loader" id="main-loader"></i>
+            </div>
+        </div>
+        <div class="miller-container" id="miller-container"></div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // ⚙️ CẤU HÌNH (CONFIGURATION) - CHỈ CẦN SỬA Ở ĐÂY KHI COPY SANG REPO KHÁC
+        // =========================================================================
+        const CONFIG = {
+            PAGE_TITLE: "Repository Directory Navigator",          // Tên hiển thị to ở đầu trang web và trên Tab
+            GITHUB_OWNER: "hoanganhdinhngoc",                 // Tên tài khoản GitHub
+            GITHUB_REPO: "hoanganhdinhngoc",                  // Tên Repository chứa file
+            BRANCH: "main",                                   // Nhánh chứa dữ liệu (thường là main hoặc master)
+            BASE_FOLDER: "demos",                             // Thư mục gốc muốn hiển thị (VD: "demos" hoặc "src"). 
+            PREVIEW_DOMAIN: "https://hoanganhdinhngoc.pages.dev" // Tên miền gốc để sinh ra link public khi bấm vào file
+        };
+        // =========================================================================
+
+        let fullTreeData = {}; 
+
+        const playSnd = (id) => { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); };
+
+        // Thiết lập giao diện ban đầu theo CONFIG
+        document.title = CONFIG.PAGE_TITLE;
+        document.getElementById('page-title-display').textContent = CONFIG.PAGE_TITLE;
+        document.getElementById('breadcrumb-content').textContent = CONFIG.BASE_FOLDER;
+
+        // Logic Copy Address
+        const addressContainer = document.getElementById('address-container');
+        const tooltipText = document.getElementById('tooltip-text');
+
+        addressContainer.addEventListener('click', () => {
+            const url = document.getElementById('breadcrumb-content').getAttribute('data-url');
+            if(url) {
+                navigator.clipboard.writeText(url).then(() => {
+                    tooltipText.innerText = "Copied to clipboard";
+                    playSnd('open-link-sound');
+                });
+            }
+        });
+
+        addressContainer.addEventListener('mouseleave', () => {
+            setTimeout(() => { tooltipText.innerText = "Copy address"; }, 300);
+        });
+
+        function updateBreadcrumb() {
+            const container = document.getElementById('miller-container');
+            const columns = container.querySelectorAll('.miller-column');
+            let paths = [];
+            
+            columns.forEach(col => {
+                const headerText = col.querySelector('.miller-header span').textContent;
+                paths.push(headerText);
+            });
+            
+            const breadcrumbText = paths.join(" > ");
+            const fullPath = paths.join("/");
+            const fullUrl = `${CONFIG.PREVIEW_DOMAIN}/${fullPath}`;
+            
+            const bcElement = document.getElementById('breadcrumb-content');
+            bcElement.textContent = breadcrumbText;
+            bcElement.setAttribute('data-url', fullUrl); 
+        }
+
+        async function fetchFullTree() {
+            $('#main-loader').show();
+            // Tự động gọi API dựa trên cấu hình Sir đã khai báo
+            const url = `https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/git/trees/${CONFIG.BRANCH}?recursive=1`;
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                buildMemoryTree(data.tree);
+            } catch (e) { 
+                console.error("API Error", e); 
+                document.getElementById('miller-container').innerHTML = `<p style="padding: 20px; color: red;">Lỗi kết nối GitHub API. Vui lòng kiểm tra lại cấu hình Owner/Repo/Branch.</p>`;
+            }
+            $('#main-loader').hide();
+        }
+
+        function buildMemoryTree(files) {
+            fullTreeData = {};
+            files.forEach(file => {
+                if (file.path.startsWith(CONFIG.BASE_FOLDER)) {
+                    let parts = file.path.split('/');
+                    let current = fullTreeData;
+                    
+                    parts.forEach((part, index) => {
+                        if (!current[part]) {
+                            current[part] = { 
+                                _name: part, 
+                                _path: file.path, 
+                                _type: (index === parts.length - 1 && file.type === 'blob') ? 'file' : 'dir',
+                                _content: {} 
+                            };
+                        }
+                        current = current[part]._content;
+                    });
+                }
+            });
+            if (fullTreeData[CONFIG.BASE_FOLDER]) {
+                renderColumn(0, fullTreeData[CONFIG.BASE_FOLDER]._content, CONFIG.BASE_FOLDER);
+                updateBreadcrumb();
+            }
+        }
+
+        function renderColumn(level, contentObj, folderName) {
+            const container = document.getElementById('miller-container');
+            while (container.children.length > level) container.removeChild(container.lastChild);
+
+            const col = document.createElement('div');
+            col.className = 'miller-column';
+            
+            const header = document.createElement('div');
+            header.className = 'miller-header';
+            header.innerHTML = `<span>${folderName}</span>`;
+            col.appendChild(header);
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'miller-content';
+
+            const items = Object.values(contentObj).sort((a, b) => {
+                if (a._type === b._type) return a._name.localeCompare(b._name);
+                return a._type === 'dir' ? -1 : 1;
+            });
+
+            items.forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'miller-item';
+                const isDir = item._type === 'dir';
+                
+                itemDiv.innerHTML = `
+                    <div class="item-left">
+                        <i class="${isDir ? 'fas fa-folder icon-folder' : 'fas fa-file-code icon-file'}"></i>
+                        <span>${item._name}</span>
+                    </div>
+                    <i class="${isDir ? 'fas fa-chevron-right' : 'fas fa-external-link-alt'}" style="font-size:10px; opacity:0.5"></i>
+                `;
+
+                itemDiv.onmouseenter = () => playSnd('hover-sound');
+                itemDiv.onclick = () => {
+                    contentDiv.querySelectorAll('.miller-item').forEach(el => el.classList.remove('active'));
+                    itemDiv.classList.add('active');
+                    if (isDir) {
+                        playSnd('click-sound');
+                        renderColumn(level + 1, item._content, item._name);
+                    } else {
+                        playSnd('open-link-sound');
+                        window.open(`${CONFIG.PREVIEW_DOMAIN}/${item._path}`, '_blank');
+                    }
+                };
+                contentDiv.appendChild(itemDiv);
+            });
+
+            col.appendChild(contentDiv);
+            container.appendChild(col);
+            container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
+
+            updateBreadcrumb();
+        }
+
+        $(document).ready(fetchFullTree);
+    </script>
+</body>
+</html>
