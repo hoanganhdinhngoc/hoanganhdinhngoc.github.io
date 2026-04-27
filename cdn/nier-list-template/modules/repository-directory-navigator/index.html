@@ -23,14 +23,22 @@
         .coreSystem { display: flex; flex-direction: column; width: 100%; height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 30px; }
         .header-section { margin-bottom: 20px; }
         .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 10px; text-transform: uppercase; font-weight: 700; }
-        ::-moz-selection {/* Code for Firefox */color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
+        ::-moz-selection {color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
         ::selection {color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
         
-        .address-bar { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 15px 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; border: 2px solid var(--nier-dark); }
-        .address-container { position: relative; cursor: pointer; display: inline-flex; align-items: center; padding: 2px 5px; transition: background 0.2s, color 0.2s; }
+        .address-bar { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 15px 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; border: 2px solid var(--nier-dark); flex-wrap: wrap; }
+        .address-container { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 2px; }
+        
+        .breadcrumb-link { cursor: pointer; padding: 2px 4px; transition: background 0.2s, color 0.2s; }
+        .breadcrumb-link:hover { background: var(--nier-highlight); color: var(--nier-text-light); }
+        .breadcrumb-separator { opacity: 0.5; margin: 0 2px; }
+
+        .copy-wrapper { position: relative; cursor: pointer; padding: 4px 8px; transition: all 0.2s; margin-left: 0; }
+        .copy-wrapper:hover { background: var(--nier-highlight); color: var(--nier-text-light); }
+        
         .tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-5px); background-color: var(--nier-dark); color: var(--nier-text-light); padding: 6px 12px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.2s ease; pointer-events: none; box-shadow: 2px 2px 0px rgba(0,0,0,0.3); z-index: 10; font-weight: normal; }
         .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--nier-dark) transparent transparent transparent; }
-        .address-container:hover .tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-10px); }
+        .copy-wrapper:hover .tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-10px); }
 
         .miller-container { flex: 1; display: flex; flex-direction: row; gap: 15px; overflow-x: auto; overflow-y: hidden; padding-bottom: 15px; align-items: flex-start; }
         .miller-column { flex: 0 0 320px; height: 100%; background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; border: 2px solid var(--nier-dark); display: flex; flex-direction: column; animation: slideIn 0.3s ease-out; }
@@ -56,10 +64,13 @@
             <h1 class="title-main" id="page-title-display">Loading...</h1>
             <div class="address-bar" id="address-bar">
                 <i class="fas fa-database"></i> 
-                <div class="address-container" id="address-container">
-                    <span id="breadcrumb-content">...</span>
+                <div class="address-container" id="address-container"></div>
+                
+                <div class="copy-wrapper" id="copy-btn">
+                    <i class="fas fa-copy"></i>
                     <span class="tooltip" id="tooltip-text">Copy address</span>
                 </div>
+                
                 <i class="fas fa-circle-notch loader" id="main-loader"></i>
             </div>
         </div>
@@ -81,20 +92,16 @@
         // =========================================================================
 
         let fullTreeData = {}; 
-
         const playSnd = (id) => { const s = document.getElementById(id); s.currentTime = 0; s.play().catch(()=>{}); };
 
-        // Thiết lập giao diện ban đầu theo CONFIG
         document.title = CONFIG.PAGE_TITLE;
         document.getElementById('page-title-display').textContent = CONFIG.PAGE_TITLE;
-        document.getElementById('breadcrumb-content').textContent = CONFIG.BASE_FOLDER;
 
-        // Logic Copy Address
-        const addressContainer = document.getElementById('address-container');
+        const copyBtn = document.getElementById('copy-btn');
         const tooltipText = document.getElementById('tooltip-text');
 
-        addressContainer.addEventListener('click', () => {
-            const url = document.getElementById('breadcrumb-content').getAttribute('data-url');
+        copyBtn.addEventListener('click', () => {
+            const url = document.getElementById('address-container').getAttribute('data-url');
             if(url) {
                 navigator.clipboard.writeText(url).then(() => {
                     tooltipText.innerText = "Copied to clipboard";
@@ -102,33 +109,60 @@
                 });
             }
         });
-
-        addressContainer.addEventListener('mouseleave', () => {
+        copyBtn.addEventListener('mouseenter', () => playSnd('hover-sound'));
+        copyBtn.addEventListener('mouseleave', () => {
             setTimeout(() => { tooltipText.innerText = "Copy address"; }, 300);
         });
 
         function updateBreadcrumb() {
             const container = document.getElementById('miller-container');
             const columns = container.querySelectorAll('.miller-column');
+            const addressContainer = document.getElementById('address-container');
+            
+            addressContainer.innerHTML = '';
             let paths = [];
             
-            columns.forEach(col => {
+            columns.forEach((col, index) => {
                 const headerText = col.querySelector('.miller-header span').textContent;
                 paths.push(headerText);
+                
+                const span = document.createElement('span');
+                span.className = 'breadcrumb-link';
+                span.textContent = headerText;
+                
+                span.onmouseenter = () => playSnd('hover-sound');
+                
+                span.onclick = () => {
+                    if (index < columns.length - 1) {
+                        playSnd('click-sound');
+                        while (container.children.length > index + 1) {
+                            container.removeChild(container.lastChild);
+                        }
+                        const currentCol = container.children[index];
+                        if (currentCol) {
+                            currentCol.querySelectorAll('.miller-item').forEach(el => el.classList.remove('active'));
+                        }
+                        updateBreadcrumb();
+                    }
+                };
+                
+                addressContainer.appendChild(span);
+                
+                if (index < columns.length - 1) {
+                    const sep = document.createElement('span');
+                    sep.className = 'breadcrumb-separator';
+                    sep.textContent = ' > ';
+                    addressContainer.appendChild(sep);
+                }
             });
             
-            const breadcrumbText = paths.join(" > ");
             const fullPath = paths.join("/");
             const fullUrl = `${CONFIG.PREVIEW_DOMAIN}/${fullPath}`;
-            
-            const bcElement = document.getElementById('breadcrumb-content');
-            bcElement.textContent = breadcrumbText;
-            bcElement.setAttribute('data-url', fullUrl); 
+            addressContainer.setAttribute('data-url', fullUrl); 
         }
 
         async function fetchFullTree() {
             $('#main-loader').show();
-            // Tự động gọi API dựa trên cấu hình Sir đã khai báo
             const url = `https://api.github.com/repos/${CONFIG.GITHUB_OWNER}/${CONFIG.GITHUB_REPO}/git/trees/${CONFIG.BRANCH}?recursive=1`;
             try {
                 const res = await fetch(url);
@@ -136,7 +170,7 @@
                 buildMemoryTree(data.tree);
             } catch (e) { 
                 console.error("API Error", e); 
-                document.getElementById('miller-container').innerHTML = `<p style="padding: 20px; color: red;">Lỗi kết nối GitHub API. Vui lòng kiểm tra lại cấu hình Owner/Repo/Branch.</p>`;
+                document.getElementById('miller-container').innerHTML = `<p style="padding: 20px; color: red;">Lỗi kết nối GitHub API.</p>`;
             }
             $('#main-loader').hide();
         }
@@ -147,7 +181,6 @@
                 if (file.path.startsWith(CONFIG.BASE_FOLDER)) {
                     let parts = file.path.split('/');
                     let current = fullTreeData;
-                    
                     parts.forEach((part, index) => {
                         if (!current[part]) {
                             current[part] = { 
@@ -163,7 +196,6 @@
             });
             if (fullTreeData[CONFIG.BASE_FOLDER]) {
                 renderColumn(0, fullTreeData[CONFIG.BASE_FOLDER]._content, CONFIG.BASE_FOLDER);
-                updateBreadcrumb();
             }
         }
 
@@ -218,7 +250,6 @@
             col.appendChild(contentDiv);
             container.appendChild(col);
             container.scrollTo({ left: container.scrollWidth, behavior: 'smooth' });
-
             updateBreadcrumb();
         }
 
