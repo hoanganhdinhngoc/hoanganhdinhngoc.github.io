@@ -26,22 +26,20 @@
         ::-moz-selection {color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
         ::selection {color: #d3cebb;background: rgba(100, 98, 86, 0.8);}
         
-        .address-bar { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 15px 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; border: 2px solid var(--nier-dark); flex-wrap: wrap; }
+        .address-bar { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 15px 20px; font-weight: bold; font-size: 14px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
         .address-container { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 2px; }
         
         .breadcrumb-link { cursor: pointer; padding: 2px 4px; transition: background 0.2s, color 0.2s; }
         .breadcrumb-link:hover { background: var(--nier-highlight); color: var(--nier-text-light); }
         .breadcrumb-separator { opacity: 0.5; margin: 0 2px; }
 
-        .copy-wrapper { position: relative; cursor: pointer; padding: 4px 8px; transition: all 0.2s; margin-left: 0; }
-        .copy-wrapper:hover { background: var(--nier-highlight); color: var(--nier-text-light); }
-        
+        .copy-wrapper { position: relative; cursor: pointer; padding: 4px 8px; transition: all 0.2s; margin-left: 0; }        
         .tooltip { position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%) translateY(-5px); background-color: var(--nier-dark); color: var(--nier-text-light); padding: 6px 12px; font-size: 12px; white-space: nowrap; opacity: 0; visibility: hidden; transition: all 0.2s ease; pointer-events: none; box-shadow: 2px 2px 0px rgba(0,0,0,0.3); z-index: 10; font-weight: normal; }
         .tooltip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: var(--nier-dark) transparent transparent transparent; }
         .copy-wrapper:hover .tooltip { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(-10px); }
 
         .miller-container { flex: 1; display: flex; flex-direction: row; gap: 15px; overflow-x: auto; overflow-y: hidden; padding-bottom: 15px; align-items: flex-start; }
-        .miller-column { flex: 0 0 320px; height: 100%; background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; border: 2px solid var(--nier-dark); display: flex; flex-direction: column; animation: slideIn 0.3s ease-out; }
+        .miller-column { flex: 0 0 320px; height: 100%; background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; display: flex; flex-direction: column; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
         
         .miller-header { padding: 12px 15px; color: var(--nier-text-light); background: var(--nier-highlight); font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
