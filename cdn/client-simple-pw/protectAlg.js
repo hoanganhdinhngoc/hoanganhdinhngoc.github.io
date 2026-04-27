@@ -1,1 +1,48 @@
-function _0x5397(_0x5c69cf,_0x2bd27f){const _0x5bb69a=_0x5bb6();return _0x5397=function(_0x5397d8,_0x3a05d8){_0x5397d8=_0x5397d8-0xb6;let _0xd6b03b=_0x5bb69a[_0x5397d8];return _0xd6b03b;},_0x5397(_0x5c69cf,_0x2bd27f);}const _0x3fbcc5=_0x5397;(function(_0x57b80f,_0xb44cca){const _0x427273=_0x5397,_0x2a9796=_0x57b80f();while(!![]){try{const _0x28317f=-parseInt(_0x427273(0xbf))/0x1*(-parseInt(_0x427273(0xd1))/0x2)+parseInt(_0x427273(0xba))/0x3+parseInt(_0x427273(0xcc))/0x4*(parseInt(_0x427273(0xc8))/0x5)+-parseInt(_0x427273(0xbc))/0x6*(parseInt(_0x427273(0xcf))/0x7)+-parseInt(_0x427273(0xce))/0x8*(-parseInt(_0x427273(0xc9))/0x9)+-parseInt(_0x427273(0xd0))/0xa*(parseInt(_0x427273(0xc3))/0xb)+-parseInt(_0x427273(0xd6))/0xc;if(_0x28317f===_0xb44cca)break;else _0x2a9796['push'](_0x2a9796['shift']());}catch(_0x3ccd2a){_0x2a9796['push'](_0x2a9796['shift']());}}}(_0x5bb6,0x6a772));function _0x5bb6(){const _0x5bbb42=['c07e2b51b65e5a444520208377ff3371ba7','1hWGTgt','value','toString','687474707','210595EHeOgP','location','href','text','Incorrect\x20password.\x20Try\x20again.','10315mjYXWJ','4127481cVBSKR','padStart','33A2F2F77','1004nwlOId','F75747562','8TinxTs','45703LUtkYJ','90TPWZUV','65924VDVxat','Enter','getElementById','3683F763D6','2F7761746','4775412yTIDwh','charCodeAt','#error-message','652E636F6D','77772E796','substr','5574559744D','key','1753692RsEOlY','length','540abnARA','C7867314C7'];_0x5bb6=function(){return _0x5bbb42;};return _0x5bb6();}const trueString=_0x3fbcc5(0xbe);function getPart(_0x3e3ee8){const _0x3e5e09=_0x3fbcc5,_0x6c75d0=[_0x3e5e09(0xc2),_0x3e5e09(0xcb),_0x3e5e09(0xb6),_0x3e5e09(0xcd),_0x3e5e09(0xd9),_0x3e5e09(0xd5),_0x3e5e09(0xd4),_0x3e5e09(0xbd),_0x3e5e09(0xb8)];return _0x6c75d0[_0x3e3ee8];}function stringToHex(_0xe60d55){const _0x29bda1=_0x3fbcc5;let _0x9d5d0d='';for(let _0x301ef8=0x0;_0x301ef8<_0xe60d55['length'];_0x301ef8++){_0x9d5d0d+=_0xe60d55['charCodeAt'](_0x301ef8)['toString'](0x10)[_0x29bda1(0xca)](0x2,'0');}return _0x9d5d0d;}function hexToString(_0x4dc841){const _0x2d3c91=_0x3fbcc5;let _0x3dcd0a='';for(let _0x11a3d1=0x0;_0x11a3d1<_0x4dc841[_0x2d3c91(0xbb)];_0x11a3d1+=0x2){_0x3dcd0a+=String['fromCharCode'](parseInt(_0x4dc841[_0x2d3c91(0xb7)](_0x11a3d1,0x2),0x10));}return _0x3dcd0a;}function alterHash(_0x459dbd){const _0x920ae=_0x3fbcc5;let _0x5364f8=0x0n;for(let _0x5720d9=0x0;_0x5720d9<_0x459dbd[_0x920ae(0xbb)];_0x5720d9++){const _0x1b9e05=BigInt(_0x459dbd[_0x920ae(0xd7)](_0x5720d9));_0x5364f8=(_0x5364f8<<0x5n)-_0x5364f8+_0x1b9e05;}let _0x778b43=_0x5364f8[_0x920ae(0xc1)](0x10)['replace'](/^-/,'');return _0x778b43;}function checkPassword(_0x104b6d){const _0x3f1a45=_0x3fbcc5;if(!_0x104b6d||_0x104b6d[_0x3f1a45(0xb9)]===_0x3f1a45(0xd2)){const _0x5b0db7=document[_0x3f1a45(0xd3)]('cheatCodeInput')[_0x3f1a45(0xc0)],_0x8d34b0=stringToHex(_0x5b0db7),_0x4e9fb3=alterHash(_0x8d34b0),_0x11c2be=hexToString(trueTarget);_0x4e9fb3===trueString?fadeOutContent(function(){const _0x4560c1=_0x3f1a45;window[_0x4560c1(0xc4)][_0x4560c1(0xc5)]=_0x11c2be;}):($(_0x3f1a45(0xd8))[_0x3f1a45(0xc6)](_0x3f1a45(0xc7)),showError());}}const trueTarget=getPart(0x0)+getPart(0x1)+getPart(0x2)+getPart(0x3)+getPart(0x4)+getPart(0x5)+getPart(0x6)+getPart(0x7)+getPart(0x8);
+(function() {
+
+    // Hashed string:
+    const _0xEncryptedData = "U2FsdGVkX19b9nOxCmTw8df8CvE4vy7hOAoww4fWYC5q84cDlYxi9mdoJZMTsnGlTpkt6ailicNhhsBoPLOj6shyMkgdiTJethP+uix09ug="; 
+    const MAGIC_STRING = "[NIER-VERIFIED]";
+
+    window.checkPassword = function(event) {
+        if (event && event.type === 'keypress' && event.key !== 'Enter') return;
+
+        const userPass = document.getElementById('cheatCodeInput').value;
+        if (!userPass) return;
+
+        try {
+            // Giải mã bằng mật khẩu
+            const bytes = CryptoJS.AES.decrypt(_0xEncryptedData, userPass);
+            const decryptedContent = bytes.toString(CryptoJS.enc.Utf8);
+
+            // Kiểm tra dấu hiệu
+            if (decryptedContent.startsWith(MAGIC_STRING)) {
+                // Tách URL thật
+                const targetUrl = decryptedContent.replace(MAGIC_STRING, "");
+                
+                // Chuyển hướng
+                if (typeof fadeOutContent === 'function') {
+                    fadeOutContent(function() {
+                        window.location.replace(targetUrl);
+                    });
+                } else {
+                    window.location.replace(targetUrl);
+                }
+            } else {
+                showError();
+            }
+        } catch (e) {
+            showError();
+        }
+    };
+
+    (function(){
+        const _check = setInterval(() => {
+            if(typeof CryptoJS === 'undefined') return;
+            clearInterval(_check);
+        }, 100);
+        setInterval(function() {
+            (function(a){return(function(a){return(Function('debugger')())}(a))}(0));
+        }, 1000);
+    })();
+})();
