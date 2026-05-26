@@ -1,81 +1,299 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CDN || Convert multiline text to list</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CDN || Convert Multiline Text To List</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- Import script -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
-    integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
-  <!-- End Google Tag Manager -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+  <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
 
   <style>
+    :root {
+      --nier-beige: #ccc6b0;
+      --nier-dark: #4b4340;
+      --nier-panel: rgba(216, 210, 186, .5);
+      --nier-error-red: #850000;
+    }
+
+    * {
+      margin: 0px;
+      padding: 0px;
+      scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+      scrollbar-width: auto;
+    }
+
+    ::-moz-selection {
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+    }
+    ::selection {
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+    }
+
+    body {
+      background-color: var(--nier-beige);
+      background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                        linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+      background-size: 5px 5px;
+      font-family: 'Montserrat', sans-serif;
+      color: var(--nier-dark);
+      min-height: 100vh;
+    }
+
+    .coreSystem {
+      display: inline-block;
+      width: 100%;
+      min-height: 100vh;
+      box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .warp-container {
+      margin-top: 1em;
+      width: 100%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Đã sửa tiêu đề căn trái, thụt lề bằng lề của ô code editor (25px) */
+    .title-main {
+      font-size: 26px;
+      text-shadow: 4px 5px rgba(162, 156, 142, .8);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      text-align: left;
+      padding-left: 25px;
+    }
+
+    /* Đã sửa mô tả căn trái, loại bỏ in đậm */
+    .desc-text {
+      text-align: left;
+      margin-bottom: 30px;
+      font-weight: normal;
+      padding-left: 25px;
+    }
+
+    .function-wrapper {
+      display: flex;
+      flex-direction: row;
+      gap: 2em;
+      align-items: stretch;
+    }
+
+    .section {
+      background: var(--nier-panel);
+      box-shadow: 2px 2px 1px #4f4b42;
+      padding: 25px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sectionTitle {
+      padding: 10px 15px;
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+      font-weight: bold;
+      margin-bottom: 20px;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+
+    /* --- CODEMIRROR OVERRIDES CHO NIER THEME --- */
+    .CodeMirror {
+      width: 100%;
+      height: 350px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      border: 2px solid var(--nier-dark);
+      background: rgba(216, 210, 186, .5);
+      color: #4b4340;
+      line-height: 1.5;
+    }
+    .CodeMirror-gutters {
+      background: rgba(100, 98, 86, 0.2);
+      border-right: 2px solid rgba(100, 98, 86, 0.3);
+    }
+    .CodeMirror-linenumber {
+      color: #4b4340;
+      font-weight: bold;
+      opacity: 0.8;
+    }
+
+    /* --- Ô RESULT --- */
     #result {
-      overflow: auto;
+      width: 100%;
+      flex-grow: 1;
+      height: 350px;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      border: 2px solid var(--nier-dark);
+      background: rgba(216, 210, 186, .5); 
+      color: #4b4340; 
+      line-height: 1.5;
+      padding: 10px;
+      resize: none;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .themebutton {
+      cursor: pointer;
+      width: 100%;
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 16px;
+      color: var(--nier-dark);
+      border: 2px solid var(--nier-dark);
+      background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+      background-size: 200% 100%;
+      background-position: right bottom;
+      transition: all .2s ease-out;
+      font-family: 'Montserrat', sans-serif;
+      text-transform: uppercase;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .themebutton:hover {
+      color: #d3cebb;
+      background-position: left bottom;
+    }
+
+    /* --- TOOLTIP TÙY CHỈNH --- */
+    .nier-tooltip {
+      position: absolute;
+      background: #4e493a;
+      color: #d3cebb;
+      padding: 6px 12px;
+      border: 1px solid var(--nier-dark);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      pointer-events: none;
+      z-index: 10000;
+      display: none;
+      box-shadow: 2px 2px 1px #4f4b42;
+      text-transform: uppercase;
+    }
+
+    /* Responsive */
+    @media (max-width: 920px) {
+      .function-wrapper {
+        flex-direction: column;
+        gap: 1.5em;
+      }
+      .title-main, .desc-text {
+        padding-left: 0;
+      }
     }
   </style>
 </head>
-
 <body>
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-  <section class="container-fluid">
-    <h3 class="text-center">Convert multiline text to list</h3>
-    <p class="text-center">Copy 1 cột multiline text vào tool này và ấn Submit, sẽ convert thành một list devided bằng
-      dấu phẩy trong ô kết quả</p>
-    <div class="row">
-      <div class="col-sm-6">
-        <form id="my-form">
-          <textarea id="mytextarea" name="name" rows="20" cols="80"></textarea>
-        </form>
-        <button id="myButton" name="button" class="btn btn-primary">Submit</button>
 
+  <audio id="hover-sound" src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/sounds/core_16.ogg" type="audio/ogg"></audio>
+  <audio id="click-sound" src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/sounds/core_52.ogg" type="audio/ogg"></audio>
+
+  <div class='coreSystem'>
+    <div class="warp-container">
+      <h3 class="title-main">Convert Multiline Text To List</h3>
+      <p class="desc-text">Copy nội dung nhiều dòng vào bảng bên trái và ấn Submit.<br>Hệ thống sẽ convert thành list ngăn cách bằng dấu phẩy và tự động copy vào Clipboard.</p>
+      
+      <div class="function-wrapper">
+        <div class="section input-panel">
+          <div class="sectionTitle">Input Lines</div>
+          <textarea id="mytextarea"></textarea>
+          <button id="myButton" class="themebutton">Submit & Copy</button>
+        </div>
+
+        <div class="section result-panel">
+          <div class="sectionTitle">Converted Result</div>
+          <textarea id="result" readonly placeholder="Kết quả sẽ hiển thị ở đây..."></textarea>
+        </div>
       </div>
-      <textarea id="result" class="col-sm-6">
-      </textarea>
     </div>
-
-  </section>
-
+  </div>
 
   <script type="text/javascript">
+    $(document).ready(function() {
+      // 1. Âm thanh tương tác
+      var hoverSound = document.getElementById("hover-sound");
+      var clickSound = document.getElementById("click-sound");
 
-    var listID = "";
-    var convertedlistID = "";
+      $(".themebutton").hover(function () {
+        if(hoverSound) hoverSound.play().catch(e=>{});
+      }, function () {
+        if(hoverSound) hoverSound.load();
+      });
 
-    function generateEbayLink() {
-      $('#result').html('');
-      // convert textarea values to array, separate by \n
-      listID = $('textarea#mytextarea').val().split("\n");
-      // loop through listID
-      for (i = 0; i < listID.length; i++) {
-        convertedlistID = convertedlistID.concat(listID[i]).concat(", ");
+      // 2. Khởi tạo CodeMirror
+      var editor = CodeMirror.fromTextArea(document.getElementById("mytextarea"), {
+        lineNumbers: true,
+        mode: "text/plain",
+        lineWrapping: true
+      });
+
+      // 3. Hàm tạo Tooltip theo vị trí chuột
+      function showTooltip(x, y, text) {
+        $('.nier-tooltip').remove(); 
+        
+        let tooltip = $('<div class="nier-tooltip"></div>').text(text);
+        $('body').append(tooltip);
+        
+        tooltip.css({
+          top: (y - 35) + 'px',
+          left: (x + 15) + 'px'
+        });
+        
+        tooltip.fadeIn(150).delay(1200).fadeOut(200, function() {
+          $(this).remove();
+        });
       }
 
-      $('#result').append(convertedlistID);
+      // 4. Logic xử lý & Convert
+      $('#myButton').on('click', function (e) {
+        if(clickSound) { 
+          clickSound.currentTime = 0; 
+          clickSound.play().catch(e=>{}); 
+        }
 
-      // copy to clipboard
-      $("#result").select();
-      document.execCommand("copy");
-      convertedlistID = '';
-    }
-    $('#myButton').click(generateEbayLink);
+        var inputText = editor.getValue();
+        
+        if (!inputText.trim()) {
+          if (typeof showPopup === "function") {
+             showPopup("System Alert", "Vui lòng nhập dữ liệu để convert!");
+          } else {
+             alert("SYSTEM ALERT: Vui lòng nhập dữ liệu để convert!");
+          }
+          return;
+        }
 
+        var listArray = inputText.split("\n")
+          .map(item => item.trim()) 
+          .filter(item => item.length > 0); 
+
+        var convertedList = listArray.join(", "); 
+
+        $('#result').val(convertedList);
+        $('#result').select();
+        document.execCommand("copy");
+
+        showTooltip(e.pageX, e.pageY, "COPIED!");
+      });
+    });
   </script>
 </body>
-
 </html>
