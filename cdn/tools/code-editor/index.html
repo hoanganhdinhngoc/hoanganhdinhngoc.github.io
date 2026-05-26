@@ -68,7 +68,6 @@
             padding: 20px;
         }
 
-        /* Nới rộng tối đa khung editor để tràn gần sát 2 bên lề */
         .warp-container {
             margin-top: 1em;
             width: 100%;
@@ -192,17 +191,24 @@
         }
 
         /* MÀU BÔI ĐEN (SELECTION) ĐƯỢC QUY ĐỊNH Ở ĐÂY */
-        /* Sử dụng hệ màu xám thẫm của code theme với Opacity 30% để không làm mất syntax color */
         .CodeMirror-selected {
-            background: rgba(75, 67, 64, 0.3) !important;
+            background: rgba(34, 31, 30, 0.404) !important;
         }
         .CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection {
-            background: rgba(75, 67, 64, 0.3);
+            background: rgba(34, 31, 30, 0.404);
         }
         .CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection {
-            background: rgba(75, 67, 64, 0.3);
+            background: rgba(34, 31, 30, 0.404);
         }
-        /* ------------------------------------------- */
+
+        /* ĐƯỜNG KẺ LỀ NỐI TRÊN DƯỚI (INDENT GUIDES) GIỐNG VSC */
+        .cm-indent-guide {
+            box-shadow: inset 1px 0 0 rgba(75, 67, 64, 0.35); /* Kẻ sọc mờ màu nâu đen Nier */
+            display: inline-block;
+        }
+        .cm-tab {
+            box-shadow: inset 1px 0 0 rgba(75, 67, 64, 0.35); /* Áp dụng cho cả thẻ Tab nguyên bản */
+        }
 
         .CodeMirror-matchingbracket {
             color: #d3cebb !important;
@@ -217,16 +223,20 @@
             font-weight: bold;
         }
 
-        /* Style cho các Token Highlighting (Màu cú pháp) */
-        .cm-s-default .cm-keyword { color: #850000; font-weight: bold; }
-        .cm-s-default .cm-def { color: #2e4a62; font-weight: bold; }
-        .cm-s-default .cm-variable, .cm-s-default .cm-variable-2 { color: #4b4340; }
-        .cm-s-default .cm-string { color: #386a38; }
-        .cm-s-default .cm-string-2 { color: #5c5c00; }
-        .cm-s-default .cm-number { color: #004c85; font-weight: bold; }
-        .cm-s-default .cm-comment { color: #7a7565; font-style: italic; }
-        .cm-s-default .cm-tag { color: #850000; }
-        .cm-s-default .cm-attribute { color: #004c85; }
+        /* TÙY CHỈNH MÀU SẮC HIỂN THỊ CÚ PHÁP (SYNTAX HIGHLIGHTING) */
+        .cm-s-default .cm-keyword { color: #a32626; font-weight: bold; }       
+        .cm-s-default .cm-def { color: #1a4675; font-weight: bold; }           
+        .cm-s-default .cm-variable { color: #2c2725; }                         
+        .cm-s-default .cm-variable-2 { color: #1a4675; font-weight: bold; }    
+        .cm-s-default .cm-property { color: #8a3800; font-weight: bold; }      
+        .cm-s-default .cm-string { color: #1e6e1e; }                           
+        .cm-s-default .cm-string-2 { color: #8a3800; }                         
+        .cm-s-default .cm-number { color: #004b87; font-weight: bold; }        
+        .cm-s-default .cm-comment { color: #706b5b; font-style: italic; }      
+        .cm-s-default .cm-tag { color: #a32626; font-weight: bold; }           
+        .cm-s-default .cm-attribute { color: #8a3800; font-weight: bold; }     
+        .cm-s-default .cm-operator { color: #2c2725; font-weight: bold; }      
+        .cm-s-default .cm-bracket, .cm-s-default .cm-meta { color: #4b4340; }  
 
         @media (max-width: 768px) {
             .toolbar {
@@ -278,17 +288,7 @@
                     </div>
                 </div>
 
-                <textarea id="codeEditor" style="display: none;"><!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Hello NieR</title>
-</head>
-<body>
-    <h1>Glory to Mankind!</h1>
-    <p>Paste your long code here to test the auto wrap feature. It will break into multiple visual lines without incrementing the line number counter on the left side.</p>
-</body>
-</html></textarea>
+                <textarea id="codeEditor" style="display: none;"></textarea>
             </div>
         </div>
     </div>
@@ -304,23 +304,73 @@
                 hoverSound.play(); 
             });
 
+            // 1. Phục hồi dữ liệu từ LocalStorage
+            const LOCAL_STORAGE_CODE_KEY = "nier_editor_saved_code";
+            const LOCAL_STORAGE_LANG_KEY = "nier_editor_saved_lang";
+
+            let savedCode = localStorage.getItem(LOCAL_STORAGE_CODE_KEY);
+            let savedLang = localStorage.getItem(LOCAL_STORAGE_LANG_KEY) || "htmlmixed";
+
+            // Code mặc định nếu là lần đầu tiên truy cập
+            let defaultCode = ``;
+
+            // Khôi phục dropdown ngôn ngữ
+            $('#languageSelect').val(savedLang);
+
+            // Gán dữ liệu ban đầu cho textarea trước khi khởi tạo CodeMirror
+            $('#codeEditor').val(savedCode !== null ? savedCode : defaultCode);
+
             // Khởi tạo CodeMirror
             var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), {
-                mode: "htmlmixed", 
+                mode: savedLang, 
                 lineNumbers: true, 
                 matchBrackets: true,
                 autoCloseBrackets: true,
                 indentUnit: 4,
                 tabSize: 4,
-                lineWrapping: true // Cài đặt tự động Wrap Text dòng dài
+                indentWithTabs: true, 
+                lineWrapping: true,
+                extraKeys: {
+                    "Ctrl-S": function(cm) { $('#downloadBtn').click(); },
+                    "Cmd-S": function(cm) { $('#downloadBtn').click(); }
+                }
             });
 
-            // Xử lý đổi ngôn ngữ
+            // Ghi đè toàn cục sự kiện ấn Ctrl+S
+            $(window).on('keydown', function(e) {
+                if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+                    e.preventDefault();
+                    $('#downloadBtn').click();
+                }
+            });
+
+            // THUẬT TOÁN TẠO INDENT GUIDES BẰNG OVERLAY
+            editor.addOverlay({
+                token: function(stream) {
+                    var ch = stream.peek();
+                    if (ch === " " || ch === "\t") {
+                        var col = stream.column();
+                        var isLeading = /^[ \t]*$/.test(stream.string.substring(0, col));
+                        if (isLeading) {
+                            stream.next();
+                            if (ch === "\t" || col % 4 === 0) {
+                                return "indent-guide"; 
+                            }
+                            return null;
+                        }
+                    }
+                    stream.skipToEnd();
+                    return null;
+                }
+            });
+
+            // Xử lý đổi ngôn ngữ và LƯU LẠI VÀO CACHE
             $('#languageSelect').on('change', function() {
                 clickSound.currentTime = 0;
                 clickSound.play();
                 var selectedMode = $(this).val();
                 editor.setOption("mode", selectedMode);
+                localStorage.setItem(LOCAL_STORAGE_LANG_KEY, selectedMode);
             });
 
             // Logic Format/Origin (Beautify)
@@ -338,19 +388,22 @@
                     let selectedMode = $('#languageSelect').val();
                     let formattedCode = originalCodeData;
 
+                    let beautifyOptions = {
+                        indent_size: 1,
+                        indent_char: "\t",
+                        indent_with_tabs: true,
+                        wrap_line_length: 0
+                    };
+
                     try {
                         if (selectedMode === "application/json") {
-                            // Beautify JSON
-                            formattedCode = JSON.stringify(JSON.parse(originalCodeData), null, 4);
+                            formattedCode = JSON.stringify(JSON.parse(originalCodeData), null, "\t");
                         } else if (selectedMode === "htmlmixed" || selectedMode === "xml") {
-                            // Beautify HTML
-                            formattedCode = html_beautify(originalCodeData, { indent_size: 4, wrap_line_length: 0 });
+                            formattedCode = html_beautify(originalCodeData, beautifyOptions);
                         } else if (selectedMode === "css") {
-                            // Beautify CSS
-                            formattedCode = css_beautify(originalCodeData, { indent_size: 4 });
+                            formattedCode = css_beautify(originalCodeData, beautifyOptions);
                         } else if (selectedMode === "javascript") {
-                            // Beautify JS
-                            formattedCode = js_beautify(originalCodeData, { indent_size: 4 });
+                            formattedCode = js_beautify(originalCodeData, beautifyOptions);
                         } 
                         
                         editor.setValue(formattedCode);
@@ -366,8 +419,12 @@
                 }
             });
 
-            // Reset trạng thái toggle nếu người dùng tự gõ thêm lúc đang ở chế độ Beautify
+            // XỬ LÝ LƯU TỰ ĐỘNG (AUTO-SAVE) KHI GÕ CODE
             editor.on("change", function(cm, changeObj) {
+                // Lưu code hiện tại vào LocalStorage
+                localStorage.setItem(LOCAL_STORAGE_CODE_KEY, cm.getValue());
+
+                // Xử lý hủy chế độ Origin nếu đang gõ code
                 if (changeObj.origin !== "setValue" && isFormatted) {
                     isFormatted = false;
                     $('#formatToggleBtn').html('<i class="fas fa-align-left"></i> Beautify');
@@ -387,8 +444,7 @@
                 }
 
                 var ext = $('#languageSelect').find(':selected').data('ext');
-                var filename = "nier_source_code" + ext;
-
+                
                 let formHTML = `
                     <p style="text-align:left;">Enter a name for your file:</p>
                     <input type="text" id="fileNameInput" class="popup-input" value="nier_source_code" style="width: 100%; padding: 8px; margin-top: 10px; background: rgba(216,210,186,0.8); border: 2px solid #4b4340; outline: none; color:#4b4340; font-family: 'Montserrat', sans-serif; font-weight: bold;">
