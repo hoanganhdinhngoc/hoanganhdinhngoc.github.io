@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <title>CDN || NieR Code Editor</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+    <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/python/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/php/php.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+            --nier-error-red: #850000;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+            scrollbar-width: auto;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
+            min-height: 100vh;
+        }
+
+        .coreSystem {
+            display: inline-block;
+            width: 100%;
+            min-height: 100vh;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+
+        /* Nới rộng tối đa khung editor để tràn gần sát 2 bên lề */
+        .warp-container {
+            margin-top: 1em;
+            width: 100%;
+            max-width: 96%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .title-main {
+            font-size: 26px;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            padding-left: 10px;
+        }
+
+        .section {
+            background: var(--nier-panel);
+            box-shadow: 2px 2px 1px #4f4b42;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Toolbar Controls */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(100, 98, 86, 0.1);
+            padding: 10px 15px;
+            border: 2px solid var(--nier-dark);
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toolbar label {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .lang-select {
+            background: rgba(216, 210, 186, 0.8);
+            border: 2px solid var(--nier-dark);
+            color: var(--nier-dark);
+            padding: 8px 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Nút Beautify */
+        .format-btn {
+            background: transparent;
+            border: 2px solid var(--nier-dark);
+            color: var(--nier-dark);
+            padding: 8px 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .format-btn:hover {
+            background: #4e493a;
+            color: #d3cebb;
+        }
+
+        .themebutton {
+            cursor: pointer;
+            padding: 10px 25px;
+            font-weight: bold;
+            font-size: 14px;
+            color: #4b4340;
+            border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .themebutton:hover {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
+
+        /* --- NIE-R THEME OVERRIDES CHO CODEMIRROR --- */
+        .CodeMirror {
+            width: 100%;
+            height: 65vh; 
+            font-family: Consolas, monospace;
+            font-size: 15px;
+            border: 2px solid var(--nier-dark);
+            background: rgba(216, 210, 186, .5);
+            color: #4b4340;
+            line-height: 1.6;
+        }
+        
+        .CodeMirror-gutters {
+            background: rgba(100, 98, 86, 0.2);
+            border-right: 2px solid rgba(100, 98, 86, 0.3);
+        }
+        
+        .CodeMirror-linenumber {
+            color: #4b4340;
+            font-weight: bold;
+            opacity: 0.8;
+        }
+
+        /* MÀU BÔI ĐEN (SELECTION) ĐƯỢC QUY ĐỊNH Ở ĐÂY */
+        /* Sử dụng hệ màu xám thẫm của code theme với Opacity 30% để không làm mất syntax color */
+        .CodeMirror-selected {
+            background: rgba(75, 67, 64, 0.3) !important;
+        }
+        .CodeMirror-line::selection, .CodeMirror-line > span::selection, .CodeMirror-line > span > span::selection {
+            background: rgba(75, 67, 64, 0.3);
+        }
+        .CodeMirror-line::-moz-selection, .CodeMirror-line > span::-moz-selection, .CodeMirror-line > span > span::-moz-selection {
+            background: rgba(75, 67, 64, 0.3);
+        }
+        /* ------------------------------------------- */
+
+        .CodeMirror-matchingbracket {
+            color: #d3cebb !important;
+            background-color: #4e493a;
+            font-weight: bold;
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+        
+        .CodeMirror-nonmatchingbracket {
+            color: var(--nier-error-red) !important;
+            font-weight: bold;
+        }
+
+        /* Style cho các Token Highlighting (Màu cú pháp) */
+        .cm-s-default .cm-keyword { color: #850000; font-weight: bold; }
+        .cm-s-default .cm-def { color: #2e4a62; font-weight: bold; }
+        .cm-s-default .cm-variable, .cm-s-default .cm-variable-2 { color: #4b4340; }
+        .cm-s-default .cm-string { color: #386a38; }
+        .cm-s-default .cm-string-2 { color: #5c5c00; }
+        .cm-s-default .cm-number { color: #004c85; font-weight: bold; }
+        .cm-s-default .cm-comment { color: #7a7565; font-style: italic; }
+        .cm-s-default .cm-tag { color: #850000; }
+        .cm-s-default .cm-attribute { color: #004c85; }
+
+        @media (max-width: 768px) {
+            .toolbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .themebutton {
+                width: 100%;
+            }
+            .toolbar-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <audio id="hover-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg">
+    </audio>
+    <audio id="click-sound">
+        <source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg">
+    </audio>
+
+    <div class="coreSystem">
+        <div class="warp-container">
+            <h1 class="title-main">NieR Code Editor</h1>
+            
+            <div class="section">
+                <div class="toolbar">
+                    <div class="toolbar-group">
+                        <label for="languageSelect">Language:</label>
+                        <select id="languageSelect" class="lang-select">
+                            <option value="htmlmixed" data-ext=".html">HTML</option>
+                            <option value="css" data-ext=".css">CSS</option>
+                            <option value="javascript" data-ext=".js">JavaScript</option>
+                            <option value="application/json" data-ext=".json">JSON</option>
+                            <option value="python" data-ext=".py">Python</option>
+                            <option value="php" data-ext=".php">PHP</option>
+                            <option value="text/x-c++src" data-ext=".cpp">C++</option>
+                        </select>
+                    </div>
+                    <div class="toolbar-group">
+                        <button id="formatToggleBtn" class="format-btn"><i class="fas fa-align-left"></i> Beautify</button>
+                        <button id="downloadBtn" class="themebutton">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+
+                <textarea id="codeEditor" style="display: none;"><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello NieR</title>
+</head>
+<body>
+    <h1>Glory to Mankind!</h1>
+    <p>Paste your long code here to test the auto wrap feature. It will break into multiple visual lines without incrementing the line number counter on the left side.</p>
+</body>
+</html></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            const hoverSound = document.getElementById("hover-sound");
+            const clickSound = document.getElementById("click-sound");
+
+            // Âm thanh tương tác
+            $(document).on('mouseenter', '.themebutton, .format-btn, .lang-select, .CodeMirror', function() { 
+                hoverSound.currentTime = 0; 
+                hoverSound.play(); 
+            });
+
+            // Khởi tạo CodeMirror
+            var editor = CodeMirror.fromTextArea(document.getElementById("codeEditor"), {
+                mode: "htmlmixed", 
+                lineNumbers: true, 
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                indentUnit: 4,
+                tabSize: 4,
+                lineWrapping: true // Cài đặt tự động Wrap Text dòng dài
+            });
+
+            // Xử lý đổi ngôn ngữ
+            $('#languageSelect').on('change', function() {
+                clickSound.currentTime = 0;
+                clickSound.play();
+                var selectedMode = $(this).val();
+                editor.setOption("mode", selectedMode);
+            });
+
+            // Logic Format/Origin (Beautify)
+            let isFormatted = false;
+            let originalCodeData = "";
+
+            $('#formatToggleBtn').on('click', function() {
+                clickSound.currentTime = 0;
+                clickSound.play();
+
+                if (!isFormatted) {
+                    originalCodeData = editor.getValue();
+                    if (!originalCodeData.trim()) return;
+
+                    let selectedMode = $('#languageSelect').val();
+                    let formattedCode = originalCodeData;
+
+                    try {
+                        if (selectedMode === "application/json") {
+                            // Beautify JSON
+                            formattedCode = JSON.stringify(JSON.parse(originalCodeData), null, 4);
+                        } else if (selectedMode === "htmlmixed" || selectedMode === "xml") {
+                            // Beautify HTML
+                            formattedCode = html_beautify(originalCodeData, { indent_size: 4, wrap_line_length: 0 });
+                        } else if (selectedMode === "css") {
+                            // Beautify CSS
+                            formattedCode = css_beautify(originalCodeData, { indent_size: 4 });
+                        } else if (selectedMode === "javascript") {
+                            // Beautify JS
+                            formattedCode = js_beautify(originalCodeData, { indent_size: 4 });
+                        } 
+                        
+                        editor.setValue(formattedCode);
+                        isFormatted = true;
+                        $(this).html('<i class="fas fa-undo"></i> Origin');
+                    } catch (error) {
+                        showPopup("SYSTEM ALERT", "<p>Cannot beautify! Syntax error or Language not supported for auto-format.</p>");
+                    }
+                } else {
+                    editor.setValue(originalCodeData);
+                    isFormatted = false;
+                    $(this).html('<i class="fas fa-align-left"></i> Beautify');
+                }
+            });
+
+            // Reset trạng thái toggle nếu người dùng tự gõ thêm lúc đang ở chế độ Beautify
+            editor.on("change", function(cm, changeObj) {
+                if (changeObj.origin !== "setValue" && isFormatted) {
+                    isFormatted = false;
+                    $('#formatToggleBtn').html('<i class="fas fa-align-left"></i> Beautify');
+                }
+            });
+
+            // Xử lý tải code xuống (Download)
+            $('#downloadBtn').on('click', function() {
+                clickSound.currentTime = 0;
+                clickSound.play();
+
+                var codeContent = editor.getValue();
+                
+                if(!codeContent.trim()) {
+                    showPopup("SYSTEM ALERT", "<p>Editor is empty. There is nothing to download.</p>");
+                    return;
+                }
+
+                var ext = $('#languageSelect').find(':selected').data('ext');
+                var filename = "nier_source_code" + ext;
+
+                let formHTML = `
+                    <p style="text-align:left;">Enter a name for your file:</p>
+                    <input type="text" id="fileNameInput" class="popup-input" value="nier_source_code" style="width: 100%; padding: 8px; margin-top: 10px; background: rgba(216,210,186,0.8); border: 2px solid #4b4340; outline: none; color:#4b4340; font-family: 'Montserrat', sans-serif; font-weight: bold;">
+                    <p style="text-align:left; font-size: 12px; margin-top: 5px;">Extension: <b>${ext}</b></p>
+                `;
+
+                showPopup("DOWNLOAD FILE", formHTML, [
+                    {
+                        text: "SAVE TO DEVICE",
+                        action: function() {
+                            let inputName = $('#fileNameInput').val().trim();
+                            if(!inputName) inputName = "untitled";
+                            
+                            let finalFilename = inputName + ext;
+                            
+                            var blob = new Blob([codeContent], { type: "text/plain;charset=utf-8" });
+                            var link = document.createElement("a");
+                            link.href = URL.createObjectURL(blob);
+                            link.download = finalFilename;
+                            
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            closePopup();
+                        }
+                    },
+                    {
+                        text: "CANCEL",
+                        action: function() { closePopup(); }
+                    }
+                ]);
+            });
+        });
+    </script>
+</body>
+</html>
