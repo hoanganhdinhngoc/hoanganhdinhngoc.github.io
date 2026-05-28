@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
-    <title>CDN || Image to PDF converter</title>
+    <title>CDN || Image to PDF</title>
     <meta name="description" content="Free online Image to PDF converter. Combine multiple images (JPG, PNG, WEBP) into a single standard A4 PDF file, maintaining the original aspect ratio with a unique theme.">
     <meta name="keywords" content="image to pdf, convert image to pdf, combine images to pdf, jpg to pdf, png to pdf, Nier theme tool, pdf converter">
     <meta name="author" content="Hoang Anh Dinh Ngoc">
@@ -16,7 +16,7 @@
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hoanganhdinhngoc.github.io/cdn/tools/merge-images-to-pdf">
-    <meta property="og:title" content="Image to PDF Converter & Download 100% free">
+    <meta property="og:title" content="CDN || Image to PDF Converter">
     <meta property="og:description" content="Quickly convert images (JPG, PNG, WEBP) to PDF. 100% secure client-side processing with a stunning UI.">
     <meta property="og:image" content="https://hoanganhdinhngoc.github.io/images/Koi.jpg">
 
@@ -61,6 +61,7 @@
             background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh;
         }
         
+        /* Chặn scroll khi bật Gallery */
         body.no-scroll { overflow: hidden !important; }
 
         .coreSystem { display: inline-block; width: 100%; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 20px; }
@@ -70,21 +71,6 @@
         .section { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 25px; display: flex; flex-direction: column; }
         .input-panel { flex: 0 0 600px; } .result-panel { flex: 1; min-width: 0; }
         .sectionTitle { padding: 10px 15px; color: #d3cebb; background: rgba(100, 98, 86, 0.8); font-weight: bold; margin-bottom: 20px; font-size: 14px; text-transform: uppercase; }
-
-        /* --- RESPONSIVE MOBILE --- */
-        @media (max-width: 900px) {
-            .function-wrapper { flex-direction: column; }
-            .input-panel { flex: none; width: 100%; }
-            .result-panel { width: 100%; }
-            #previewWrapper { height: 45vh !important; }
-            .title-main { text-align: center; font-size: 22px; padding-left: 0; }
-            .gallery-nav { width: 25vw !important; }
-            #galleryPrev { width: calc(25vw + 15px) !important; padding-left: calc(8% + 15px) !important; }
-            #galleryNext { width: calc(25vw + 15px) !important; padding-right: calc(8% + 15px) !important; }
-            .dropzone { padding: 30px 15px; }
-            .coreSystem { padding: 10px; }
-            .section { padding: 15px; }
-        }
 
         /* --- UPLOAD ZONE --- */
         .dropzone { width: 100%; padding: 40px 20px; border: 2px dashed var(--nier-dark); background: rgba(216, 210, 186, 0.3); text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
@@ -129,46 +115,33 @@
             display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; z-index: 5;
             opacity: 0; transition: all 0.2s; box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
-        
-        /* Hiệu ứng Hover Delete cho Desktop */
         .thumb-wrapper:hover .thumb-delete { opacity: 1; }
-        
-        /* Hiệu ứng Click Delete cho Mobile (khi click vào grid) */
-        .show-delete-mobile .thumb-delete { opacity: 1 !important; }
-
         .thumb-delete:hover { 
             background: rgba(216, 210, 186, 0.9) !important; color: var(--nier-error-red) !important; 
             border-color: var(--nier-error-red) !important; transform: scale(1.1); 
         }
 
-        /* --- Sortable Customization (FIX DRAG BẸP DÍ) --- */
-        .nier-drag .thumb-box, .nier-fallback .thumb-box { 
-            transform: rotate(4deg) scale(1.05); 
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); 
-            border-color: var(--nier-beige); 
-        }
-        /* Fallback class cho item đang được nhấc lên bởi ngón tay (Mobile) */
-        .nier-fallback { 
-            opacity: 0.9 !important; 
-            z-index: 99999 !important; 
-            cursor: grabbing !important; 
-            width: 100px !important; 
-        }
+        /* Sortable Customization */
+        .nier-drag .thumb-box { transform: rotate(4deg) scale(1.05); box-shadow: 5px 5px 15px rgba(0,0,0,0.5); border-color: var(--nier-beige); }
         
-        /* Ghost là ô trống mờ mờ ở chỗ cũ, nơi ảnh sẽ được thả xuống */
         .nier-ghost {
-            opacity: 0.4 !important; visibility: visible !important; 
-            background: rgba(100, 98, 86, 0.2); border: 2px dashed var(--nier-dark); box-shadow: none;
+            opacity: 1 !important; visibility: visible !important; background: transparent; border: none; box-shadow: none;
             overflow: visible; display: flex; align-items: center; justify-content: center;
-            position: relative; height: 130px !important; width: 100px !important; margin-bottom: auto; 
-            border-radius: 2px;
+            animation: lineToBox 0.5s cubic-bezier(0.8, 0, 0.2, 1) forwards; position: relative; height: 130px !important; margin-bottom: auto; 
         }
         .nier-ghost * { display: none !important; }
         .nier-ghost::after {
             content: attr(data-slot); font-family: 'Montserrat', sans-serif; font-size: 45px; font-weight: bold;
             color: rgba(75, 67, 64, 0.4); text-shadow: 1px 1px 2px rgba(216, 210, 186, 0.8);
-            position: absolute; top: 35px;
+            position: absolute; top: 35px; opacity: 0; animation: fadeInNum 0.2s 0.4s forwards;
         }
+        
+        @keyframes lineToBox {
+            0% { width: 4px; border-left: 2px solid var(--nier-dark); height: 130px; }
+            90% { width: 4px; border-left: 2px solid var(--nier-dark); border: none; height: 130px; }
+            100% { width: 100px; border: 2px dashed var(--nier-dark); background: rgba(100, 98, 86, 0.2); height: 130px; }
+        }
+        @keyframes fadeInNum { to { opacity: 1; } }
 
         /* --- DYNAMIC PREVIEW PANEL --- */
         #previewWrapper { 
@@ -217,6 +190,7 @@
         .anim-in-left { transform: translateX(-50vw) rotateY(-45deg); opacity: 0; }
         .anim-center { transform: translateX(0) rotateY(0); opacity: 1; }
 
+        /* Vùng điều hướng sát mép (Có translateZ(0) fix lỗi Click Opera) */
         .gallery-nav {
             position: absolute; top: 0; bottom: 80px; width: 15vw;
             display: flex; align-items: center; justify-content: center;
@@ -331,31 +305,12 @@
         let isPopupActive = false; 
         let currentPreviewData = null; 
         
-        // --- NÂNG CẤP SORTABLEJS (Kéo thả mượt mà trên Mobile) ---
         const sortableGrid = new Sortable(document.getElementById('thumbGrid'), {
-            animation: 200, 
-            ghostClass: 'nier-ghost', 
-            dragClass: 'nier-drag',
-            fallbackClass: 'nier-fallback',
-            forceFallback: true, 
-            fallbackOnBody: true, // GIÚP ELEMENT DRAG BÁM SÁT THEO ĐÚNG NGÓN TAY VÀ KHÔNG BỊ LỆCH TỌA ĐỘ
-            delay: 100, // Touch 100ms để active kéo thả (nhanh hơn theo ý anh)
-            delayOnTouchOnly: true, // Delay kéo thả chỉ áp dụng trên Touch 
+            animation: 200, ghostClass: 'nier-ghost', dragClass: 'nier-drag',
+            delay: 50, delayOnTouchOnly: true,
             onStart: function(evt) { evt.item.setAttribute('data-slot', evt.oldIndex + 1); },
             onChange: function(evt) {
                 if(evt.item) evt.item.setAttribute('data-slot', evt.newIndex + 1);
-            }
-        });
-
-        // Event toàn cục: Bấm vào ảnh thì hiện TẤT CẢ nút X (Delete). Bấm chỗ khác tàng hình nút X
-        document.addEventListener('click', (e) => {
-            const grid = document.getElementById('thumbGrid');
-            if (grid) {
-                if (e.target.closest('.thumb-wrapper')) {
-                    grid.classList.add('show-delete-mobile');
-                } else {
-                    grid.classList.remove('show-delete-mobile');
-                }
             }
         });
 
@@ -424,6 +379,7 @@
                 const url = URL.createObjectURL(generatedPdfBlob);
                 link.href = url; link.download = fileName;
                 document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+                // Không gọi closePopup() ở đây để giữ Popup mở
             });
 
             $('#startOverBtn').click(function() { 
@@ -449,17 +405,20 @@
             let newFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
             if(newFiles.length === 0) return;
 
-            let fileDataArray = newFiles.map(file => {
-                return {
-                    id: 'img_' + Date.now() + Math.random().toString(36).substr(2,9), 
-                    name: file.name, 
-                    dataUrl: URL.createObjectURL(file), 
-                    checked: true 
-                };
+            let fileReaders = newFiles.map(file => {
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        resolve({ id: 'img_' + Date.now() + Math.random().toString(36).substr(2,9), name: file.name, dataUrl: e.target.result, checked: true });
+                    };
+                    reader.readAsDataURL(file);
+                });
             });
 
-            uploadedFiles = uploadedFiles.concat(fileDataArray);
-            renderThumbnails(fileDataArray); 
+            Promise.all(fileReaders).then(results => {
+                uploadedFiles = uploadedFiles.concat(results);
+                renderThumbnails(results); 
+            });
         }
 
         function resizePreviewBox(naturalWidth, naturalHeight) {
@@ -478,25 +437,18 @@
             box.style.height = targetH + 'px';
         }
 
-        let resizeTimeout;
         window.addEventListener('resize', () => {
             if (currentPreviewData) {
-                clearTimeout(resizeTimeout);
-                resizeTimeout = setTimeout(() => {
-                    let box = document.getElementById('mainPreviewBox');
-                    box.style.transition = 'none';
-                    resizePreviewBox(currentPreviewData.w, currentPreviewData.h);
-                    void box.offsetWidth; 
-                    box.style.transition = 'width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
-                }, 100);
+                let box = document.getElementById('mainPreviewBox');
+                box.style.transition = 'none';
+                resizePreviewBox(currentPreviewData.w, currentPreviewData.h);
+                setTimeout(() => { box.style.transition = 'width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1)'; }, 50);
             }
         });
 
         function renderThumbnails(filesToRender) {
             const grid = document.getElementById('thumbGrid');
             if(grid.innerHTML.includes("No images")) grid.innerHTML = '';
-            
-            const fragment = document.createDocumentFragment();
 
             filesToRender.forEach(file => {
                 let displayName = file.name;
@@ -524,11 +476,7 @@
                     deleteSound.currentTime = 0; 
                     deleteSound.play(); 
                     wrapper.classList.add('removing');
-                    setTimeout(() => { 
-                        wrapper.remove(); 
-                        URL.revokeObjectURL(file.dataUrl); 
-                        uploadedFiles = uploadedFiles.filter(f => f.id !== file.id); 
-                    }, 5);
+                    setTimeout(() => { wrapper.remove(); uploadedFiles = uploadedFiles.filter(f => f.id !== file.id); }, 5);
                 });
 
                 const box = wrapper.querySelector('.thumb-box');
@@ -551,9 +499,8 @@
                     imgPre.src = file.dataUrl;
                 });
 
-                fragment.appendChild(wrapper);
+                grid.appendChild(wrapper);
             });
-            grid.appendChild(fragment);
         }
 
         function getCurrentSequence() {
@@ -573,6 +520,7 @@
             });
         }
 
+        // --- GALLERY MODE ---
         let galleryImages = [];
         let galleryIndex = 0;
         let isAnimating = false;
@@ -609,32 +557,8 @@
 
         document.getElementById('galleryClose').addEventListener('click', closeGallery);
         document.getElementById('galleryMain').addEventListener('click', (e) => {
-            // Chỉ đóng nếu click vào nền (không đóng nếu click vào vùng chuyển ảnh hoặc chính bức ảnh)
             if(e.target.id === 'galleryMain') closeGallery();
         });
-
-        // --- TÍNH NĂNG VUỐT TRÊN MOBILE CHO GALLERY ---
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        const galleryMainElem = document.getElementById('galleryMain');
-        
-        galleryMainElem.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-        
-        galleryMainElem.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            let swipeDistance = touchStartX - touchEndX;
-            
-            // Nếu khoảng cách vuốt > 40px thì mới tính là vuốt (chống click nhầm)
-            if (swipeDistance > 40 && galleryIndex < galleryImages.length - 1) {
-                navigateGallery(galleryIndex + 1); // Vuốt sang trái -> Xem ảnh tiếp theo
-            } else if (swipeDistance < -40 && galleryIndex > 0) {
-                navigateGallery(galleryIndex - 1); // Vuốt sang phải -> Xem ảnh trước đó
-            }
-        }, {passive: true});
-        // ----------------------------------------------
 
         function updateGalleryStrip() {
             const strip = document.getElementById('galleryStrip');
@@ -707,6 +631,7 @@
             }, 100);
         }
 
+        // --- CONVERT LOGIC CHUẨN A4 100% ZOOM ---
         document.getElementById('convertBtn').addEventListener('click', async () => {
             actionSound.currentTime = 0; actionSound.play();
             const sequence = getCheckedSequence();
@@ -758,7 +683,7 @@
                             let xOffset = (a4W - drawW) / 2;
                             let yOffset = (a4H - drawH) / 2;
 
-                            pdf.addImage(img, 'JPEG', xOffset, yOffset, drawW, drawH);
+                            pdf.addImage(imgObj.dataUrl, 'JPEG', xOffset, yOffset, drawW, drawH);
                             resolve();
                         };
                     });
