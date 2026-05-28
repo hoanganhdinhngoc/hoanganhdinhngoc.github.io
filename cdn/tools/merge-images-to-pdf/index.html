@@ -82,8 +82,8 @@
             #previewWrapper { height: 45vh !important; }
             .title-main { text-align: center; font-size: 22px; padding-left: 0; }
             .gallery-nav { width: 25vw !important; }
-            #galleryPrev { width: calc(25vw + 15px) !important; padding-left: calc(8% + 15px) !important; }
-            #galleryNext { width: calc(25vw + 15px) !important; padding-right: calc(8% + 15px) !important; }
+            #galleryPrev { width: calc(8vw + 15px) !important; padding-left: calc(8% + 15px) !important; }
+            #galleryNext { width: calc(8vw + 15px) !important; padding-right: calc(8% + 15px) !important; }
             .dropzone { padding: 30px 15px; }
             .coreSystem { padding: 10px; }
             .section { padding: 15px; }
@@ -209,9 +209,9 @@
             position: absolute; top: 0; bottom: 80px; width: 15vw; display: flex; align-items: center; justify-content: center;
             color: rgba(255,255,255,0.2); font-size: 45px; cursor: pointer; transition: 0.2s; z-index: 10000; transform: translateZ(0); 
         }
-        #galleryPrev { left: -15px; width: calc(15vw + 15px); justify-content: flex-start; padding-left: calc(3% + 15px); }
+        #galleryPrev { left: -15px; width: calc(8vw + 15px); justify-content: flex-start; padding-left: calc(3% + 15px); }
         #galleryPrev:hover { background: radial-gradient(ellipse 100% 40% at 15px center, rgba(216,210,186,0.2) 0%, transparent 100%); color: rgba(216, 210, 186, 0.8); }
-        #galleryNext { right: -15px; width: calc(15vw + 15px); justify-content: flex-end; padding-right: calc(3% + 15px); }
+        #galleryNext { right: -15px; width: calc(8vw + 15px); justify-content: flex-end; padding-right: calc(3% + 15px); }
         #galleryNext:hover { background: radial-gradient(ellipse 100% 40% at calc(100% - 15px) center, rgba(216,210,186,0.2) 0%, transparent 100%); color: rgba(216, 210, 186, 0.8); }
         
         .gallery-close { position: absolute; top: 25px; right: 35px; color: rgba(216, 210, 186, 0.5); font-size: 35px; cursor: pointer; z-index: 10005; padding: 10px; transition: color 0.2s;}
