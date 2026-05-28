@@ -232,7 +232,7 @@
     <audio id="hover-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg"></audio>
     <audio id="click-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg"></audio>
     <audio id="action-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg"></audio>
-    <audio id="core1-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg"></audio>
+    <audio id="open-close-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg"></audio>
     <audio id="delete-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_76.ogg"></audio>
 
     <div id="galleryOverlay">
@@ -286,7 +286,7 @@
         const hoverSound = document.getElementById("hover-sound");
         const clickSound = document.getElementById("click-sound");
         const actionSound = document.getElementById("action-sound");
-        const core1Sound = document.getElementById("core1-sound");
+        const openCloseSound = document.getElementById("open-close-sound");
         const deleteSound = document.getElementById("delete-sound");
         
         let uploadedFiles = []; 
@@ -436,7 +436,7 @@
         document.getElementById('mainPreviewBox').addEventListener('click', () => {
             const src = document.getElementById('mainPreviewImg').src;
             if(!src || src.includes(window.location.host + window.location.pathname)) return; 
-            core1Sound.currentTime = 0; core1Sound.play();
+            openCloseSound.currentTime = 0; openCloseSound.play();
             galleryImages = getCurrentSequence(); 
             galleryIndex = galleryImages.findIndex(img => img.dataUrl === src) !== -1 ? galleryImages.findIndex(img => img.dataUrl === src) : 0;
             openGallery();
@@ -450,7 +450,7 @@
         }
 
         function closeGallery() {
-            core1Sound.currentTime = 0; core1Sound.play();
+            openCloseSound.currentTime = 0; openCloseSound.play();
             $('#galleryOverlay').removeClass('show');
             setTimeout(() => { $('#galleryOverlay').css('display', 'none'); document.body.classList.remove('no-scroll'); }, 200);
         }

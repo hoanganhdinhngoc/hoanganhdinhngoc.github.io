@@ -7,8 +7,6 @@ This module follows a **"Plug & Play"** philosophy. You don't need to manually w
 
 ---
 
-
-
 ## 2. Key Features
 The module is highly flexible and supports three main types of interactions:
 
@@ -17,8 +15,6 @@ The module is highly flexible and supports three main types of interactions:
 3.  **Dynamic Forms:** Embed HTML elements like `input` or `textarea` directly inside the popup to collect user data without leaving the current view.
 
 ---
-
-
 
 ## 3. Initial Setup (How to install on a new page)
 
@@ -32,25 +28,22 @@ This module requires **jQuery** to function. If your page doesn't have it yet, p
 ```
 
 ### Step 2: Link the Nier Popup Module
-Paste these two lines inside your `<head>` tag (Make sure they are placed BELOW the jQuery link from Step 1):
+Paste these two lines inside your <head> tag (Make sure they are placed BELOW the jQuery link from Step 1):
 
 ```html
 <link rel="stylesheet" href="[https://hoanganhdinhngoc.github.io/cdn/nier-list-template/module/popup/nier-popup.css](https://hoanganhdinhngoc.github.io/cdn/nier-list-template/module/popup/nier-popup.css)">
 <script src="[https://hoanganhdinhngoc.github.io/cdn/nier-list-template/module/popup/nier-popup.js](https://hoanganhdinhngoc.github.io/cdn/nier-list-template/module/popup/nier-popup.js)"></script>
 ```
 
-**🎉 Setup complete!** You can now trigger popups anywhere in your scripts.
-
-
+🎉 Setup complete! You can now trigger popups anywhere in your scripts.
 
 ## 4. Usage Guide & Code Examples
-The primary function to trigger a popup is: `showPopup(Title, ContentHTML, ButtonsArray).`
+The primary function to trigger a popup is: showPopup(Title, ContentHTML, ButtonsArray).
 
 ### Type 1: Basic Alert Popup
 Ideal for simple messages. The system automatically creates an "OK" button for you.
 
-**Copy & Paste Code:**
-
+Copy & Paste Code:
 ```js
 // Trigger a simple alert
 showPopup("SYSTEM ALERT", "<p>Your message goes here. The operation was successful.</p>");
@@ -59,8 +52,7 @@ showPopup("SYSTEM ALERT", "<p>Your message goes here. The operation was successf
 ### Type 2: Confirmation Popup (Yes/No)
 Use this when you need the user to choose between different actions.
 
-**Copy & Paste Code:**
-
+Copy & Paste Code:
 ```js
 showPopup(
     "CONFIRM ACTION", 
@@ -73,7 +65,6 @@ showPopup(
             action: function() {
                 // INSERT YOUR LOGIC HERE (e.g., delete data)
                 console.log("Confirmed!");
-                
                 closePopup(); // Always call this to close the dialog
             }
         },
@@ -91,8 +82,7 @@ showPopup(
 ### Type 3: Input Form Popup
 This allows you to collect data from the user directly within the popup.
 
-**Copy & Paste Code:**
-
+Copy & Paste Code:
 ```js
 // 1. Define your form HTML
 let myForm = `
@@ -118,7 +108,7 @@ showPopup(
                 let note = $('#userInputNote').val();
                 
                 if(!name) {
-                    showPopup("ERROR", "Name field cannot be empty!");
+                    showPopup("ERROR", "<p>Name field cannot be empty!</p>");
                     return; // Keep the form open
                 }
                 
@@ -129,6 +119,39 @@ showPopup(
         {
             text: "DISCARD",
             action: function() { closePopup(); }
+        }
+    ]
+);
+```
+
+## 5. Audio & Sound Management (Nier Sounds)
+To prevent overlapping audio conflicts with the host page (e.g., two sounds playing at the same time), the Popup Module does not automatically play sounds when a popup opens or when a button is clicked.
+
+The only automatic sound is core_1.ogg, which plays when the user clicks outside the popup (on the dark overlay) to close it.
+
+However, the module automatically preloads 7 iconic Nier sound effects into the browser's memory for you to use manually.
+
+Preloaded Sounds Available:
+`core_1`, `core_16`, `core_20`, `core_32`, `core_52`, `core_58`, `core_76`
+
+How to play sounds manually:
+You can trigger any of these sounds anywhere in your custom scripts using the global function playNierSound('sound_name').
+
+Example: Playing a sound when the user clicks a custom popup button:
+
+```js
+showPopup(
+    "SYSTEM ALERT", 
+    "<p>Process completed.</p>", 
+    [
+        {
+            text: "OKAY",
+            action: function() {
+                // Manually trigger the Nier click sound
+                playNierSound('core_52'); 
+                
+                closePopup();
+            }
         }
     ]
 );
