@@ -30,9 +30,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
-
-    <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
-    <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
@@ -82,8 +79,8 @@
             #previewWrapper { height: 45vh !important; }
             .title-main { text-align: center; font-size: 22px; padding-left: 0; }
             .gallery-nav { width: 25vw !important; }
-            #galleryPrev { width: calc(25vw + 15px) !important; padding-left: calc(8% + 15px) !important; }
-            #galleryNext { width: calc(25vw + 15px) !important; padding-right: calc(8% + 15px) !important; }
+            #galleryPrev { width: calc(8vw + 15px) !important; padding-left: calc(8% + 15px) !important; }
+            #galleryNext { width: calc(8vw + 15px) !important; padding-right: calc(8% + 15px) !important; }
             .dropzone { padding: 30px 15px; }
             .coreSystem { padding: 10px; }
             .section { padding: 15px; }
@@ -133,28 +130,38 @@
             opacity: 0; transition: all 0.2s; box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
         
+        /* Hiệu ứng Hover Delete cho Desktop */
         .thumb-wrapper:hover .thumb-delete { opacity: 1; }
+        
+        /* Hiệu ứng Click Delete cho Mobile (khi click vào grid) */
         .show-delete-mobile .thumb-delete { opacity: 1 !important; }
+
         .thumb-delete:hover { 
             background: rgba(216, 210, 186, 0.9) !important; color: var(--nier-error-red) !important; 
             border-color: var(--nier-error-red) !important; transform: scale(1.1); 
         }
 
-        /* --- Sortable Customization --- */
+        /* --- Sortable Customization (FIX DRAG BẸP DÍ) --- */
         .nier-drag .thumb-box, .nier-fallback .thumb-box { 
             transform: rotate(4deg) scale(1.05); 
             box-shadow: 5px 5px 15px rgba(0,0,0,0.5); 
             border-color: var(--nier-beige); 
         }
+        /* Fallback class cho item đang được nhấc lên bởi ngón tay (Mobile) */
         .nier-fallback { 
-            opacity: 0.9 !important; z-index: 99999 !important; 
-            cursor: grabbing !important; width: 100px !important; 
+            opacity: 0.9 !important; 
+            z-index: 99999 !important; 
+            cursor: grabbing !important; 
+            width: 100px !important; 
         }
+        
+        /* Ghost là ô trống mờ mờ ở chỗ cũ, nơi ảnh sẽ được thả xuống */
         .nier-ghost {
             opacity: 0.4 !important; visibility: visible !important; 
             background: rgba(100, 98, 86, 0.2); border: 2px dashed var(--nier-dark); box-shadow: none;
             overflow: visible; display: flex; align-items: center; justify-content: center;
-            position: relative; height: 130px !important; width: 100px !important; margin-bottom: auto; border-radius: 2px;
+            position: relative; height: 130px !important; width: 100px !important; margin-bottom: auto; 
+            border-radius: 2px;
         }
         .nier-ghost * { display: none !important; }
         .nier-ghost::after {
@@ -164,7 +171,10 @@
         }
 
         /* --- DYNAMIC PREVIEW PANEL --- */
-        #previewWrapper { width: 100%; height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #previewWrapper { 
+            width: 100%; height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; 
+        }
+        
         .preview-box {
             width: 100%; height: 100%; background: rgba(0,0,0,0.8); border: 2px solid var(--nier-dark);
             box-shadow: inset 0px 0px 20px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
@@ -192,7 +202,9 @@
             opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; 
         }
         #galleryOverlay.show { opacity: 1; visibility: visible; }
+        
         .gallery-main { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: default; }
+        
         .gallery-img-container {
             position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
             transform-style: preserve-3d; transition: all 0.1s ease-out; pointer-events: none;
@@ -206,26 +218,45 @@
         .anim-center { transform: translateX(0) rotateY(0); opacity: 1; }
 
         .gallery-nav {
-            position: absolute; top: 0; bottom: 80px; width: 15vw; display: flex; align-items: center; justify-content: center;
-            color: rgba(255,255,255,0.2); font-size: 45px; cursor: pointer; transition: 0.2s; z-index: 10000; transform: translateZ(0); 
+            position: absolute; top: 0; bottom: 80px; width: 15vw;
+            display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.2); font-size: 45px; cursor: pointer; transition: 0.2s; z-index: 10000;
+            transform: translateZ(0); 
         }
-        #galleryPrev { left: -15px; width: calc(15vw + 15px); justify-content: flex-start; padding-left: calc(3% + 15px); }
-        #galleryPrev:hover { background: radial-gradient(ellipse 100% 40% at 15px center, rgba(216,210,186,0.2) 0%, transparent 100%); color: rgba(216, 210, 186, 0.8); }
-        #galleryNext { right: -15px; width: calc(15vw + 15px); justify-content: flex-end; padding-right: calc(3% + 15px); }
-        #galleryNext:hover { background: radial-gradient(ellipse 100% 40% at calc(100% - 15px) center, rgba(216,210,186,0.2) 0%, transparent 100%); color: rgba(216, 210, 186, 0.8); }
+        #galleryPrev { left: -15px; width: calc(8vw + 15px); justify-content: flex-start; padding-left: calc(3% + 15px); }
+        #galleryPrev:hover { 
+            background: radial-gradient(ellipse 100% 40% at 15px center, rgba(216,210,186,0.2) 0%, transparent 100%); 
+            color: rgba(216, 210, 186, 0.8); 
+        }
+        
+        #galleryNext { right: -15px; width: calc(8vw + 15px); justify-content: flex-end; padding-right: calc(3% + 15px); }
+        #galleryNext:hover { 
+            background: radial-gradient(ellipse 100% 40% at calc(100% - 15px) center, rgba(216,210,186,0.2) 0%, transparent 100%); 
+            color: rgba(216, 210, 186, 0.8); 
+        }
         
         .gallery-close { position: absolute; top: 25px; right: 35px; color: rgba(216, 210, 186, 0.5); font-size: 35px; cursor: pointer; z-index: 10005; padding: 10px; transition: color 0.2s;}
         .gallery-close:hover { color: #ffffff; }
+
         .gallery-counter { position: absolute; bottom: 110px; width: 100%; text-align: center; color: #fff; font-size: 14px; font-weight: bold; z-index: 10; text-shadow: 1px 1px 2px #000; pointer-events: none; }
+
         .gallery-strip { height: 80px; width: 100%; background: rgba(20, 20, 20, 0.9); border-top: 1px solid var(--nier-dark); display: flex; align-items: center; gap: 10px; padding: 0 20px; overflow-x: auto; z-index: 10; }
         .gallery-thumb { width: 50px; height: 60px; border: 2px solid transparent; opacity: 0.5; cursor: pointer; transition: 0.2s; object-fit: cover; }
         .gallery-thumb:hover { opacity: 0.8; }
         .gallery-thumb.active { border-color: var(--nier-beige); opacity: 1; transform: scale(1.1); }
 
-        /* Module Phụ trợ cho Progress Bar (Giữ lại do module chính ko bao gồm) */
+        /* --- NIER POPUP --- */
+        .popup-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); z-index: 9998; }
+        .popupSection { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 500px; background: rgba(216, 210, 186, .95); color: #4b4340; box-shadow: 2px 2px 10px #4f4b42; z-index: 9999; }
+        .popupSectionTitle { padding: 12px 15px; background: rgba(68, 66, 60, 0.98); color: #d3cebb; font-size: 14px; font-weight: bold; text-transform: uppercase; margin: 0; }
+        .boxContent { padding: 25px 20px; text-align: center; }
+        .boxContent p { line-height: 1.6; margin-bottom: 25px; font-weight: 500; font-size: 14px; }
+        .popup-controls { display: flex; gap: 10px; justify-content: center; }
+        .popup-btn { width: auto; min-width: 120px; margin-top: 0; }
         .progress-container { width: 100%; border: 2px solid var(--nier-dark); background: rgba(100, 98, 86, 0.2); height: 30px; position: relative; margin: 20px 0; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background: var(--nier-dark); transition: width 0.2s ease; }
         .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #d3cebb; font-weight: bold; font-size: 12px; mix-blend-mode: difference; }
+        .toolzone { width: 100%; padding: 12px; font-family: 'Montserrat', sans-serif; font-size: 14px; border: 2px solid var(--nier-dark); background: rgba(216, 210, 186, .5); color: #4b4340; outline: none; margin-bottom: 15px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -234,6 +265,12 @@
     <audio id="action-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg"></audio>
     <audio id="core1-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg"></audio>
     <audio id="delete-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_76.ogg"></audio>
+
+    <div class="popup-overlay" id="popupOverlay"></div>
+    <div class="popupSection" id="customPopup">
+        <h2 class="popupSectionTitle" id="popupTitle">System Alert</h2>
+        <div class="boxContent" id="popupBody"></div>
+    </div>
 
     <div id="galleryOverlay">
         <i class="fas fa-times gallery-close" id="galleryClose"></i>
@@ -291,27 +328,111 @@
         
         let uploadedFiles = []; 
         let generatedPdfBlob = null;
+        let isPopupActive = false; 
         let currentPreviewData = null; 
         
-        // --- NÂNG CẤP SORTABLEJS ---
+        // --- NÂNG CẤP SORTABLEJS (Kéo thả mượt mà trên Mobile) ---
         const sortableGrid = new Sortable(document.getElementById('thumbGrid'), {
-            animation: 200, ghostClass: 'nier-ghost', dragClass: 'nier-drag',
-            fallbackClass: 'nier-fallback', forceFallback: true, fallbackOnBody: true, 
-            delay: 100, delayOnTouchOnly: true, 
+            animation: 200, 
+            ghostClass: 'nier-ghost', 
+            dragClass: 'nier-drag',
+            fallbackClass: 'nier-fallback',
+            forceFallback: true, 
+            fallbackOnBody: true, // GIÚP ELEMENT DRAG BÁM SÁT THEO ĐÚNG NGÓN TAY VÀ KHÔNG BỊ LỆCH TỌA ĐỘ
+            delay: 100, // Touch 100ms để active kéo thả (nhanh hơn theo ý anh)
+            delayOnTouchOnly: true, // Delay kéo thả chỉ áp dụng trên Touch 
             onStart: function(evt) { evt.item.setAttribute('data-slot', evt.oldIndex + 1); },
-            onChange: function(evt) { if(evt.item) evt.item.setAttribute('data-slot', evt.newIndex + 1); }
+            onChange: function(evt) {
+                if(evt.item) evt.item.setAttribute('data-slot', evt.newIndex + 1);
+            }
         });
 
+        // Event toàn cục: Bấm vào ảnh thì hiện TẤT CẢ nút X (Delete). Bấm chỗ khác tàng hình nút X
         document.addEventListener('click', (e) => {
             const grid = document.getElementById('thumbGrid');
-            if (grid) { e.target.closest('.thumb-wrapper') ? grid.classList.add('show-delete-mobile') : grid.classList.remove('show-delete-mobile'); }
+            if (grid) {
+                if (e.target.closest('.thumb-wrapper')) {
+                    grid.classList.add('show-delete-mobile');
+                } else {
+                    grid.classList.remove('show-delete-mobile');
+                }
+            }
         });
 
         $(document).on('mouseenter', '.themebutton:not(:disabled), .thumb-box, .dropzone, .gallery-nav, .gallery-thumb, .gallery-close', () => { 
             hoverSound.currentTime = 0; hoverSound.play(); 
         });
 
-        // --- SỬ DỤNG MODULE NIER POPUP CHUẨN TỪ CDN ---
+        function openPopup() { 
+            isPopupActive = true;
+            $('#popupOverlay').fadeIn(200); $('#customPopup').fadeIn(200); 
+        }
+        function closePopup() { 
+            $('#popupOverlay').fadeOut(200); $('#customPopup').fadeOut(200);
+            isPopupActive = false;
+            generatedPdfBlob = null; 
+        }
+
+        $('#popupOverlay').click(function() {
+            if(isPopupActive) {
+                core1Sound.currentTime = 0; core1Sound.play();
+                closePopup();
+            }
+        });
+
+        function showSystemAlert(msg) {
+            $('#popupTitle').text('SYSTEM ALERT');
+            $('#popupBody').html(`
+                <p>${msg}</p>
+                <div class="popup-controls">
+                    <button class="themebutton popup-btn" id="alertOkayBtn">OKAY</button>
+                </div>
+            `);
+            openPopup();
+            
+            $('#alertOkayBtn').click(function() {
+                core1Sound.currentTime = 0; core1Sound.play();
+                closePopup();
+            });
+        }
+
+        function showProgressPopup() {
+            isPopupActive = false; 
+            $('#popupTitle').text('PROCESSING DATA...');
+            $('#popupBody').html(`<p>Compiling document structure...</p><div class="progress-container"><div id="pdfProgressBar" class="progress-bar"></div><div id="pdfProgressText" class="progress-text">STANDBY 0%</div></div>`);
+            $('#popupOverlay').fadeIn(200); $('#customPopup').fadeIn(200); 
+        }
+
+        function showDownloadPopup(defaultName) {
+            isPopupActive = true;
+            $('#popupTitle').text('CONVERSION COMPLETE');
+            $('#popupBody').html(`
+                <p>Document compiled. Assign a registry name:</p>
+                <input type="text" id="pdfFileName" class="toolzone" value="${defaultName}">
+                <div class="popup-controls">
+                    <button id="downloadPdfBtn" class="themebutton popup-btn" style="background-color: var(--nier-dark); color: #d3cebb;">DOWNLOAD</button>
+                    <button id="startOverBtn" class="themebutton popup-btn">START OVER</button>
+                </div>
+            `);
+            openPopup();
+
+            $('#downloadPdfBtn').click(function() {
+                actionSound.currentTime = 0; actionSound.play();
+                let fileName = $('#pdfFileName').val().trim() || defaultName;
+                if (!fileName.toLowerCase().endsWith('.pdf')) fileName += '.pdf';
+                const link = document.createElement('a');
+                const url = URL.createObjectURL(generatedPdfBlob);
+                link.href = url; link.download = fileName;
+                document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+            });
+
+            $('#startOverBtn').click(function() { 
+                clickSound.currentTime = 0; 
+                clickSound.play(); 
+                setTimeout(() => { location.reload(); }, 300); 
+            });
+        }
+
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
 
@@ -342,9 +463,19 @@
         }
 
         function resizePreviewBox(naturalWidth, naturalHeight) {
-            let wrap = document.getElementById('previewWrapper'); let box = document.getElementById('mainPreviewBox');
-            let scale = Math.min(wrap.clientWidth / naturalWidth, wrap.clientHeight / naturalHeight);
-            box.style.width = (naturalWidth * scale) + 'px'; box.style.height = (naturalHeight * scale) + 'px';
+            let wrap = document.getElementById('previewWrapper');
+            let box = document.getElementById('mainPreviewBox');
+            
+            let wrapW = wrap.clientWidth;
+            let wrapH = wrap.clientHeight;
+            
+            let scale = Math.min(wrapW / naturalWidth, wrapH / naturalHeight);
+            
+            let targetW = naturalWidth * scale;
+            let targetH = naturalHeight * scale;
+            
+            box.style.width = targetW + 'px';
+            box.style.height = targetH + 'px';
         }
 
         let resizeTimeout;
@@ -372,7 +503,8 @@
                 if(displayName.length > 56) displayName = displayName.substring(0, 53) + '...';
 
                 const wrapper = document.createElement('div');
-                wrapper.className = 'thumb-wrapper'; wrapper.dataset.id = file.id;
+                wrapper.className = 'thumb-wrapper';
+                wrapper.dataset.id = file.id;
 
                 wrapper.innerHTML = `
                     <div class="thumb-box">
@@ -383,28 +515,34 @@
                     <div class="thumb-name" title="${file.name}">${displayName}</div>
                 `;
 
-                wrapper.querySelector('.thumb-checkbox').addEventListener('click', (e) => { 
-                    e.stopPropagation(); file.checked = e.target.checked; clickSound.currentTime=0; clickSound.play(); 
-                });
+                const cb = wrapper.querySelector('.thumb-checkbox');
+                cb.addEventListener('click', (e) => { e.stopPropagation(); file.checked = e.target.checked; clickSound.currentTime=0; clickSound.play(); });
 
-                wrapper.querySelector('.thumb-delete').addEventListener('click', (e) => {
-                    e.stopPropagation(); deleteSound.currentTime = 0; deleteSound.play(); 
+                const delBtn = wrapper.querySelector('.thumb-delete');
+                delBtn.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    deleteSound.currentTime = 0; 
+                    deleteSound.play(); 
                     wrapper.classList.add('removing');
                     setTimeout(() => { 
-                        wrapper.remove(); URL.revokeObjectURL(file.dataUrl); 
+                        wrapper.remove(); 
+                        URL.revokeObjectURL(file.dataUrl); 
                         uploadedFiles = uploadedFiles.filter(f => f.id !== file.id); 
                     }, 5);
                 });
 
-                wrapper.querySelector('.thumb-box').addEventListener('click', (e) => {
+                const box = wrapper.querySelector('.thumb-box');
+                box.addEventListener('click', (e) => {
                     if(e.target.classList.contains('thumb-delete') || e.target.classList.contains('thumb-checkbox')) return;
                     clickSound.currentTime=0; clickSound.play();
                     
                     document.getElementById('previewPlaceholder').style.display = 'none';
+                    
                     let imgPre = new Image();
                     imgPre.onload = function() {
                         currentPreviewData = { w: this.naturalWidth, h: this.naturalHeight };
                         resizePreviewBox(this.naturalWidth, this.naturalHeight);
+
                         document.getElementById('mainPreviewImg').src = file.dataUrl;
                         document.getElementById('mainPreviewImg').style.display = 'block';
                         document.getElementById('mainPreviewName').textContent = file.name; 
@@ -412,6 +550,7 @@
                     }
                     imgPre.src = file.dataUrl;
                 });
+
                 fragment.appendChild(wrapper);
             });
             grid.appendChild(fragment);
@@ -420,25 +559,34 @@
         function getCurrentSequence() {
             const currentUI = [];
             document.querySelectorAll('.thumb-wrapper').forEach(el => {
-                const fileObj = uploadedFiles.find(f => f.id === el.dataset.id);
+                const id = el.dataset.id;
+                const fileObj = uploadedFiles.find(f => f.id === id);
                 if (fileObj && !el.classList.contains('removing')) currentUI.push(fileObj);
             });
             return currentUI;
         }
 
         function getCheckedSequence() {
-            return getCurrentSequence().filter(f => document.querySelector(`.thumb-wrapper[data-id="${f.id}"] .thumb-checkbox`)?.checked);
+            return getCurrentSequence().filter(f => {
+                const el = document.querySelector(`.thumb-wrapper[data-id="${f.id}"] .thumb-checkbox`);
+                return el && el.checked;
+            });
         }
 
-        // --- GALLERY ---
-        let galleryImages = []; let galleryIndex = 0; let isAnimating = false;
+        let galleryImages = [];
+        let galleryIndex = 0;
+        let isAnimating = false;
 
         document.getElementById('mainPreviewBox').addEventListener('click', () => {
             const src = document.getElementById('mainPreviewImg').src;
             if(!src || src.includes(window.location.host + window.location.pathname)) return; 
+            
             core1Sound.currentTime = 0; core1Sound.play();
+
             galleryImages = getCurrentSequence(); 
-            galleryIndex = galleryImages.findIndex(img => img.dataUrl === src) !== -1 ? galleryImages.findIndex(img => img.dataUrl === src) : 0;
+            galleryIndex = galleryImages.findIndex(img => img.dataUrl === src);
+            if(galleryIndex === -1) galleryIndex = 0;
+
             openGallery();
         });
 
@@ -446,35 +594,57 @@
             document.body.classList.add('no-scroll');
             $('#galleryOverlay').css('display', 'flex');
             setTimeout(() => { $('#galleryOverlay').addClass('show'); }, 10);
-            updateGalleryStrip(); renderGalleryImage(galleryImages[galleryIndex].dataUrl, 'none');
+            updateGalleryStrip();
+            renderGalleryImage(galleryImages[galleryIndex].dataUrl, 'none');
         }
 
         function closeGallery() {
             core1Sound.currentTime = 0; core1Sound.play();
             $('#galleryOverlay').removeClass('show');
-            setTimeout(() => { $('#galleryOverlay').css('display', 'none'); document.body.classList.remove('no-scroll'); }, 200);
+            setTimeout(() => { 
+                $('#galleryOverlay').css('display', 'none');
+                document.body.classList.remove('no-scroll');
+            }, 200);
         }
 
         document.getElementById('galleryClose').addEventListener('click', closeGallery);
-        document.getElementById('galleryMain').addEventListener('click', (e) => { if(e.target.id === 'galleryMain') closeGallery(); });
+        document.getElementById('galleryMain').addEventListener('click', (e) => {
+            // Chỉ đóng nếu click vào nền (không đóng nếu click vào vùng chuyển ảnh hoặc chính bức ảnh)
+            if(e.target.id === 'galleryMain') closeGallery();
+        });
 
-        let touchStartX = 0; let touchEndX = 0;
+        // --- TÍNH NĂNG VUỐT TRÊN MOBILE CHO GALLERY ---
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
         const galleryMainElem = document.getElementById('galleryMain');
         
-        galleryMainElem.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        galleryMainElem.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, {passive: true});
+        
         galleryMainElem.addEventListener('touchend', e => {
             touchEndX = e.changedTouches[0].screenX;
-            let swipeDist = touchStartX - touchEndX;
-            if (swipeDist > 40 && galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1);
-            else if (swipeDist < -40 && galleryIndex > 0) navigateGallery(galleryIndex - 1);
+            let swipeDistance = touchStartX - touchEndX;
+            
+            // Nếu khoảng cách vuốt > 40px thì mới tính là vuốt (chống click nhầm)
+            if (swipeDistance > 40 && galleryIndex < galleryImages.length - 1) {
+                navigateGallery(galleryIndex + 1); // Vuốt sang trái -> Xem ảnh tiếp theo
+            } else if (swipeDistance < -40 && galleryIndex > 0) {
+                navigateGallery(galleryIndex - 1); // Vuốt sang phải -> Xem ảnh trước đó
+            }
         }, {passive: true});
+        // ----------------------------------------------
 
         function updateGalleryStrip() {
-            const strip = document.getElementById('galleryStrip'); strip.innerHTML = '';
+            const strip = document.getElementById('galleryStrip');
+            strip.innerHTML = '';
+            
             document.getElementById('galleryCounterText').textContent = `${galleryIndex + 1} / ${galleryImages.length}`;
 
             galleryImages.forEach((img, idx) => {
-                const thumb = document.createElement('img'); thumb.src = img.dataUrl;
+                const thumb = document.createElement('img');
+                thumb.src = img.dataUrl;
                 thumb.className = 'gallery-thumb' + (idx === galleryIndex ? ' active' : '');
                 thumb.onclick = () => { if(!isAnimating && idx !== galleryIndex) navigateGallery(idx); };
                 strip.appendChild(thumb);
@@ -486,13 +656,21 @@
         function navigateGallery(targetIndex) {
             if(isAnimating) return;
             hoverSound.currentTime = 0; hoverSound.play();
+            
             let direction = targetIndex > galleryIndex ? 'right' : 'left';
             galleryIndex = targetIndex;
-            updateGalleryStrip(); renderGalleryImage(galleryImages[galleryIndex].dataUrl, direction);
+            
+            updateGalleryStrip();
+            renderGalleryImage(galleryImages[galleryIndex].dataUrl, direction);
         }
 
-        document.getElementById('galleryNext').addEventListener('click', () => { if(galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1); });
-        document.getElementById('galleryPrev').addEventListener('click', () => { if(galleryIndex > 0) navigateGallery(galleryIndex - 1); });
+        document.getElementById('galleryNext').addEventListener('click', () => {
+            if(galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1);
+        });
+        document.getElementById('galleryPrev').addEventListener('click', () => {
+            if(galleryIndex > 0) navigateGallery(galleryIndex - 1);
+        });
+
         document.addEventListener('keydown', (e) => {
             if ($('#galleryOverlay').hasClass('show')) {
                 if (e.key === 'ArrowRight' && galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1);
@@ -502,70 +680,85 @@
         });
 
         function renderGalleryImage(newSrc, direction) {
-            const container = document.getElementById('galleryMain'); const oldImgCont = document.getElementById('galleryImgContainer');
-            if(direction === 'none') { if(oldImgCont) oldImgCont.querySelector('img').src = newSrc; return; }
+            const container = document.getElementById('galleryMain');
+            const oldImgCont = document.getElementById('galleryImgContainer');
+            
+            if(direction === 'none') {
+                if(oldImgCont) oldImgCont.querySelector('img').src = newSrc;
+                return;
+            }
 
             isAnimating = true;
             const newImgCont = document.createElement('div');
             newImgCont.className = 'gallery-img-container ' + (direction === 'right' ? 'anim-in-right' : 'anim-in-left');
-            const img = document.createElement('img'); img.src = newSrc; newImgCont.appendChild(img); container.appendChild(newImgCont);
+            const img = document.createElement('img'); img.src = newSrc;
+            newImgCont.appendChild(img);
+            container.appendChild(newImgCont);
+
             void newImgCont.offsetWidth; 
 
             oldImgCont.className = 'gallery-img-container ' + (direction === 'right' ? 'anim-out-left' : 'anim-out-right');
             newImgCont.className = 'gallery-img-container anim-center';
 
-            setTimeout(() => { oldImgCont.remove(); newImgCont.id = 'galleryImgContainer'; isAnimating = false; }, 100);
+            setTimeout(() => {
+                oldImgCont.remove();
+                newImgCont.id = 'galleryImgContainer';
+                isAnimating = false;
+            }, 100);
         }
 
-        // --- KẾT NỐI API POPUP MODULE ---
         document.getElementById('convertBtn').addEventListener('click', async () => {
             actionSound.currentTime = 0; actionSound.play();
             const sequence = getCheckedSequence();
             
             if (sequence.length === 0) {
-                // Sử dụng CDN Popup Module
-                showPopup("SYSTEM ALERT", "<p style='text-align:center;'>Data Missing: Requires at least one selected image.</p>");
+                showSystemAlert("Data Missing: Requires at least one selected image.");
                 return;
             }
 
-            // Mở Popup Loading bằng API CDN
-            showPopup(
-                "PROCESSING DATA...", 
-                `<p style="text-align:center;">Compiling document structure...</p>
-                 <div class="progress-container">
-                    <div id="pdfProgressBar" class="progress-bar"></div>
-                    <div id="pdfProgressText" class="progress-text">STANDBY 0%</div>
-                 </div>`, 
-                [] // Truyền mảng rỗng để CDN tự sinh nút OK mặc định
-            );
-            
-            // Ẩn nút OK đi trong lúc đang load file
-            $('#popupButtons').hide(); 
+            showProgressPopup();
+            const bar = document.getElementById('pdfProgressBar');
+            const pText = document.getElementById('pdfProgressText');
 
             setTimeout(async () => {
                 const { jsPDF } = window.jspdf;
                 let pdf = null; 
-                const bar = document.getElementById('pdfProgressBar');
-                const pText = document.getElementById('pdfProgressText');
 
                 for (let i = 0; i < sequence.length; i++) {
                     const imgObj = sequence[i];
                     await new Promise(resolve => {
                         let img = new Image(); img.src = imgObj.dataUrl;
                         img.onload = () => {
-                            let imgW = img.naturalWidth; let imgH = img.naturalHeight;
-                            let isLandscape = imgW > imgH; let orientation = isLandscape ? 'l' : 'p';
-                            let a4W = isLandscape ? 297 : 210; let a4H = isLandscape ? 210 : 297;
+                            let imgW = img.naturalWidth;
+                            let imgH = img.naturalHeight;
+                            
+                            let isLandscape = imgW > imgH;
+                            let orientation = isLandscape ? 'l' : 'p';
+                            
+                            let a4W = isLandscape ? 297 : 210;
+                            let a4H = isLandscape ? 210 : 297;
 
                             if (i === 0) {
                                 pdf = new jsPDF({ orientation: orientation, unit: 'mm', format: 'a4' });
                                 pdf.setDisplayMode('100%', 'continuous', 'UseOutlines');
-                            } else { pdf.addPage('a4', orientation); }
+                            } else {
+                                pdf.addPage('a4', orientation);
+                            }
 
-                            let ratio = imgW / imgH; let drawW = a4W; let drawH = a4W / ratio;
-                            if (drawH > a4H) { drawH = a4H; drawW = a4H * ratio; }
+                            let ratio = imgW / imgH;
                             
-                            pdf.addImage(img, 'JPEG', (a4W - drawW) / 2, (a4H - drawH) / 2, drawW, drawH);
+                            let drawW = a4W;
+                            let drawH = a4W / ratio;
+                            
+                            if (drawH > a4H) { 
+                                drawH = a4H; 
+                                drawW = a4H * ratio; 
+                            }
+                            
+                            let xOffset = (a4W - drawW) / 2;
+                            let yOffset = (a4H - drawH) / 2;
+
+                            pdf.addImage(img, 'JPEG', xOffset, yOffset, drawW, drawH);
                             resolve();
                         };
                     });
@@ -576,42 +769,7 @@
 
                 generatedPdfBlob = pdf.output('blob');
                 let defaultPdfName = sequence[0].name.split('.').slice(0, -1).join('.') || 'Nier_Document';
-                
-                setTimeout(() => {
-                    $('#popupButtons').show(); // Hiện lại khung nút bấm của API CDN
-                    
-                    // Gọi API hiển thị Form File Download
-                    showPopup(
-                        "CONVERSION COMPLETE",
-                        `<p style="text-align:center;">Document compiled. Assign a registry name:</p>
-                         <input type="text" id="pdfFileName" class="popup-input" value="${defaultPdfName}" style="text-align:center;">`,
-                        [
-                            {
-                                text: "DOWNLOAD",
-                                id: "downloadPdfBtn",
-                                action: function() {
-                                    actionSound.currentTime = 0; actionSound.play();
-                                    let fileName = $('#pdfFileName').val().trim() || defaultPdfName;
-                                    if (!fileName.toLowerCase().endsWith('.pdf')) fileName += '.pdf';
-                                    const link = document.createElement('a');
-                                    const url = URL.createObjectURL(generatedPdfBlob);
-                                    link.href = url; link.download = fileName;
-                                    document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
-                                }
-                            },
-                            {
-                                text: "START OVER",
-                                action: function() { 
-                                    clickSound.currentTime = 0; clickSound.play(); 
-                                    setTimeout(() => { location.reload(); }, 300); 
-                                }
-                            }
-                        ]
-                    );
-                    
-                    // Tùy biến nhanh màu nút Download cho nổi bật
-                    $('#downloadPdfBtn').css({'background-color': 'var(--nier-dark)', 'color': '#d3cebb'});
-                }, 500);
+                setTimeout(() => showDownloadPopup(defaultPdfName), 500);
 
             }, 500);
         });

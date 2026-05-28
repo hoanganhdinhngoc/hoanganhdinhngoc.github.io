@@ -12,4 +12,4 @@
 
 /* Khu vực chứa nút bấm */
 .popup-button-group { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
-.popup-btn { min-width: 120px; }
+.popup-btn { min-width: 60px; }
