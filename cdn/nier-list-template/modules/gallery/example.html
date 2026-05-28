@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nier Gallery Module - Example</title>
+    
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:200,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link rel="stylesheet" href="nier-gallery.css">
+    <script src="nier-gallery.js"></script>
+
+    <style>
+        /* =========================================
+           NIER THEME BASE STYLES
+        ========================================= */
+        :root {
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, 0.5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        ::-moz-selection { color: var(--nier-text-light); background: rgba(100, 98, 86, 0.8); }
+        ::selection { color: var(--nier-text-light); background: rgba(100, 98, 86, 0.8); }
+
+        body {
+            font-family: 'Montserrat', sans-serif; 
+            background-color: var(--nier-beige);
+            background-image: 
+                linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px; 
+            color: var(--nier-dark); 
+            min-height: 100vh;
+        }
+
+        .coreSystem { padding: 40px 20px; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); }
+        .warp-container { max-width: 900px; margin: 0 auto; }
+        
+        .title-main { 
+            font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); 
+            margin-bottom: 30px; text-transform: uppercase; 
+        }
+
+        .section { 
+            background: var(--nier-panel); 
+            box-shadow: 2px 2px 1px #4f4b42; 
+            padding: 30px; 
+            margin-bottom: 30px;
+        }
+
+        .sectionTitle { 
+            padding: 10px 15px; color: var(--nier-text-light); 
+            background: rgba(100, 98, 86, 0.8); 
+            font-weight: bold; margin-bottom: 20px; 
+            font-size: 14px; text-transform: uppercase; 
+        }
+
+        /* --- BUTTONS --- */
+        .themebutton {
+            cursor: pointer; padding: 12px 25px; font-weight: bold; color: var(--nier-dark); 
+            border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, var(--nier-bg-btn) 50%, rgba(0, 0, 0, 0) 50%); 
+            background-size: 200% 100%; background-position: right bottom; 
+            transition: all .2s ease-out; font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase; outline: none;
+            display: inline-flex; align-items: center; gap: 10px;
+        }
+        .themebutton:hover { color: var(--nier-text-light); background-position: left bottom; }
+
+        /* --- UPLOAD ZONE --- */
+        .upload-controls { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+        #fileInput { display: none; }
+
+        /* --- THUMBNAIL GRID --- */
+        .thumb-grid { 
+            display: flex; flex-wrap: wrap; gap: 20px; 
+            background: rgba(100, 98, 86, 0.1); 
+            padding: 20px; border: 1px solid var(--nier-dark); 
+            min-height: 150px; align-content: flex-start;
+        }
+        
+        .empty-text { width: 100%; text-align: center; color: rgba(75, 67, 64, 0.6); font-size: 14px; font-weight: bold; margin-top: 20px; }
+
+        .thumb-box {
+            width: 120px; height: 120px; 
+            border: 2px solid var(--nier-dark); background: #000;
+            box-shadow: 3px 3px 1px rgba(79, 75, 66, 0.5); 
+            cursor: pointer; transition: transform 0.2s;
+            position: relative; overflow: hidden;
+        }
+        .thumb-box:hover { transform: scale(1.05) rotate(2deg); border-color: var(--nier-beige); z-index: 2;}
+        .thumb-box img { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+        
+        /* Chữ hiển thị index khi hover */
+        .thumb-overlay {
+            position: absolute; top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.6); color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.2s; font-weight: bold; font-size: 14px;
+            text-align: center;
+        }
+        .thumb-box:hover .thumb-overlay { opacity: 1; }
+
+    </style>
+</head>
+<body>
+
+    <div class="coreSystem">
+        <div class="warp-container">
+            <h1 class="title-main">Gallery Module Test</h1>
+
+            <div class="section">
+                <h2 class="sectionTitle">Data Input Sequence</h2>
+                
+                <div class="upload-controls">
+                    <button id="uploadBtn" class="themebutton">
+                        <i class="fas fa-folder-open"></i> Select Images
+                    </button>
+                    <button id="openAllBtn" class="themebutton" style="display: none;">
+                        <i class="fas fa-expand"></i> Open Gallery (From Start)
+                    </button>
+                    <input type="file" id="fileInput" multiple accept="image/*">
+                </div>
+
+                <div class="thumb-grid" id="imageGrid">
+                    <div class="empty-text" id="emptyState">NO DATA FOUND. PLEASE UPLOAD IMAGES.</div>
+                </div>
+            </div>
+
+            <div class="section" style="opacity: 0.8;">
+                <h2 class="sectionTitle">System Log</h2>
+                <p style="font-size: 14px; line-height: 1.6;">
+                    <strong>[Notice]:</strong> The Gallery Module is currently on standby.<br>
+                    1. Click "Select Images" to load local files.<br>
+                    2. Click on any thumbnail below to initialize the Nier Gallery from that specific image.<br>
+                    3. Use Mouse, Keyboard (Arrow Keys / ESC), or Touch Swipe (Mobile) to navigate.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Mảng lưu trữ đường dẫn ảnh (Dùng cho Nier Gallery)
+            let imageDatabase = [];
+
+            // 1. Kích hoạt nút Upload
+            $('#uploadBtn').click(function() {
+                $('#fileInput').click();
+            });
+
+            // 2. Xử lý khi user chọn file
+            $('#fileInput').change(function(e) {
+                const files = e.target.files;
+                if (!files || files.length === 0) return;
+
+                // Xóa text báo trống nếu có
+                $('#emptyState').hide();
+                $('#openAllBtn').fadeIn();
+
+                // Lặp qua các file vừa tải lên
+                Array.from(files).forEach((file) => {
+                    if (file.type.startsWith('image/')) {
+                        // Tạo URL tạm thời cho ảnh (Blob URL)
+                        let imageUrl = URL.createObjectURL(file);
+                        
+                        // Đẩy vào mảng Database
+                        imageDatabase.push(imageUrl);
+                        
+                        // Lấy ra index hiện tại của ảnh này trong mảng
+                        let currentIndex = imageDatabase.length - 1;
+
+                        // Tạo HTML cho Thumbnail
+                        let thumbHTML = `
+                            <div class="thumb-box" data-index="${currentIndex}">
+                                <img src="${imageUrl}" alt="Uploaded Image">
+                                <div class="thumb-overlay">VIEW IN GALLERY</div>
+                            </div>
+                        `;
+                        
+                        $('#imageGrid').append(thumbHTML);
+                    }
+                });
+
+                // Reset input để có thể chọn lại đúng file đó nếu muốn
+                $(this).val('');
+            });
+
+            // 3. Sự kiện Click vào 1 Thumbnail bất kỳ để mở Gallery
+            // Sử dụng Event Delegation vì các thumb-box được tạo ra động (append)
+            $('#imageGrid').on('click', '.thumb-box', function() {
+                // Lấy ra vị trí của ảnh được click
+                let startIndex = parseInt($(this).attr('data-index'));
+                
+                // GỌI API CỦA NIER GALLERY MODULE
+                openNierGallery(imageDatabase, startIndex);
+            });
+
+            // 4. Sự kiện mở Gallery từ đầu (Nút Open Gallery)
+            $('#openAllBtn').click(function() {
+                if (imageDatabase.length > 0) {
+                    openNierGallery(imageDatabase, 0); // Mở từ ảnh đầu tiên (index 0)
+                }
+            });
+        });
+    </script>
+</body>
+</html>
