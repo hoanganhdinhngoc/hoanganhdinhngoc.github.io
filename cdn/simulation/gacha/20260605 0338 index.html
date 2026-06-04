@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png">
+    <title>Simulation || Gachapon (Nier Theme)</title>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    
+    <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+    <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #85000083;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+        }
+
+        * {
+            box-sizing: border-box;
+            scrollbar-color: rgba(100,98,86,0.8) rgba(143, 139, 122, 0.7);
+            margin: 0;
+            padding: 0;
+        }
+
+        ::-moz-selection { background: rgba(100, 98, 86, 0.8); color: #d3cebb; }
+        ::selection { background: rgba(100, 98, 86, 0.8); color: #d3cebb; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                              linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
+            min-height: 100vh;
+        }
+
+        .coreSystem {
+            display: inline-block;
+            width: 100%;
+            min-height: 100vh;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+        }
+
+        .warp-container {
+            margin-top: 2em;
+            width: 100%;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .title-main {
+            font-size: 26px;
+            text-shadow: 4px 5px rgba(162, 156, 142, .8);
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .function-wrapper {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            grid-template-rows: max-content auto; 
+            grid-template-areas:
+                "random gacha"
+                "history gacha";
+            gap: 1.5em;
+            width: 100%;
+            align-items: start;
+        }
+
+        .panel-random { grid-area: random; }
+        .panel-history { grid-area: history; align-self: start; }
+        .panel-gacha { grid-area: gacha; display: flex; flex-direction: column; }
+
+        .section {
+            background: var(--nier-panel);
+            box-shadow: 2px 2px 1px #4f4b42;
+            padding: 20px;
+            border-radius: 0px;
+        }
+
+        .sectionTitle {
+            padding: 10px 15px;
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.8);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .themebutton {
+            cursor: pointer;
+            padding: 10px 15px;
+            font-weight: bold;
+            color: #4b4340;
+            border: none;
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0.2) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+        }
+
+        .themebutton:hover:not(:disabled) {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
+        .themebutton:disabled {
+            background: rgba(100, 98, 86, 0.4);
+            cursor: not-allowed;
+            color: rgba(75, 67, 64, 0.6);
+        }
+
+        .play-btn { 
+            width: 25%; 
+            font-size: 18px; 
+            padding: 15px; 
+            margin: 15px auto 0 auto;
+            border: 2px solid var(--nier-dark); 
+            display: block; 
+        }
+
+        #textareaContainer {
+            position: relative;
+            width: 100%;
+            height: 350px; 
+            border: 2px solid var(--nier-dark);
+            background: rgba(216, 210, 186, .3);
+            overflow: hidden;
+        }
+
+        #ballNames {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: transparent;
+            color: var(--nier-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            padding: 10px;
+            resize: none;
+            box-sizing: border-box;
+            line-height: 1.5em;
+            outline: none;
+            border: none;
+            z-index: 5;
+        }
+        #ballNames:disabled { background: rgba(100, 98, 86, 0.1); cursor: not-allowed; }
+
+        #highlightLayer {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .highlight-duplicate {
+            background-color: rgba(119, 47, 37, 0.4);
+            display: inline-block;
+            width: 100%;
+        }
+
+        #canvasContainer {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* [6.1] TỶ LỆ ZOOM CỦA MÁY GACHA SO VỚI BOX CHỨA NÓ */
+        /* max-width quy định máy gacha sẽ to tối đa bao nhiêu pixel trên Desktop. 
+           width: 100% giúp nó tự động thu nhỏ lại khi màn hình Tablet/Mobile nhỏ đi. */
+        #gashaponCanvas {
+            width: 100%;
+            max-width: 480px; 
+            height: auto;
+            aspect-ratio: 4 / 5; 
+            object-fit: contain;
+        }
+
+        .table-scroll {
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid var(--nier-dark);
+            scrollbar-width: thin;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #4e493a; color: #d3cebb; padding: 12px; position: sticky; top: 0; font-size: 13px; text-align: center; }
+        td { padding: 12px 5px; text-align: center; border-bottom: 1px solid rgba(75, 67, 64, 0.2); font-size: 13px; }
+
+        @media only screen and (max-width: 900px) {
+            .function-wrapper {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+                grid-template-areas:
+                    "gacha"
+                    "random"
+                    "history";
+            }
+            .title-main { font-size: 22px; text-align: center; margin-bottom: 15px; }
+            .play-btn { width: 50%; }
+        }
+    </style>
+
+    <script>
+    $(document).ready(function () {
+        var hoverSound = document.getElementById("hover-sound");
+        var clickSound = document.getElementById("click-sound");
+
+        $(".themebutton").hover(function () {
+            if(!$(this).is(':disabled')) hoverSound.play();
+        }, function () {
+            hoverSound.load();
+        });
+
+        $(".themebutton").click(function () {
+            if(!$(this).is(':disabled')) clickSound.play();
+        });
+    });
+    </script>
+</head>
+<body>
+
+<audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+<audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+<audio id="collide-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_76.ogg" type="audio/ogg"></audio>
+
+<div class="coreSystem">
+    <div class="warp-container">
+        <h1 class="title-main">GACHAPON SIMULATION</h1>
+
+        <div class="function-wrapper">
+            <div class="panel-random section">
+                <h2 class="sectionTitle">RANDOM VALUE</h2>
+                <div style="font-size: 13px; margin-bottom: 10px; font-weight: bold;">
+                    [ Enter values line by line ] - Count: <span id="valueCount" style="color:var(--secondary-color); font-size:16px;">0</span>
+                </div>
+                <div id="textareaContainer">
+                    <textarea id="ballNames" spellcheck="false" placeholder="Enter random values">
+Akiko
+Asami
+Fumiko
+Himari 
+Mei
+Monika
+Naomi
+Natsuki
+Sayori
+Tomoko
+Tsumugi</textarea>
+                    <div id="highlightLayer"></div>
+                </div>
+            </div>
+
+            <div class="panel-history section" style="padding: 0; background: transparent; box-shadow: none;">
+                <h2 class="sectionTitle" style="margin-bottom: 0;">HISTORY LOGS</h2>
+                <div class="section" style="padding: 0; margin-top: 15px;">
+                    <div class="table-scroll">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 30%;">Roll #</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-gacha section">
+                <h2 class="sectionTitle">GACHA MACHINE</h2>
+                <div id="canvasContainer">
+                    <canvas id="gashaponCanvas"></canvas>
+                </div>
+                <button class="themebutton play-btn" id="rollButton">ROLL</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script>
+    function drawRoundRect(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+    }
+
+    const ballColors = ['#FF6F618D', '#6B5B958D', '#88B04B8D', '#F7CAC98D', '#92A8D18D', '#FFCC5C8D', '#D4A5A58D', '#9B59B68D', '#3498DB8D', '#E67E228D'];
+    const collideSound = document.getElementById('collide-sound');
+    let roundCount = 0;
+
+    const { Engine, Render, World, Bodies, Body, Events } = Matter;
+    const engine = Engine.create();
+    engine.positionIterations = 8;
+    engine.velocityIterations = 8;
+    const world = engine.world;
+
+    const canvas = document.getElementById('gashaponCanvas');
+    
+    // [6.2] KHOẢNG CÁCH TỪ MÁY ĐẾN VIỀN CANVAS
+    // Canvas có kích thước vật lý L_WIDTH = 800, L_HEIGHT = 1000
+    const L_WIDTH = 800;
+    const L_HEIGHT = 1000;
+    canvas.width = L_WIDTH;
+    canvas.height = L_HEIGHT;
+
+    const render = Render.create({
+        canvas: canvas,
+        engine: engine,
+        options: { width: L_WIDTH, height: L_HEIGHT, wireframes: false, background: 'transparent' }
+    });
+
+    // [6.3] KÍCH THƯỚC TƯƠNG ĐỐI CỦA CÁC THÀNH PHẦN
+    // Tọa độ tâm (bowlCenterX/Y) và Bán kính (bowlRadius) quyết định vị trí quả cầu.
+    // L_WIDTH = 800, bowlRadius = 360 -> Quả cầu chiếm 720px chiều ngang (cách mép canvas trái/phải 40px)
+    const bowlRadius = 360; 
+    const bowlCenterX = L_WIDTH / 2; // 400
+    const bowlCenterY = 420;         
+    
+    // Kích thước Thân máy so với Cầu
+    const bodyWidth = 280; 
+    const bodyHeight = 150;
+    const bodyX = bowlCenterX - bodyWidth/2;
+    const bodyY = 760; 
+
+    // Kích thước Miệng lỗ (hơi to hơn bóng 1 chút)
+    const holeRadius = 38;
+    const holeX = bowlCenterX;
+    const holeY = bodyY + 90; 
+    const ballRadius = 37; 
+
+    // Kích thước Đệm tối màu (to hơn thân máy một chút tạo khớp nối)
+    const cushWidth = 300;
+    const cushHeight = 35;
+    const cushX = bowlCenterX - cushWidth/2;
+    const cushY = 745; 
+
+    const segments = 128;
+    const wallThickness = 40; 
+    const walls = [];
+    
+    const physicsBowlRadius = bowlRadius + (wallThickness / 2);
+    for (let i = 0; i < segments; i++) {
+        const angle = (i / segments) * Math.PI * 2;
+        const nextAngle = ((i + 1) / segments) * Math.PI * 2;
+        const x1 = bowlCenterX + Math.cos(angle) * physicsBowlRadius;
+        const y1 = bowlCenterY + Math.sin(angle) * physicsBowlRadius;
+        const x2 = bowlCenterX + Math.cos(nextAngle) * physicsBowlRadius;
+        const y2 = bowlCenterY + Math.sin(nextAngle) * physicsBowlRadius;
+        const wall = Bodies.rectangle(
+            (x1 + x2) / 2, (y1 + y2) / 2,
+            Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)), wallThickness,
+            { isStatic: true, angle: Math.atan2(y2 - y1, x2 - x1), render: { visible: false } }
+        );
+        walls.push(wall);
+    }
+    World.add(world, walls);
+
+    let balls = [];
+    let isRolling = false;
+    let dropObj = null;
+    let isDroppingOut = false;
+
+    const persistentColors = new Map();
+    let colorCounter = 0;
+    function getBallColor(name) {
+        let key = name.trim();
+        if(!persistentColors.has(key)) {
+            persistentColors.set(key, ballColors[colorCounter % ballColors.length]);
+            colorCounter++;
+        }
+        return persistentColors.get(key);
+    }
+
+    const ballNamesInput = document.getElementById('ballNames');
+    const highlightLayer = document.getElementById('highlightLayer');
+    const valueCountDisplay = document.getElementById('valueCount');
+
+    function highlightDuplicates() {
+        const lines = ballNamesInput.value.split('\n').map(line => line.trim());
+        const lineHeight = parseFloat(getComputedStyle(ballNamesInput).lineHeight) || 24;
+        const paddingTop = parseFloat(getComputedStyle(ballNamesInput).paddingTop) || 10;
+        const paddingLeft = parseFloat(getComputedStyle(ballNamesInput).paddingLeft) || 10;
+
+        highlightLayer.innerHTML = '';
+        const seen = new Map();
+        const duplicates = new Set();
+        
+        lines.forEach((line, index) => {
+            if (line) {
+                if (seen.has(line)) duplicates.add(line);
+                else seen.set(line, index);
+            }
+        });
+
+        lines.forEach((line, index) => {
+            if (duplicates.has(line)) {
+                const highlight = document.createElement('div');
+                highlight.className = 'highlight-duplicate';
+                highlight.style.position = 'absolute';
+                highlight.style.top = `${paddingTop + index * lineHeight}px`;
+                highlight.style.left = `${paddingLeft}px`;
+                highlight.style.height = `${lineHeight}px`;
+                highlight.style.width = `calc(100% - ${paddingLeft * 2}px)`;
+                highlightLayer.appendChild(highlight);
+            }
+        });
+        highlightLayer.style.transform = `translateY(-${ballNamesInput.scrollTop}px)`;
+    }
+
+    function syncBalls() {
+        const lines = ballNamesInput.value.split('\n').map(l => l.trim()).filter(l => l !== '');
+        valueCountDisplay.innerText = lines.length;
+        
+        const expectedCounts = {};
+        lines.forEach(l => expectedCounts[l] = (expectedCounts[l] || 0) + 1);
+        
+        const actualCounts = {};
+        balls.forEach(b => actualCounts[b.label] = (actualCounts[b.label] || 0) + 1);
+        
+        for (let i = balls.length - 1; i >= 0; i--) {
+            const b = balls[i];
+            const expected = expectedCounts[b.label] || 0;
+            const actual = actualCounts[b.label];
+            if (actual > expected) {
+                World.remove(world, b);
+                balls.splice(i, 1);
+                actualCounts[b.label]--;
+            }
+        }
+        
+        Object.keys(expectedCounts).forEach(label => {
+            const expected = expectedCounts[label];
+            const actual = actualCounts[label] || 0;
+            for (let i = actual; i < expected; i++) {
+                const b = Bodies.circle(
+                    bowlCenterX + (Math.random() - 0.5) * 40,
+                    bowlCenterY - 150 + (Math.random() - 0.5) * 40,
+                    ballRadius,
+                    { friction: 0.05, restitution: 0.7, render: { fillStyle: getBallColor(label) }, label: label }
+                );
+                balls.push(b);
+                World.add(world, b);
+                actualCounts[label] = (actualCounts[label] || 0) + 1;
+            }
+        });
+        
+        highlightDuplicates();
+        localStorage.setItem('gashaponBallNames', ballNamesInput.value);
+    }
+
+    window.addEventListener('load', () => {
+        const savedValues = localStorage.getItem('gashaponBallNames');
+        if (savedValues) ballNamesInput.value = savedValues;
+        syncBalls();
+    });
+
+    ballNamesInput.addEventListener('input', syncBalls);
+
+    ballNamesInput.addEventListener('scroll', () => {
+        highlightLayer.style.transform = `translateY(-${ballNamesInput.scrollTop}px)`;
+    });
+
+    function showNierResultPopup(ballRef) {
+        const contentHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px;">
+                <div style="width:100px; height:100px; border-radius:50%; background:${ballRef.color}; border:4px solid var(--nier-dark); margin-bottom:15px; box-shadow: inset 0px -10px 15px rgba(0,0,0,0.3);"></div>
+                <div style="font-size:32px; font-weight:bold; color:var(--nier-dark); text-transform:uppercase; text-align:center;">${ballRef.label.trim()}</div>
+            </div>
+        `;
+
+        showPopup("GACHAPON RESULT", contentHTML, [
+            {
+                text: "ACCEPT",
+                action: function() {
+                    playNierSound('core_52');
+                    ballNamesInput.disabled = false;
+                    closePopup();
+                    syncBalls();
+                }
+            },
+            {
+                text: "ELIMINATE",
+                action: function() {
+                    playNierSound('core_52');
+                    
+                    let lines = ballNamesInput.value.split('\n');
+                    let indexToRemove = lines.findIndex(l => l.trim() === ballRef.label.trim());
+                    if (indexToRemove !== -1) {
+                        lines.splice(indexToRemove, 1);
+                    }
+                    
+                    ballNamesInput.value = lines.join('\n');
+                    ballNamesInput.disabled = false;
+                    
+                    closePopup();
+                    syncBalls();
+                }
+            }
+        ]);
+
+        if (typeof playNierSound === "function") {
+            try { playNierSound('core_32'); } catch(e) {}
+        }
+
+        roundCount++;
+        const row = document.getElementById('historyBody').insertRow(0);
+        row.innerHTML = `
+            <td style="color: rgba(75, 67, 64, 0.7);">#${roundCount}</td>
+            <td style="font-weight:bold; color:var(--nier-dark);">${ballRef.label.trim()}</td>
+        `;
+    }
+
+    const rollButton = document.getElementById('rollButton');
+    rollButton.addEventListener('click', () => {
+        const currentLines = ballNamesInput.value.split('\n').filter(name => name.trim() !== '');
+        if (isRolling || currentLines.length === 0) return;
+        
+        isRolling = true;
+        rollButton.disabled = true;
+        rollButton.innerText = "ROLLING...";
+        ballNamesInput.disabled = true;
+
+        balls.forEach(ball => {
+            Body.applyForce(ball, ball.position, {
+                x: (Math.random() - 0.5) * 0.25,
+                y: -0.35
+            });
+        });
+
+        setTimeout(() => {
+            if (balls.length > 0) {
+                let closestBall = null;
+                let minDistance = Infinity;
+                
+                balls.forEach(ball => {
+                    const dist = Math.hypot(ball.position.x - holeX, ball.position.y - holeY);
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        closestBall = ball;
+                    }
+                });
+
+                World.remove(world, closestBall);
+                balls.splice(balls.indexOf(closestBall), 1);
+                
+                dropObj = {
+                    x: holeX,
+                    y: holeY - 20, 
+                    velocity: 0,
+                    angle: 0,
+                    color: closestBall.render.fillStyle,
+                    label: closestBall.label,
+                    ref: closestBall
+                };
+                isDroppingOut = true;
+            }
+        }, 3000);
+    });
+
+    Events.on(engine, 'beforeUpdate', () => {
+        if (isDroppingOut && dropObj) {
+            dropObj.velocity += 0.8; 
+            dropObj.y += dropObj.velocity;
+            dropObj.angle += 0.05; 
+
+            if (dropObj.y > L_HEIGHT + ballRadius + 20) {
+                isDroppingOut = false;
+                isRolling = false; 
+                rollButton.disabled = false;
+                rollButton.innerText = "ROLL";
+                showNierResultPopup(dropObj);
+                dropObj = null;
+            }
+        }
+    });
+
+    Events.on(render, 'afterRender', function() {
+        const ctx = render.context;
+        
+        balls.forEach(ball => {
+            ctx.save();
+            ctx.translate(ball.position.x, ball.position.y);
+            ctx.rotate(ball.angle); 
+            
+            let text = ball.label.trim();
+            
+            ctx.shadowColor = "rgba(255, 255, 255, 0.5)";
+            ctx.shadowBlur = 4;
+            ctx.fillStyle = "rgba(50, 45, 40, 0.5)"; 
+            
+            let fontSize = 20;
+            ctx.font = `bold ${fontSize}px Montserrat`;
+            let textWidth = ctx.measureText(text).width;
+            while(textWidth > ballRadius * 1.6 && fontSize > 8) {
+                fontSize -= 1;
+                ctx.font = `bold ${fontSize}px Montserrat`;
+                textWidth = ctx.measureText(text).width;
+            }
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(text, 0, 0);
+
+            ctx.shadowBlur = 0;
+            ctx.beginPath();
+            ctx.arc(-ballRadius * 0.3, -ballRadius * 0.3, ballRadius * 0.4, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+            ctx.fill();
+            ctx.restore();
+        });
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-over';
+        
+        ctx.fillStyle = '#110f0e';
+        ctx.beginPath();
+        ctx.arc(holeX, holeY, holeRadius, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.fillStyle = '#ccc6b0';
+        drawRoundRect(ctx, bodyX, bodyY, bodyWidth, bodyHeight, 15);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(216, 210, 186, 0.3)';
+        ctx.beginPath();
+        ctx.arc(bowlCenterX, bowlCenterY, bowlRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        
+        if (isDroppingOut && dropObj) {
+            ctx.save();
+            ctx.translate(dropObj.x, dropObj.y);
+            ctx.rotate(dropObj.angle);
+            
+            ctx.beginPath();
+            ctx.arc(0, 0, ballRadius, 0, Math.PI * 2);
+            ctx.fillStyle = dropObj.color;
+            ctx.fill();
+            
+            ctx.fillStyle = "rgba(50, 45, 40, 0.5)";
+            let text = dropObj.label.trim();
+            let fontSize = 20;
+            ctx.font = `bold ${fontSize}px Montserrat`;
+            while(ctx.measureText(text).width > ballRadius * 1.6 && fontSize > 8) {
+                fontSize -= 1;
+                ctx.font = `bold ${fontSize}px Montserrat`;
+            }
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(text, 0, 0);
+
+            ctx.beginPath();
+            ctx.arc(-ballRadius * 0.3, -ballRadius * 0.3, ballRadius * 0.4, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
+            ctx.fill();
+            ctx.restore();
+        }
+
+        ctx.beginPath();
+        ctx.arc(holeX, holeY, holeRadius, Math.PI, 0); 
+        let grad = ctx.createLinearGradient(0, holeY - holeRadius, 0, holeY);
+        grad.addColorStop(0, "rgba(0,0,0,0.9)"); 
+        grad.addColorStop(1, "rgba(0,0,0,0)");   
+        ctx.fillStyle = grad;
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(100, 98, 86, 1)';
+        ctx.lineWidth = 6;
+        
+        ctx.beginPath();
+        ctx.arc(holeX, holeY, holeRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        drawRoundRect(ctx, bodyX, bodyY, bodyWidth, bodyHeight, 15);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(bowlCenterX, bowlCenterY, bowlRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.fillStyle = '#352f2d'; 
+        ctx.strokeStyle = '#1a1615'; 
+        ctx.lineWidth = 8;
+        drawRoundRect(ctx, cushX, cushY, cushWidth, cushHeight, 20);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+    });
+
+    Events.on(engine, 'collisionStart', (event) => {
+        const pairs = event.pairs;
+        pairs.forEach((pair) => {
+            if (pair.bodyA.label !== 'Rectangle Body' || pair.bodyB.label !== 'Rectangle Body') {
+                const velocityA = pair.bodyA.velocity;
+                const velocityB = pair.bodyB.velocity;
+                const relativeVelocity = Math.sqrt(
+                    Math.pow(velocityA.x - velocityB.x, 2) + Math.pow(velocityA.y - velocityB.y, 2)
+                );
+                const maxVelocity = 15;
+                const volume = Math.min(1, Math.max(0, relativeVelocity / maxVelocity));
+                
+                if (volume > 0.1) {
+                    collideSound.volume = volume;
+                    collideSound.currentTime = 0;
+                    let playPromise = collideSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(() => {});
+                    }
+                }
+            }
+        });
+    });
+
+    Engine.run(engine);
+    Render.run(render);
+</script>
+</body>
+</html>
