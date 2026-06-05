@@ -45,39 +45,12 @@
             min-height: 100vh;
         }
 
-        /* --- MÀN HÌNH BOOT ĐỂ MỞ KHÓA ÂM THANH TRÌNH DUYỆT --- */
-        #bootScreen {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: var(--nier-beige);
-            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
-                              linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
-            background-size: 5px 5px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease-out;
-        }
-
-        #initBootBtn {
-            font-size: 20px;
-            padding: 15px 40px;
-            letter-spacing: 2px;
-            border: 2px solid var(--nier-dark);
-        }
-
-        /* Hiệu ứng Fade-in cho Tool */
         .coreSystem {
             display: inline-block;
             width: 100%;
             min-height: 100vh;
             box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
             padding: 20px;
-            opacity: 0; 
-            transition: opacity 0.5s ease-in;
         }
 
         .warp-container {
@@ -236,11 +209,6 @@
                     "random"
                     "history";
             }
-
-            #initBootBtn {
-            max-width: 80%;
-            }
-
             .title-main { font-size: 22px; text-align: center; margin-bottom: 15px; }
             .play-btn { width: 50%; }
         }
@@ -252,28 +220,24 @@
         var clickSound = document.getElementById("click-sound");
 
         $(".themebutton").hover(function () {
-            if(!$(this).is(':disabled')) hoverSound.play().catch(()=>{});
+            if(!$(this).is(':disabled')) hoverSound.play();
         }, function () {
             hoverSound.load();
         });
 
         $(".themebutton").click(function () {
-            if(!$(this).is(':disabled')) clickSound.play().catch(()=>{});
+            if(!$(this).is(':disabled')) clickSound.play();
         });
     });
     </script>
 </head>
 <body>
 
-<div id="bootScreen">
-    <button class="themebutton" id="initBootBtn">START GACHAPON SIMULATOR</button>
-</div>
+<audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+<audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+<audio id="collide-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_76.ogg" type="audio/ogg"></audio>
 
-<audio id="hover-sound" preload="auto"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
-<audio id="click-sound" preload="auto"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
-<audio id="collide-sound" preload="auto"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_76.ogg" type="audio/ogg"></audio>
-
-<div class="coreSystem" id="coreApp">
+<div class="coreSystem">
     <div class="warp-container">
         <h1 class="title-main">GACHAPON SIMULATION</h1>
 
@@ -388,7 +352,7 @@ Tsumugi</textarea>
     const cushY = 745; 
 
     const segments = 128;
-    const wallThickness = 200; 
+    const wallThickness = 40; 
     const walls = [];
     
     const physicsBowlRadius = bowlRadius + (wallThickness / 2);
@@ -409,13 +373,9 @@ Tsumugi</textarea>
     World.add(world, walls);
 
     let balls = [];
-    
     let isRolling = false;
-    let isDroppingOut = false;
     let dropObj = null;
-    let isPopupOpen = false;
-    let pendingReturnBall = null; 
-    let rollStartTime = 0;
+    let isDroppingOut = false;
 
     const persistentColors = new Map();
     let colorCounter = 0;
@@ -431,7 +391,6 @@ Tsumugi</textarea>
     const ballNamesInput = document.getElementById('ballNames');
     const highlightLayer = document.getElementById('highlightLayer');
     const valueCountDisplay = document.getElementById('valueCount');
-    const rollButton = document.getElementById('rollButton');
 
     function highlightDuplicates() {
         const lines = ballNamesInput.value.split('\n').map(line => line.trim());
@@ -466,8 +425,6 @@ Tsumugi</textarea>
     }
 
     function syncBalls() {
-        if (isRolling || isDroppingOut || isPopupOpen) return;
-
         const lines = ballNamesInput.value.split('\n').map(l => l.trim()).filter(l => l !== '');
         valueCountDisplay.innerText = lines.length;
         
@@ -496,6 +453,7 @@ Tsumugi</textarea>
                     bowlCenterX + (Math.random() - 0.5) * 40,
                     bowlCenterY - 150 + (Math.random() - 0.5) * 40,
                     ballRadius,
+                    // TĂNG ĐỘ NẢY (restitution: 0.9), GIẢM MA SÁT (friction)
                     { friction: 0.005, restitution: 0.9, render: { fillStyle: getBallColor(label) }, label: label }
                 );
                 balls.push(b);
@@ -508,56 +466,10 @@ Tsumugi</textarea>
         localStorage.setItem('gashaponBallNames', ballNamesInput.value);
     }
 
-    function returnPendingBall() {
-        if (pendingReturnBall) {
-            const b = Bodies.circle(
-                bowlCenterX + (Math.random() - 0.5) * 10,
-                bowlCenterY - 200, 
-                ballRadius,
-                { friction: 0.005, restitution: 0.9, render: { fillStyle: pendingReturnBall.color }, label: pendingReturnBall.label }
-            );
-            balls.push(b);
-            World.add(world, b);
-            pendingReturnBall = null;
-        }
-        ballNamesInput.disabled = false;
-        rollButton.disabled = false; // Mở khóa nút Roll
-    }
-
-    function eliminatePendingBall() {
-        if (pendingReturnBall) {
-            let lines = ballNamesInput.value.split('\n');
-            let idx = lines.findIndex(l => l.trim() === pendingReturnBall.label.trim());
-            if (idx !== -1) {
-                lines.splice(idx, 1); 
-            }
-            ballNamesInput.value = lines.join('\n');
-            pendingReturnBall = null;
-        }
-        ballNamesInput.disabled = false;
-        rollButton.disabled = false; // Mở khóa nút Roll
-        syncBalls(); 
-    }
-
-    // --- MÀN HÌNH BOOT MỞ KHÓA ÂM THANH ---
     window.addEventListener('load', () => {
         const savedValues = localStorage.getItem('gashaponBallNames');
         if (savedValues) ballNamesInput.value = savedValues;
-    });
-
-    document.getElementById('initBootBtn').addEventListener('click', function() {
-        let emptyPlay = collideSound.play();
-        if(emptyPlay !== undefined) emptyPlay.catch(()=>{});
-
-        this.innerText = "LOADING GACHAPON...";
-        setTimeout(() => {
-            document.getElementById('bootScreen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('bootScreen').style.display = 'none';
-                document.getElementById('coreApp').style.opacity = '1';
-                syncBalls();
-            }, 500);
-        }, 300);
+        syncBalls();
     });
 
     ballNamesInput.addEventListener('input', syncBalls);
@@ -566,33 +478,7 @@ Tsumugi</textarea>
         highlightLayer.style.transform = `translateY(-${ballNamesInput.scrollTop}px)`;
     });
 
-    // --- LIGHTWEIGHT OBSERVER TỐI ƯU ---
-    // Chỉ đăng ký 1 lần duy nhất, theo dõi thuộc tính style của #popupOverlay
-    let overlayObserver = null;
-    function setupOverlayObserver() {
-        const overlay = document.getElementById('popupOverlay');
-        if (overlay && !overlayObserver) {
-            overlayObserver = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'style') {
-                        // Nếu thư viện đổi thành display: none VÀ cờ popup vẫn đang mở 
-                        // (nghĩa là user không bấm Accept/Eliminate mà tự click ra ngoài)
-                        if (overlay.style.display === 'none' && isPopupOpen) {
-                            isPopupOpen = false; // Hạ cờ
-                            returnPendingBall(); // Gọi hàm trả bóng & mở khóa Roll
-                        }
-                    }
-                });
-            });
-            // Chỉ yêu cầu DOM báo cáo khi thuộc tính 'style' thay đổi -> Cực kỳ tiết kiệm CPU
-            overlayObserver.observe(overlay, { attributes: true, attributeFilter: ['style'] });
-        }
-    }
-
     function showNierResultPopup(ballRef) {
-        isPopupOpen = true;
-        pendingReturnBall = { label: ballRef.label, color: ballRef.color };
-
         const contentHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px;">
                 <div style="width:100px; height:100px; border-radius:50%; background:${ballRef.color}; border:4px solid var(--nier-dark); margin-bottom:15px; box-shadow: inset 0px -10px 15px rgba(0,0,0,0.3);"></div>
@@ -604,21 +490,28 @@ Tsumugi</textarea>
             {
                 text: "ACCEPT",
                 action: function() {
-                    if (!isPopupOpen) return;
-                    isPopupOpen = false; // Tắt cờ trước khi đóng để Observer bỏ qua việc gọi trả bóng lần 2
                     playNierSound('core_52');
+                    ballNamesInput.disabled = false;
                     closePopup();
-                    returnPendingBall();
+                    syncBalls();
                 }
             },
             {
                 text: "ELIMINATE",
                 action: function() {
-                    if (!isPopupOpen) return;
-                    isPopupOpen = false; // Tắt cờ trước khi đóng
                     playNierSound('core_52');
+                    
+                    let lines = ballNamesInput.value.split('\n');
+                    let indexToRemove = lines.findIndex(l => l.trim() === ballRef.label.trim());
+                    if (indexToRemove !== -1) {
+                        lines.splice(indexToRemove, 1);
+                    }
+                    
+                    ballNamesInput.value = lines.join('\n');
+                    ballNamesInput.disabled = false;
+                    
                     closePopup();
-                    eliminatePendingBall();
+                    syncBalls();
                 }
             }
         ]);
@@ -626,9 +519,6 @@ Tsumugi</textarea>
         if (typeof playNierSound === "function") {
             try { playNierSound('core_32'); } catch(e) {}
         }
-
-        // Kích hoạt theo dõi thuộc tính style ngay khi popup được tạo ra
-        setupOverlayObserver();
 
         roundCount++;
         const row = document.getElementById('historyBody').insertRow(0);
@@ -638,66 +528,56 @@ Tsumugi</textarea>
         `;
     }
 
+    const rollButton = document.getElementById('rollButton');
     rollButton.addEventListener('click', () => {
         const currentLines = ballNamesInput.value.split('\n').filter(name => name.trim() !== '');
         if (isRolling || currentLines.length === 0) return;
         
         isRolling = true;
-        rollStartTime = Date.now(); 
         rollButton.disabled = true;
         rollButton.innerText = "ROLLING...";
         ballNamesInput.disabled = true;
 
         balls.forEach(ball => {
+            // LỰC ĐẨY MẠNH HƠN NHIỀU, GIÚP BOUNCE GẤP ĐÔI
             Body.applyForce(ball, ball.position, {
-                x: (Math.random() - 0.5) * 0.8,
-                y: -(Math.random() * 0.4 + 0.8) 
+                x: (Math.random() - 0.5) * 0.6,
+                y: -(Math.random() * 0.4 + 0.6) 
             });
         });
-    });
 
-    Events.on(engine, 'beforeUpdate', () => {
-        const maxSpeed = 60; 
-        balls.forEach(ball => {
-            if (ball.speed > maxSpeed) {
-                Body.setVelocity(ball, {
-                    x: ball.velocity.x * (maxSpeed / ball.speed),
-                    y: ball.velocity.y * (maxSpeed / ball.speed)
-                });
-            }
-        });
-
-        if (isRolling && !isDroppingOut && Date.now() - rollStartTime > 1500) {
-            let candidate = null;
-            
-            for (let i = 0; i < balls.length; i++) {
-                let b = balls[i];
-                let distToCenter = Math.abs(b.position.x - bowlCenterX);
+        // Hẹn giờ 3 giây để chúng bật nảy đủ lâu rồi nằm im, quá trình rơi mất thêm ~0.8s -> Tổng < 4s
+        setTimeout(() => {
+            if (balls.length > 0) {
+                let closestBall = null;
+                let minDistance = Infinity;
                 
-                if (distToCenter < 50 && b.position.y > 720 && b.speed < 2.5) {
-                    candidate = b;
-                    break;
-                }
-            }
+                balls.forEach(ball => {
+                    const dist = Math.hypot(ball.position.x - holeX, ball.position.y - holeY);
+                    if (dist < minDistance) {
+                        minDistance = dist;
+                        closestBall = ball;
+                    }
+                });
 
-            if (candidate) {
-                World.remove(world, candidate);
-                balls.splice(balls.indexOf(candidate), 1);
+                World.remove(world, closestBall);
+                balls.splice(balls.indexOf(closestBall), 1);
                 
                 dropObj = {
                     x: holeX,
                     y: holeY - 20, 
                     velocity: 0,
-                    angle: candidate.angle,
-                    color: candidate.render.fillStyle,
-                    label: candidate.label,
-                    ref: candidate
+                    angle: closestBall.angle, // GIỮ NGUYÊN GÓC ĐỂ NHÌN TỰ NHIÊN NHẤT
+                    color: closestBall.render.fillStyle,
+                    label: closestBall.label,
+                    ref: closestBall
                 };
                 isDroppingOut = true;
-                isRolling = false;
             }
-        }
+        }, 3000);
+    });
 
+    Events.on(engine, 'beforeUpdate', () => {
         if (isDroppingOut && dropObj) {
             dropObj.velocity += 0.8; 
             dropObj.y += dropObj.velocity;
@@ -705,6 +585,8 @@ Tsumugi</textarea>
 
             if (dropObj.y > L_HEIGHT + ballRadius + 20) {
                 isDroppingOut = false;
+                isRolling = false; 
+                rollButton.disabled = false;
                 rollButton.innerText = "ROLL";
                 showNierResultPopup(dropObj);
                 dropObj = null;
@@ -712,32 +594,10 @@ Tsumugi</textarea>
         }
     });
 
-    Events.on(engine, 'afterUpdate', () => {
-        const maxAllowedDist = bowlRadius - ballRadius + 2; 
-        
-        balls.forEach(ball => {
-            const dx = ball.position.x - bowlCenterX;
-            const dy = ball.position.y - bowlCenterY;
-            const dist = Math.hypot(dx, dy);
-            
-            if (dist > maxAllowedDist) {
-                const angle = Math.atan2(dy, dx);
-                Body.setPosition(ball, {
-                    x: bowlCenterX + Math.cos(angle) * maxAllowedDist,
-                    y: bowlCenterY + Math.sin(angle) * maxAllowedDist
-                });
-                
-                Body.setVelocity(ball, {
-                    x: ball.velocity.x * -0.9,
-                    y: ball.velocity.y * -0.9
-                });
-            }
-        });
-    });
-
     Events.on(render, 'afterRender', function() {
         const ctx = render.context;
         
+        // --- 1. VẼ CÁC QUẢ BÓNG BÊN TRONG MÁY ---
         balls.forEach(ball => {
             ctx.save();
             ctx.translate(ball.position.x, ball.position.y);
@@ -769,6 +629,7 @@ Tsumugi</textarea>
             ctx.restore();
         });
 
+        // --- 2. VẼ LỚP NỀN (Nằm dưới các quả bóng bên trong) ---
         ctx.save();
         ctx.globalCompositeOperation = 'destination-over';
         
@@ -787,22 +648,28 @@ Tsumugi</textarea>
         ctx.fill();
         ctx.restore();
 
+        // --- 3. VẼ CÁC LỚP VIỀN, BÓNG RƠI, VÀ BÓNG RÂM (Theo đúng thứ tự đè lên nhau) ---
         ctx.save();
         
+        // 3.1 VẼ TOÀN BỘ VIỀN THÂN MÁY VÀ ĐỆM (Vẽ trước để bóng rơi đè lên)
         ctx.strokeStyle = 'rgba(100, 98, 86, 1)';
         ctx.lineWidth = 6;
         
+        // Viền lỗ (bên dưới)
         ctx.beginPath();
         ctx.arc(holeX, holeY, holeRadius, 0, Math.PI * 2);
         ctx.stroke();
 
+        // Viền thân máy 
         drawRoundRect(ctx, bodyX, bodyY, bodyWidth, bodyHeight, 15);
         ctx.stroke();
 
+        // Viền quả cầu
         ctx.beginPath();
         ctx.arc(bowlCenterX, bowlCenterY, bowlRadius, 0, Math.PI * 2);
         ctx.stroke();
 
+        // Đệm lót
         ctx.fillStyle = '#352f2d'; 
         ctx.strokeStyle = '#1a1615'; 
         ctx.lineWidth = 8;
@@ -810,9 +677,12 @@ Tsumugi</textarea>
         ctx.fill();
         ctx.stroke();
 
+        // 3.2 VẼ QUẢ BÓNG ĐANG RƠI (Bóng này sẽ đè lấp đi các viền máy ở trên)
         if (isDroppingOut && dropObj) {
             ctx.save();
             
+            // Dùng mặt nạ giới hạn: Bóng chỉ hiển thị khi đã chui qua mép trên của lỗ 
+            // Giúp đỉnh bóng bị cắt gọt chuẩn xác, không bị lẹm ra ngoài phần thân kim loại
             ctx.beginPath();
             ctx.arc(holeX, holeY, holeRadius, Math.PI, 0); 
             ctx.lineTo(L_WIDTH, holeY);
@@ -825,11 +695,13 @@ Tsumugi</textarea>
             ctx.translate(dropObj.x, dropObj.y);
             ctx.rotate(dropObj.angle);
             
+            // Vẽ bề mặt bóng
             ctx.beginPath();
             ctx.arc(0, 0, ballRadius, 0, Math.PI * 2);
             ctx.fillStyle = dropObj.color;
             ctx.fill();
             
+            // Vẽ Text (opacity 50%)
             ctx.fillStyle = "rgba(50, 45, 40, 0.5)";
             let text = dropObj.label.trim();
             let fontSize = 20;
@@ -842,6 +714,7 @@ Tsumugi</textarea>
             ctx.textBaseline = "middle";
             ctx.fillText(text, 0, 0);
 
+            // Phản quang
             ctx.beginPath();
             ctx.arc(-ballRadius * 0.3, -ballRadius * 0.3, ballRadius * 0.4, 0, Math.PI * 2);
             ctx.fillStyle = "rgba(255, 255, 255, 0.15)";
@@ -850,6 +723,7 @@ Tsumugi</textarea>
             ctx.restore();
         }
 
+        // 3.3 VẼ BÓNG RÂM CỦA MIỆNG LỖ (Đè lên quả bóng để tạo độ sâu hang tối)
         ctx.beginPath();
         ctx.arc(holeX, holeY, holeRadius, Math.PI, 0); 
         let grad = ctx.createLinearGradient(0, holeY - holeRadius, 0, holeY);
@@ -858,6 +732,8 @@ Tsumugi</textarea>
         ctx.fillStyle = grad;
         ctx.fill();
 
+        // 3.4 CHUỐT LẠI NỬA TRÊN CỦA VIỀN MIỆNG LỖ
+        // Kỹ thuật này giúp bóng chui ra "từ bên trong" - viền trên đè lên bóng, bóng đè lên viền dưới
         ctx.strokeStyle = 'rgba(100, 98, 86, 1)';
         ctx.lineWidth = 6;
         ctx.beginPath();
@@ -882,8 +758,10 @@ Tsumugi</textarea>
                 if (volume > 0.1) {
                     collideSound.volume = volume;
                     collideSound.currentTime = 0;
-                    let p = collideSound.play();
-                    if(p !== undefined) p.catch(() => {});
+                    let playPromise = collideSound.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(() => {});
+                    }
                 }
             }
         });
@@ -891,7 +769,6 @@ Tsumugi</textarea>
 
     Engine.run(engine);
     Render.run(render);
-
 </script>
 </body>
 </html>
