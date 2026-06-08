@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Meeting Schedule System || NieR Theme</title>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+    <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #850000;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+            --nier-error-red: #850000;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7); }
+        ::-moz-selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+        ::selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+
+        body {
+            font-family: 'Montserrat', sans-serif; background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%), linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh;
+        }
+        
+        .coreSystem { display: inline-block; width: 100%; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 20px; }
+        .warp-container { margin-top: 1em; width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 30px; text-transform: uppercase; padding-left: 10px; }
+        
+        .function-wrapper { display: flex; flex-direction: row; gap: 2em; align-items: stretch; }
+        .section { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 25px; display: flex; flex-direction: column; }
+        .sectionTitle { padding: 10px 15px; color: #d3cebb; background: rgba(100, 98, 86, 0.8); font-weight: bold; margin-bottom: 20px; font-size: 14px; text-transform: uppercase; }
+        
+        .input-panel { flex: 0 0 400px; } 
+        .result-panel { flex: 1; min-width: 0; }
+        @media (max-width: 900px) { .function-wrapper { flex-direction: column; } .input-panel, .result-panel { flex: none; width: 100%; } }
+
+        .themebutton {
+            cursor: pointer; padding: 12px 20px; font-weight: bold; color: #4b4340; border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%); background-size: 200% 100%;
+            background-position: right bottom; transition: all .2s ease-out; font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase; text-align: center; width: 100%; margin-top: 15px;
+        }
+        .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
+        .themebutton.back-btn { margin-top: 0; margin-bottom: 20px; width: auto; font-size: 12px; padding: 8px 15px; }
+
+        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .cal-header h3 { font-size: 18px; text-transform: uppercase; margin: 0; }
+        .nav-btn { cursor: pointer; padding: 5px 15px; border: 2px solid var(--nier-dark); font-weight: bold; background: transparent; transition: 0.2s; color: var(--nier-dark); }
+        .nav-btn:hover { background: var(--nier-dark); color: var(--nier-text-light); }
+
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+        .weekday { font-weight: bold; padding: 10px 0; font-size: 12px; border-bottom: 2px solid var(--nier-dark); }
+        .day-cell {
+            padding: 15px 5px; border: 2px solid var(--nier-dark); font-weight: bold;
+            background: rgba(100, 98, 86, 0.1); color: var(--nier-dark); opacity: 0.3; cursor: not-allowed; transition: all 0.2s;
+        }
+        .day-cell.available { opacity: 1; background: transparent; cursor: pointer; }
+        .day-cell.available:hover { background: var(--nier-bg-btn); color: var(--nier-text-light); transform: scale(1.05); }
+
+        .slots-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
+        
+        .nier-form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .nier-form-group label { font-weight: bold; font-size: 12px; text-transform: uppercase; color: var(--nier-dark); }
+        .nier-input, .nier-textarea {
+            background: rgba(235, 230, 210, 0.7); border: 2px solid var(--nier-dark); padding: 12px;
+            font-family: 'Montserrat', sans-serif; color: var(--nier-dark); font-size: 14px; transition: 0.2s; outline: none;
+        }
+        .nier-input:focus, .nier-textarea:focus { background: rgba(255, 255, 255, 0.9); box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
+        
+        .view-section { display: none; }
+        .view-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .profile-desc { font-size: 14px; line-height: 1.6; margin-bottom: 20px; border-left: 4px solid var(--nier-dark); padding-left: 15px; }
+        .host-info p { margin-bottom: 10px; font-weight: bold; font-size: 13px; display: flex; align-items: center; gap: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="coreSystem" style="display:none;" id="main-system">
+        <div class="warp-container">
+            <h1 class="title-main">Schedule System // <span style="font-size: 16px; font-weight:normal;">Working Calendar Bridge</span></h1>
+            
+            <div class="function-wrapper">
+                <div class="input-panel section">
+                    <h2 class="sectionTitle">Host Information</h2>
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="https://hoanganhdinhngoc.github.io/images/Koi-Kanji.png" alt="Avatar" style="width: 100px; height: 100px; border: 2px solid var(--nier-dark); padding: 5px; border-radius: 50%;">
+                        <h2 style="margin-top: 15px; text-transform: uppercase; letter-spacing: 2px;">ANH HOANG</h2>
+                    </div>
+                    
+                    <div class="profile-desc">
+                        Vui lòng chọn một ngày khả dụng trên bảng điện tử bên phải để xem luồng thời gian rảnh. Hệ thống sẽ tự động ghim lịch vào "Working Calendar" và gửi thư xác nhận.
+                    </div>
+
+                    <div class="host-info">
+                        <p><i class="fas fa-clock"></i> Duration: 30 Min</p>
+                        <p><i class="fas fa-video"></i> Format: Google Meet</p>
+                    </div>
+                </div>
+
+                <div class="result-panel section">
+                    <h2 class="sectionTitle" id="right-panel-title">Date Selection</h2>
+                    
+                    <div id="step-date" class="view-section active">
+                        <div class="cal-header">
+                            <button class="nav-btn" id="prev-month">&lt; PREV</button>
+                            <h3 id="cal-month-year">...</h3>
+                            <button class="nav-btn" id="next-month">NEXT &gt;</button>
+                        </div>
+                        <div class="calendar-grid" id="cal-days"></div>
+                    </div>
+
+                    <div id="step-time" class="view-section">
+                        <button class="themebutton back-btn" onclick="switchStep('step-date')">[ &lt; BACK TO CALENDAR ]</button>
+                        <h3 style="margin-bottom: 20px; font-size: 16px; border-bottom: 1px dashed var(--nier-dark); padding-bottom: 10px;">AVAILABLE SLOTS: <span id="selected-date-text"></span></h3>
+                        <div class="slots-container" id="slots-wrapper"></div>
+                    </div>
+
+                    <div id="step-form" class="view-section">
+                        <button class="themebutton back-btn" onclick="switchStep('step-time')">[ &lt; BACK TO SLOTS ]</button>
+                        <h3 style="margin-bottom: 20px; font-size: 16px; border-bottom: 1px dashed var(--nier-dark); padding-bottom: 10px;">CONFIRM MEETING: <span id="summary-meeting"></span></h3>
+                        
+                        <form id="booking-form">
+                            <div class="nier-form-group">
+                                <label>Full Name *</label>
+                                <input type="text" id="b-name" class="nier-input" required placeholder="Enter your name...">
+                            </div>
+                            <div class="nier-form-group">
+                                <label>Email Address *</label>
+                                <input type="email" id="b-email" class="nier-input" required placeholder="name@domain.com">
+                            </div>
+                            <div class="nier-form-group">
+                                <label>Notes / Purpose (Optional)</label>
+                                <textarea id="b-notes" class="nier-textarea" rows="4" placeholder="Brief context of the meeting..."></textarea>
+                            </div>
+                            <button type="submit" class="themebutton" style="margin-top: 10px;">INITIALIZE BOOKING SEQUENCE</button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // !!! CẮM LINK APP SCRIPT MỚI CỦA ANH VÀO ĐÂY !!!
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxCw_fTjgj-y7s7_Y1rQE_cpLxZdVNPNUM4mPIFyi4Bt0kxiA00Zl-ujm-nGjzKXrGF/exec";
+
+        let localCacheSlots = {}; // Lưu trữ toàn bộ data tải 1 lần từ server
+        let currentDisplayDate = new Date();
+        let selectedDateStr = "";
+        let selectedTimeStr = "";
+        
+        const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+        const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+        $(document).on('mouseenter', '.themebutton:not(:disabled), .day-cell.available, .nav-btn', () => { 
+            playNierSound('core_16');
+        });
+
+        // 1. NGAY KHI VÀO TRANG -> FETCH DỮ LIỆU TỔNG VÀ LƯU VÀO CACHE
+        $(document).ready(function() {
+            // Hiện popup loading che toàn trang
+            showPopup("SYSTEM INITIALIZATION", "<p style='text-align:center; font-weight:bold;'>Fetching Calendar Database...</p><p style='text-align:center; font-size:12px; opacity:0.7'>Downloading schedule for the next 60 days.</p>", []);
+            $('#popupButtons').hide();
+
+            fetch(GAS_WEB_APP_URL)
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "SUCCESS") {
+                    localCacheSlots = data.slotsData; // Lưu vào RAM
+                    renderCalendar(); // Render lịch
+                    closePopup(); 
+                    $('#main-system').fadeIn(300); // Hiện layout chính
+                } else {
+                    closePopup(); showPopup("DATABASE ERROR", "<p>Error syncing with Host Calendar.</p>");
+                }
+            })
+            .catch(err => {
+                closePopup();
+                showPopup("CONNECTION ERROR", "<p>Failed to retrieve data. Please ensure CORS/Live Server is running if local.</p>");
+            });
+        });
+
+        function switchStep(stepId) {
+            playNierSound('core_52');
+            $('.view-section').removeClass('active');
+            $('#' + stepId).addClass('active');
+            
+            let titles = { 'step-date': 'Date Selection', 'step-time': 'Time Slots Selection', 'step-form': 'Booking Initialization' };
+            $('#right-panel-title').text(titles[stepId]);
+        }
+
+        function renderCalendar() {
+            const year = currentDisplayDate.getFullYear();
+            const month = currentDisplayDate.getMonth();
+            $('#cal-month-year').text(`${monthNames[month]} ${year}`);
+            
+            const grid = document.getElementById('cal-days');
+            grid.innerHTML = "";
+            
+            dayNames.forEach(day => {
+                let div = document.createElement('div'); div.className = 'weekday'; div.innerText = day; grid.appendChild(div);
+            });
+            
+            const firstDayIndex = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+            
+            for (let i = 0; i < firstDayIndex; i++) { grid.appendChild(document.createElement('div')); }
+            
+            const today = new Date(); today.setHours(0,0,0,0);
+            
+            for (let day = 1; day <= totalDays; day++) {
+                let cell = document.createElement('div');
+                cell.className = 'day-cell'; cell.innerText = day;
+                
+                const thisDate = new Date(year, month, day);
+                const offsetDate = new Date(thisDate.getTime() - (thisDate.getTimezoneOffset() * 60000));
+                const dateKey = offsetDate.toISOString().split('T')[0];
+                
+                // Kiểm tra xem ngày đó có tồn tại trong Cache và có slot trống không
+                if (thisDate >= today && localCacheSlots[dateKey] && localCacheSlots[dateKey].length > 0) {
+                    cell.classList.add('available');
+                    cell.addEventListener('click', () => {
+                        selectedDateStr = dateKey;
+                        openInstantSlots(selectedDateStr); // Load tức thì
+                    });
+                }
+                grid.appendChild(cell);
+            }
+        }
+
+        $('#prev-month').click(() => { playNierSound('core_52'); currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1); renderCalendar(); });
+        $('#next-month').click(() => { playNierSound('core_52'); currentDisplayDate.setMonth(currentDisplayDate.getMonth() + 1); renderCalendar(); });
+
+        // 2. LOAD SLOTS TỨC THÌ TỪ CACHE (KHÔNG CẦN FETCH API NỮA)
+        function openInstantSlots(dateStr) {
+            playNierSound('core_58');
+            $('#selected-date-text').text(dateStr);
+            switchStep('step-time');
+            
+            const wrapper = $('#slots-wrapper');
+            wrapper.empty();
+            
+            const slots = localCacheSlots[dateStr] || [];
+            if (slots.length > 0) {
+                slots.forEach(time => {
+                    let btn = $(`<button class="themebutton">${time}</button>`);
+                    btn.click(() => {
+                        selectedTimeStr = time;
+                        $('#summary-meeting').text(`${selectedDateStr} @ ${selectedTimeStr}`);
+                        switchStep('step-form');
+                    });
+                    wrapper.append(btn);
+                });
+            } else {
+                wrapper.append("<div style='grid-column: 1/-1; padding: 20px; border: 1px dashed var(--nier-dark); text-align:center;'>NO AVAILABLE SLOTS DETECTED.</div>");
+            }
+        }
+
+        // XỬ LÝ SUBMIT FORM
+        $('#booking-form').submit(function(e) {
+            e.preventDefault();
+            playNierSound('core_58');
+
+            const payload = {
+                date: selectedDateStr, time: selectedTimeStr,
+                name: $('#b-name').val(), email: $('#b-email').val(), notes: $('#b-notes').val()
+            };
+
+            showPopup("PROCESSING", "<p style='text-align:center;'>Injecting booking data into Google Calendar...</p>", []);
+            $('#popupButtons').hide();
+
+            fetch(GAS_WEB_APP_URL, {
+                method: "POST",
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showPopup("SEQUENCE COMPLETE", `<p style='text-align:center;'>Booking established successfully.</p><p style='text-align:center; font-size:12px; opacity:0.8;'>An invitation link has been dispatched to ${payload.email}.</p>`, [{ text: "RETURN TO ROOT", action: function() { playNierSound('core_52'); location.reload(); } }]);
+                } else {
+                    closePopup(); showPopup("ERROR", "<p>Failed to book the session. " + data.error + "</p>");
+                }
+            })
+            .catch(err => {
+                closePopup(); showPopup("CRITICAL ERROR", "<p>Network interruption occurred.</p>");
+            });
+        });
+    </script>
+</body>
+</html>
