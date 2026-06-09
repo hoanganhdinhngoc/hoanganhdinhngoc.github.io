@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Meeting Schedule System || NieR Theme</title>
+    <title>CDN || Book A Meeting</title>
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png">
     
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -35,6 +36,9 @@
             background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh;
         }
         
+        /* Màng chắn màn hình lúc loading để popup không bị tắt */
+        #loading-blocker { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; display: none; }
+
         .coreSystem { display: inline-block; width: 100%; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 20px; }
         .warp-container { margin-top: 1em; width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; }
         .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 30px; text-transform: uppercase; padding-left: 10px; }
@@ -54,11 +58,13 @@
             text-transform: uppercase; text-align: center; width: 100%; margin-top: 15px;
         }
         .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
+        .themebutton:disabled { opacity: 0.3; cursor: not-allowed; background: transparent; border-color: rgba(100, 98, 86, 0.6); }
         .themebutton.back-btn { margin-top: 0; margin-bottom: 20px; width: auto; font-size: 12px; padding: 8px 15px; }
 
-        .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        /* GRID FIX: Nút luôn cố định ở mép, ko di chuyển khi thay đổi lịch */
+        .cal-header { display: grid; grid-template-columns: 75px 1fr 75px; align-items: center; margin-bottom: 15px; height: 40px; text-align: center; }
         .cal-header h3 { font-size: 18px; text-transform: uppercase; margin: 0; }
-        .nav-btn { cursor: pointer; padding: 5px 15px; border: 2px solid var(--nier-dark); font-weight: bold; background: transparent; transition: 0.2s; color: var(--nier-dark); }
+        .nav-btn { cursor: pointer; padding: 5px; border: 2px solid var(--nier-dark); font-weight: bold; background: transparent; transition: 0.2s; color: var(--nier-dark); width: 100%; }
         .nav-btn:hover { background: var(--nier-dark); color: var(--nier-text-light); }
 
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
@@ -72,7 +78,7 @@
 
         .slots-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; }
         
-        .nier-form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .nier-form-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; position: relative; }
         .nier-form-group label { font-weight: bold; font-size: 12px; text-transform: uppercase; color: var(--nier-dark); }
         .nier-input, .nier-textarea {
             background: rgba(235, 230, 210, 0.7); border: 2px solid var(--nier-dark); padding: 12px;
@@ -80,6 +86,15 @@
         }
         .nier-input:focus, .nier-textarea:focus { background: rgba(255, 255, 255, 0.9); box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
         
+        /* Tooltip Validation Form */
+        .nier-error-tooltip {
+            position: absolute; right: 0; top: 0;
+            background: var(--nier-error-red); color: var(--nier-text-light);
+            padding: 2px 6px; font-size: 10px; font-weight: bold; text-transform: uppercase;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.3); animation: fadeBlink 1s infinite alternate; pointer-events: none;
+        }
+        @keyframes fadeBlink { from { opacity: 0.7; } to { opacity: 1; } }
+
         .view-section { display: none; }
         .view-section.active { display: block; animation: fadeIn 0.3s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -90,20 +105,22 @@
 </head>
 <body>
 
+    <div id="loading-blocker"></div>
+
     <div class="coreSystem" style="display:none;" id="main-system">
         <div class="warp-container">
-            <h1 class="title-main">Schedule System // <span style="font-size: 16px; font-weight:normal;">Working Calendar Bridge</span></h1>
+            <h1 class="title-main">Book A Meeting</h1>
             
             <div class="function-wrapper">
                 <div class="input-panel section">
                     <h2 class="sectionTitle">Host Information</h2>
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <img src="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png" alt="Avatar" style="width: 100px; height: 100px; border: 2px solid var(--nier-dark); padding: 5px; border-radius: 50%;">
-                        <h2 style="margin-top: 15px; text-transform: uppercase; letter-spacing: 2px;">ANH HOANG</h2>
+                        <img src="https://hoanganhdinhngoc.github.io/cdn/images/profile2.jpg" alt="Avatar" style="width: 100px; height: 100px; border: 2px solid var(--nier-dark); padding: 5px; border-radius: 50%; object-fit: cover;">
+                        <h2 style="margin-top: 15px; text-transform: uppercase; letter-spacing: 2px;">HOANG ANH DINH</h2>
                     </div>
                     
-                    <div class="profile-desc">
-                        Vui lòng chọn một ngày khả dụng trên bảng điện tử bên phải để xem luồng thời gian rảnh. Hệ thống sẽ tự động ghim lịch vào "Working Calendar" và gửi thư xác nhận.
+                    <div class="profile-desc" id="dynamic-desc">
+                        Select an available date on the calendar panel to view my open time slots.
                     </div>
 
                     <div class="host-info">
@@ -117,24 +134,24 @@
                     
                     <div id="step-date" class="view-section active">
                         <div class="cal-header">
-                            <button class="nav-btn" id="prev-month">&lt; PREV</button>
+                            <button class="nav-btn" id="prev-month">PREV</button>
                             <h3 id="cal-month-year">...</h3>
-                            <button class="nav-btn" id="next-month">NEXT &gt;</button>
+                            <button class="nav-btn" id="next-month">NEXT</button>
                         </div>
                         <div class="calendar-grid" id="cal-days"></div>
                     </div>
 
                     <div id="step-time" class="view-section">
-                        <button class="themebutton back-btn" onclick="switchStep('step-date')">[ &lt; BACK TO CALENDAR ]</button>
+                        <button class="themebutton back-btn" id="btn-back-cal">[ &lt; BACK TO CALENDAR ]</button>
                         <h3 style="margin-bottom: 20px; font-size: 16px; border-bottom: 1px dashed var(--nier-dark); padding-bottom: 10px;">AVAILABLE SLOTS: <span id="selected-date-text"></span></h3>
                         <div class="slots-container" id="slots-wrapper"></div>
                     </div>
 
                     <div id="step-form" class="view-section">
-                        <button class="themebutton back-btn" onclick="switchStep('step-time')">[ &lt; BACK TO SLOTS ]</button>
+                        <button class="themebutton back-btn" id="btn-back-slots">[ &lt; BACK TO SLOTS ]</button>
                         <h3 style="margin-bottom: 20px; font-size: 16px; border-bottom: 1px dashed var(--nier-dark); padding-bottom: 10px;">CONFIRM MEETING: <span id="summary-meeting"></span></h3>
                         
-                        <form id="booking-form">
+                        <form id="booking-form" novalidate>
                             <div class="nier-form-group">
                                 <label>Full Name *</label>
                                 <input type="text" id="b-name" class="nier-input" required placeholder="Enter your name...">
@@ -147,7 +164,7 @@
                                 <label>Notes / Purpose (Optional)</label>
                                 <textarea id="b-notes" class="nier-textarea" rows="4" placeholder="Brief context of the meeting..."></textarea>
                             </div>
-                            <button type="submit" class="themebutton" style="margin-top: 10px;">INITIALIZE BOOKING SEQUENCE</button>
+                            <button type="submit" class="themebutton" style="margin-top: 10px;">BOOK MEETING</button>
                         </form>
                     </div>
 
@@ -158,52 +175,70 @@
 
     <script>
         // !!! CẮM LINK APP SCRIPT MỚI CỦA ANH VÀO ĐÂY !!!
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzPbfbkmEtvE9ALHFDlVllnLBfYCgNPv-sbHajTG87dofmZPDoqp8l4_moPb9mWwNl7/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxGX2WfHGXSe4Yujqeq0seP6tIuwE33ghomCupWScf4_jNzutQUoJb0kYUrSKy8-eZ/exec";
 
-        let localCacheSlots = {}; // Lưu trữ toàn bộ data tải 1 lần từ server
+        let localCacheSlots = {}; 
         let currentDisplayDate = new Date();
         let selectedDateStr = "";
         let selectedTimeStr = "";
         
-        const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+        // Rút ngắn tên tháng theo yêu cầu Mobile UI
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
+        const stepDescriptions = {
+            'step-date': "Select an available date on the calendar panel to view my open time slots.",
+            'step-time': "Choose a suitable time block from the available slots. Grayed-out blocks are currently occupied.",
+            'step-form': "Provide your contact details and a brief agenda to initialize the booking sequence."
+        };
 
         $(document).on('mouseenter', '.themebutton:not(:disabled), .day-cell.available, .nav-btn', () => { 
             playNierSound('core_16');
         });
 
-        // 1. NGAY KHI VÀO TRANG -> FETCH DỮ LIỆU TỔNG VÀ LƯU VÀO CACHE
         $(document).ready(function() {
-            // Hiện popup loading che toàn trang
+            // Mở màng chắn vô hình chặn thao tác click ra ngoài
+            $('#loading-blocker').show();
             showPopup("SYSTEM INITIALIZATION", "<p style='text-align:center; font-weight:bold;'>Fetching Calendar Database...</p><p style='text-align:center; font-size:12px; opacity:0.7'>Downloading schedule for the next 60 days.</p>", []);
             $('#popupButtons').hide();
 
             fetch(GAS_WEB_APP_URL)
             .then(res => res.json())
             .then(data => {
+                $('#loading-blocker').hide();
                 if(data.status === "SUCCESS") {
-                    localCacheSlots = data.slotsData; // Lưu vào RAM
-                    renderCalendar(); // Render lịch
+                    localCacheSlots = data.slotsData; 
+                    renderCalendar(); 
                     closePopup(); 
-                    $('#main-system').fadeIn(300); // Hiện layout chính
+                    $('#main-system').fadeIn(300);
                 } else {
                     closePopup(); showPopup("DATABASE ERROR", "<p>Error syncing with Host Calendar.</p>");
                 }
             })
             .catch(err => {
+                $('#loading-blocker').hide();
                 closePopup();
                 showPopup("CONNECTION ERROR", "<p>Failed to retrieve data. Please ensure CORS/Live Server is running if local.</p>");
             });
         });
 
+        // Hàm chuyển bước không có âm thanh (Âm thanh gắn ở nút bấm để tránh double sound)
         function switchStep(stepId) {
-            playNierSound('core_52');
             $('.view-section').removeClass('active');
             $('#' + stepId).addClass('active');
             
             let titles = { 'step-date': 'Date Selection', 'step-time': 'Time Slots Selection', 'step-form': 'Booking Initialization' };
             $('#right-panel-title').text(titles[stepId]);
+
+            // Animation hiển thị text (tổng 200ms)
+            $('#dynamic-desc').fadeOut(100, function() {
+                $(this).text(stepDescriptions[stepId]).fadeIn(100);
+            });
         }
+
+        // Bắt sự kiện quay lại có kèm âm thanh 1 lần
+        $('#btn-back-cal').click(() => { playNierSound('core_58'); switchStep('step-date'); });
+        $('#btn-back-slots').click(() => { playNierSound('core_58'); switchStep('step-time'); });
 
         function renderCalendar() {
             const year = currentDisplayDate.getFullYear();
@@ -232,24 +267,23 @@
                 const offsetDate = new Date(thisDate.getTime() - (thisDate.getTimezoneOffset() * 60000));
                 const dateKey = offsetDate.toISOString().split('T')[0];
                 
-                // Kiểm tra xem ngày đó có tồn tại trong Cache và có slot trống không
-                if (thisDate >= today && localCacheSlots[dateKey] && localCacheSlots[dateKey].length > 0) {
+                // Mở tương tác cho các ngày từ hôm nay trở đi (nếu có dữ liệu trả về)
+                if (thisDate >= today && localCacheSlots[dateKey]) {
                     cell.classList.add('available');
                     cell.addEventListener('click', () => {
+                        playNierSound('core_58');
                         selectedDateStr = dateKey;
-                        openInstantSlots(selectedDateStr); // Load tức thì
+                        openInstantSlots(selectedDateStr); 
                     });
                 }
                 grid.appendChild(cell);
             }
         }
 
-        $('#prev-month').click(() => { playNierSound('core_52'); currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1); renderCalendar(); });
-        $('#next-month').click(() => { playNierSound('core_52'); currentDisplayDate.setMonth(currentDisplayDate.getMonth() + 1); renderCalendar(); });
+        $('#prev-month').click(() => { playNierSound('core_58'); currentDisplayDate.setMonth(currentDisplayDate.getMonth() - 1); renderCalendar(); });
+        $('#next-month').click(() => { playNierSound('core_58'); currentDisplayDate.setMonth(currentDisplayDate.getMonth() + 1); renderCalendar(); });
 
-        // 2. LOAD SLOTS TỨC THÌ TỪ CACHE (KHÔNG CẦN FETCH API NỮA)
         function openInstantSlots(dateStr) {
-            playNierSound('core_58');
             $('#selected-date-text').text(dateStr);
             switchStep('step-time');
             
@@ -257,40 +291,65 @@
             wrapper.empty();
             
             const slots = localCacheSlots[dateStr] || [];
+            
             if (slots.length > 0) {
-                slots.forEach(time => {
-                    let btn = $(`<button class="themebutton">${time}</button>`);
-                    btn.click(() => {
-                        selectedTimeStr = time;
-                        $('#summary-meeting').text(`${selectedDateStr} @ ${selectedTimeStr}`);
-                        switchStep('step-form');
-                    });
+                slots.forEach(slotInfo => {
+                    // Nếu slot bị bận (available: false), gán attribute disabled để css grey out
+                    let isDisabled = !slotInfo.available ? 'disabled' : '';
+                    let btn = $(`<button class="themebutton slot-btn" ${isDisabled}>${slotInfo.time}</button>`);
+                    
+                    if (slotInfo.available) {
+                        btn.click(() => {
+                            playNierSound('core_58');
+                            selectedTimeStr = slotInfo.time;
+                            $('#summary-meeting').text(`${selectedDateStr} @ ${selectedTimeStr}`);
+                            switchStep('step-form');
+                        });
+                    }
                     wrapper.append(btn);
                 });
             } else {
-                wrapper.append("<div style='grid-column: 1/-1; padding: 20px; border: 1px dashed var(--nier-dark); text-align:center;'>NO AVAILABLE SLOTS DETECTED.</div>");
+                wrapper.append("<div style='grid-column: 1/-1; padding: 20px; border: 1px dashed var(--nier-dark); text-align:center;'>NO SLOTS DATA DETECTED.</div>");
             }
         }
 
-        // XỬ LÝ SUBMIT FORM
+        // TÙY CHỈNH TOOLTIP VALIDATION FORM KIỂU NIER
         $('#booking-form').submit(function(e) {
             e.preventDefault();
-            playNierSound('core_58');
+            
+            // Xóa tooltip cũ nếu có
+            $('.nier-error-tooltip').remove();
+            $('.nier-input, .nier-textarea').css('border-color', 'var(--nier-dark)');
+            
+            let isValid = true;
+            $('#b-name, #b-email').each(function() {
+                if ($(this).val().trim() === "") {
+                    isValid = false;
+                    $(this).css('border-color', 'var(--nier-error-red)');
+                    $(this).parent().append('<div class="nier-error-tooltip">Please fill out this field.</div>');
+                }
+            });
+
+            if (!isValid) {
+                playNierSound('core_52'); // Cảnh báo lỗi
+                return;
+            }
+            
+            playNierSound('core_58'); // Bấm submit thành công
 
             const payload = {
                 date: selectedDateStr, time: selectedTimeStr,
                 name: $('#b-name').val(), email: $('#b-email').val(), notes: $('#b-notes').val()
             };
 
+            $('#loading-blocker').show();
             showPopup("PROCESSING", "<p style='text-align:center;'>Injecting booking data into Google Calendar...</p>", []);
             $('#popupButtons').hide();
 
-            fetch(GAS_WEB_APP_URL, {
-                method: "POST",
-                body: JSON.stringify(payload)
-            })
+            fetch(GAS_WEB_APP_URL, { method: "POST", body: JSON.stringify(payload) })
             .then(res => res.json())
             .then(data => {
+                $('#loading-blocker').hide();
                 if (data.success) {
                     showPopup("SEQUENCE COMPLETE", `<p style='text-align:center;'>Booking established successfully.</p><p style='text-align:center; font-size:12px; opacity:0.8;'>An invitation link has been dispatched to ${payload.email}.</p>`, [{ text: "RETURN TO ROOT", action: function() { playNierSound('core_52'); location.reload(); } }]);
                 } else {
@@ -298,6 +357,7 @@
                 }
             })
             .catch(err => {
+                $('#loading-blocker').hide();
                 closePopup(); showPopup("CRITICAL ERROR", "<p>Network interruption occurred.</p>");
             });
         });
