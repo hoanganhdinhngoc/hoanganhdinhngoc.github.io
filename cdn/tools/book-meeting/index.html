@@ -116,7 +116,7 @@
                     <h2 class="sectionTitle">Host Information</h2>
                     <div style="text-align: center; margin-bottom: 20px;">
                         <img src="https://hoanganhdinhngoc.github.io/cdn/images/profile2.jpg" alt="Avatar" style="width: 100px; height: 100px; border: 2px solid var(--nier-dark); padding: 5px; border-radius: 50%; object-fit: cover;">
-                        <h2 style="margin-top: 15px; text-transform: uppercase; letter-spacing: 2px;">HOANG ANH DINH</h2>
+                        <h3 style="margin-top: 15px; text-transform: uppercase; letter-spacing: 2px;">HOANG ANH DINH NGOC</h3>
                     </div>
                     
                     <div class="profile-desc" id="dynamic-desc">
@@ -174,7 +174,6 @@
     </div>
 
     <script>
-        // !!! CẮM LINK APP SCRIPT MỚI CỦA ANH VÀO ĐÂY !!!
         const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxGX2WfHGXSe4Yujqeq0seP6tIuwE33ghomCupWScf4_jNzutQUoJb0kYUrSKy8-eZ/exec";
 
         let localCacheSlots = {}; 
@@ -182,13 +181,12 @@
         let selectedDateStr = "";
         let selectedTimeStr = "";
         
-        // Rút ngắn tên tháng theo yêu cầu Mobile UI
         const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         const dayNames = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
         const stepDescriptions = {
             'step-date': "Select an available date on the calendar panel to view my open time slots.",
-            'step-time': "Choose a suitable time block from the available slots. Grayed-out blocks are currently occupied.",
+            'step-time': "Choose a suitable time block from the available slots. Each slot represents a 30-minute window.",
             'step-form': "Provide your contact details and a brief agenda to initialize the booking sequence."
         };
 
@@ -313,7 +311,7 @@
             }
         }
 
-        // TÙY CHỈNH TOOLTIP VALIDATION FORM KIỂU NIER
+        // TÙY CHỈNH TOOLTIP VALIDATION FORM KIỂU NIER BỔ SUNG VALIDATE EMAIL
         $('#booking-form').submit(function(e) {
             e.preventDefault();
             
@@ -322,20 +320,36 @@
             $('.nier-input, .nier-textarea').css('border-color', 'var(--nier-dark)');
             
             let isValid = true;
-            $('#b-name, #b-email').each(function() {
-                if ($(this).val().trim() === "") {
-                    isValid = false;
-                    $(this).css('border-color', 'var(--nier-error-red)');
-                    $(this).parent().append('<div class="nier-error-tooltip">Please fill out this field.</div>');
-                }
-            });
+            
+            // Validate trường Tên
+            const nameField = $('#b-name');
+            if (nameField.val().trim() === "") {
+                isValid = false;
+                nameField.css('border-color', 'var(--nier-error-red)');
+                nameField.parent().append('<div class="nier-error-tooltip">Please fill out this field.</div>');
+            }
+
+            // Validate trường Email bằng Regex
+            const emailField = $('#b-email');
+            const emailVal = emailField.val().trim();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Biểu thức chuẩn để check format email
+            
+            if (emailVal === "") {
+                isValid = false;
+                emailField.css('border-color', 'var(--nier-error-red)');
+                emailField.parent().append('<div class="nier-error-tooltip">Please fill out this field.</div>');
+            } else if (!emailRegex.test(emailVal)) {
+                isValid = false;
+                emailField.css('border-color', 'var(--nier-error-red)');
+                emailField.parent().append('<div class="nier-error-tooltip">Please enter a valid email address.</div>');
+            }
 
             if (!isValid) {
-                playNierSound('core_52'); // Cảnh báo lỗi
+                playNierSound('core_52'); // Phát tiếng tít cảnh báo lỗi nếu form sai
                 return;
             }
             
-            playNierSound('core_58'); // Bấm submit thành công
+            playNierSound('core_58'); // Bấm submit thành công khi mọi thứ xanh mượt
 
             const payload = {
                 date: selectedDateStr, time: selectedTimeStr,
