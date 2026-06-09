@@ -36,7 +36,6 @@
             background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh;
         }
         
-        /* Màng chắn màn hình lúc loading để popup không bị tắt */
         #loading-blocker { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 99999; display: none; }
 
         .coreSystem { display: inline-block; width: 100%; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 20px; }
@@ -61,7 +60,6 @@
         .themebutton:disabled { opacity: 0.3; cursor: not-allowed; background: transparent; border-color: rgba(100, 98, 86, 0.6); }
         .themebutton.back-btn { margin-top: 0; margin-bottom: 20px; width: auto; font-size: 12px; padding: 8px 15px; }
 
-        /* GRID FIX: Nút luôn cố định ở mép, ko di chuyển khi thay đổi lịch */
         .cal-header { display: grid; grid-template-columns: 75px 1fr 75px; align-items: center; margin-bottom: 15px; height: 40px; text-align: center; }
         .cal-header h3 { font-size: 18px; text-transform: uppercase; margin: 0; }
         .nav-btn { cursor: pointer; padding: 5px; border: 2px solid var(--nier-dark); font-weight: bold; background: transparent; transition: 0.2s; color: var(--nier-dark); width: 100%; }
@@ -86,7 +84,6 @@
         }
         .nier-input:focus, .nier-textarea:focus { background: rgba(255, 255, 255, 0.9); box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
         
-        /* Tooltip Validation Form */
         .nier-error-tooltip {
             position: absolute; right: 0; top: 0;
             background: var(--nier-error-red); color: var(--nier-text-light);
@@ -174,7 +171,7 @@
     </div>
 
     <script>
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwxGX2WfHGXSe4Yujqeq0seP6tIuwE33ghomCupWScf4_jNzutQUoJb0kYUrSKy8-eZ/exec";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx5ndRkezprqJ0bUC2uleNYsUbj5vhZNzlYH0hFPiL5LZttbbKFZAq_rWY3VjdBZQx3/exec";
 
         let localCacheSlots = {}; 
         let currentDisplayDate = new Date();
@@ -186,7 +183,7 @@
 
         const stepDescriptions = {
             'step-date': "Select an available date on the calendar panel to view my open time slots.",
-            'step-time': "Choose a suitable time block from the available slots. Each slot represents a 30-minute window.",
+            'step-time': "Choose a suitable time block from the available slots. Each slot represents a 30-minutes window.",
             'step-form': "Provide your contact details and a brief agenda to initialize the booking sequence."
         };
 
@@ -195,7 +192,6 @@
         });
 
         $(document).ready(function() {
-            // Mở màng chắn vô hình chặn thao tác click ra ngoài
             $('#loading-blocker').show();
             showPopup("SYSTEM INITIALIZATION", "<p style='text-align:center; font-weight:bold;'>Fetching Calendar Database...</p><p style='text-align:center; font-size:12px; opacity:0.7'>Downloading schedule for the next 60 days.</p>", []);
             $('#popupButtons').hide();
@@ -220,7 +216,6 @@
             });
         });
 
-        // Hàm chuyển bước không có âm thanh (Âm thanh gắn ở nút bấm để tránh double sound)
         function switchStep(stepId) {
             $('.view-section').removeClass('active');
             $('#' + stepId).addClass('active');
@@ -228,13 +223,11 @@
             let titles = { 'step-date': 'Date Selection', 'step-time': 'Time Slots Selection', 'step-form': 'Booking Initialization' };
             $('#right-panel-title').text(titles[stepId]);
 
-            // Animation hiển thị text (tổng 200ms)
             $('#dynamic-desc').fadeOut(100, function() {
                 $(this).text(stepDescriptions[stepId]).fadeIn(100);
             });
         }
 
-        // Bắt sự kiện quay lại có kèm âm thanh 1 lần
         $('#btn-back-cal').click(() => { playNierSound('core_58'); switchStep('step-date'); });
         $('#btn-back-slots').click(() => { playNierSound('core_58'); switchStep('step-time'); });
 
@@ -265,8 +258,15 @@
                 const offsetDate = new Date(thisDate.getTime() - (thisDate.getTimezoneOffset() * 60000));
                 const dateKey = offsetDate.toISOString().split('T')[0];
                 
-                // Mở tương tác cho các ngày từ hôm nay trở đi (nếu có dữ liệu trả về)
-                if (thisDate >= today && localCacheSlots[dateKey]) {
+                // THUẬT TOÁN MỚI: Check xem trong ngày này có ít nhất 1 slot trống không?
+                let hasAvailableSlot = false;
+                if (localCacheSlots[dateKey]) {
+                    hasAvailableSlot = localCacheSlots[dateKey].some(slot => slot.available === true);
+                }
+                
+                // Chỉ gán class available cho click khi ngày đó có ÍT NHẤT 1 slot rảnh
+                // Nếu dính ngày Lễ hoặc full lịch -> nó sẽ luôn chìm màu mờ đi và bị block click
+                if (thisDate >= today && hasAvailableSlot) {
                     cell.classList.add('available');
                     cell.addEventListener('click', () => {
                         playNierSound('core_58');
@@ -292,7 +292,6 @@
             
             if (slots.length > 0) {
                 slots.forEach(slotInfo => {
-                    // Nếu slot bị bận (available: false), gán attribute disabled để css grey out
                     let isDisabled = !slotInfo.available ? 'disabled' : '';
                     let btn = $(`<button class="themebutton slot-btn" ${isDisabled}>${slotInfo.time}</button>`);
                     
@@ -311,17 +310,14 @@
             }
         }
 
-        // TÙY CHỈNH TOOLTIP VALIDATION FORM KIỂU NIER BỔ SUNG VALIDATE EMAIL
         $('#booking-form').submit(function(e) {
             e.preventDefault();
             
-            // Xóa tooltip cũ nếu có
             $('.nier-error-tooltip').remove();
             $('.nier-input, .nier-textarea').css('border-color', 'var(--nier-dark)');
             
             let isValid = true;
             
-            // Validate trường Tên
             const nameField = $('#b-name');
             if (nameField.val().trim() === "") {
                 isValid = false;
@@ -329,10 +325,9 @@
                 nameField.parent().append('<div class="nier-error-tooltip">Please fill out this field.</div>');
             }
 
-            // Validate trường Email bằng Regex
             const emailField = $('#b-email');
             const emailVal = emailField.val().trim();
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Biểu thức chuẩn để check format email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
             
             if (emailVal === "") {
                 isValid = false;
@@ -345,11 +340,11 @@
             }
 
             if (!isValid) {
-                playNierSound('core_52'); // Phát tiếng tít cảnh báo lỗi nếu form sai
+                playNierSound('core_52'); 
                 return;
             }
             
-            playNierSound('core_58'); // Bấm submit thành công khi mọi thứ xanh mượt
+            playNierSound('core_58'); 
 
             const payload = {
                 date: selectedDateStr, time: selectedTimeStr,
