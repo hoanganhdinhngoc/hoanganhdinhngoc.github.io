@@ -84,7 +84,7 @@
             GITHUB_OWNER: "hoanganhdinhngoc",                 // Tên tài khoản GitHub
             GITHUB_REPO: "hoanganhdinhngoc",                  // Tên Repository chứa file
             BRANCH: "main",                                   // Nhánh chứa dữ liệu (thường là main hoặc master)
-            BASE_FOLDER: "demos",                             // Thư mục gốc muốn hiển thị (VD: "demos" hoặc "src"). 
+            BASE_FOLDER: "",                             // Thư mục gốc muốn hiển thị (VD: "demos" hoặc "src"). 
             PREVIEW_DOMAIN: "https://hoanganhdinhngoc.pages.dev" // Tên miền gốc để sinh ra link public khi bấm vào file
         };
         // =========================================================================
@@ -192,8 +192,13 @@
                     });
                 }
             });
-            if (fullTreeData[CONFIG.BASE_FOLDER]) {
+
+            if (CONFIG.BASE_FOLDER === "") {
+                renderColumn(0, fullTreeData, CONFIG.GITHUB_REPO);
+            } else if (fullTreeData[CONFIG.BASE_FOLDER]) {
                 renderColumn(0, fullTreeData[CONFIG.BASE_FOLDER]._content, CONFIG.BASE_FOLDER);
+            } else {
+                document.getElementById('miller-container').innerHTML = `<p style="padding: 20px; color: var(--nier-text-light);">Kho lưu trữ trống hoặc không tìm thấy thư mục "${CONFIG.BASE_FOLDER}".</p>`;
             }
         }
 
