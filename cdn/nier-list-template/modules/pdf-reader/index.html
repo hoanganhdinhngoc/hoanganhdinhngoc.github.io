@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png">
     <title>Nier PDF Document</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -78,6 +78,10 @@
             transition: background 0.3s, border-color 0.3s;
         }
 
+        .top-bar-header { flex: 1; display: flex; align-items: center; gap: 10px; }
+        .pagination-group { flex: 1; display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .right-controls { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+
         .title-main {
             font-size: 18px;
             text-shadow: 2px 2px rgba(100, 98, 86, .3);
@@ -85,7 +89,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 350px;
             font-weight: 700;
         }
 
@@ -134,10 +137,18 @@
             background-position: left bottom;
         }
 
-        .separator {
-            font-weight: bold;
-            font-size: 16px;
+        .separator { font-weight: bold; font-size: 16px; }
+
+        /* Rotate Icon Animation */
+        .rotate-90 {
+            transform: rotate(90deg);
         }
+        #fit-icon {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .mobile-only { display: none !important; }
+        .mobile-text { display: none; }
 
         /* ----- CONTENT AREA ----- */
         .content-area {
@@ -147,7 +158,7 @@
             position: relative;
         }
 
-        /* ----- SIDEBAR ----- */
+        /* ----- LEFT SIDEBAR ----- */
         .sidebar {
             width: 250px;
             flex-shrink: 0;
@@ -161,9 +172,7 @@
             z-index: 10;
         }
 
-        .sidebar.closed {
-            margin-left: -250px;
-        }
+        .sidebar.closed { margin-left: -250px; }
 
         .sidebar-thumbnails {
             padding: 15px;
@@ -187,7 +196,7 @@
             max-width: 100%;
             height: auto;
             box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            background: #fff; /* PDF Pages always white natively */
+            background: #fff;
         }
 
         .thumbnail-wrapper.active {
@@ -195,20 +204,15 @@
             background: rgba(100, 98, 86, 0.4);
         }
 
-        .thumbnail-number {
-            font-size: 12px;
-            font-weight: bold;
-            margin-top: 5px;
-            color: var(--nier-dark);
-        }
+        .thumbnail-number { font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--nier-dark); }
 
         /* ----- MAIN VIEWER ----- */
         .main-viewer {
             flex: 1;
-            overflow-y: auto;
+            overflow: auto;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Tự động căn giữa không gian trống */
+            align-items: center;
             padding: 30px 0;
             background: rgba(100, 98, 86, 0.05);
             scroll-behavior: smooth;
@@ -217,7 +221,7 @@
         .page-wrapper {
             margin-bottom: 25px;
             box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
-            background: #fff; /* Nền trang PDF luôn trắng chuẩn */
+            background: #fff;
             position: relative;
         }
 
@@ -231,11 +235,41 @@
             text-shadow: 2px 2px rgba(100, 98, 86, .5);
         }
 
+        /* ----- RESPONSIVE (MOBILE & TABLET) ----- */
         @media (max-width: 920px) {
-            .top-bar { flex-direction: column; gap: 10px; }
-            .title-main { max-width: 100%; }
-            .toolbar-group { justify-content: center; width: 100%; flex-wrap: wrap; }
-            .sidebar { position: absolute; height: 100%; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
+            .top-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 10px; }
+            .top-bar-header { width: 100%; justify-content: space-between; }
+            .pagination-group { width: 100%; order: 2; margin-bottom: 5px; }
+            .right-controls { display: none !important; /* Thay thế bằng Right Sidebar */ }
+            
+            .title-main { flex: 1; text-align: left; padding: 0 10px; font-size: 16px; }
+            .zoom-group { display: none !important; }
+            .mobile-only { display: flex !important; }
+            .mobile-text { display: inline-block; margin-left: 10px; font-size: 14px; }
+
+            /* Left Sidebar Overlays Main Content */
+            .sidebar { position: absolute; height: 100%; box-shadow: 5px 0 15px rgba(0,0,0,0.5); z-index: 50; }
+
+            /* Right Burger Menu Sidebar */
+            #right-sidebar {
+                position: absolute;
+                top: 0;
+                right: -250px;
+                width: 220px;
+                height: 100%;
+                background: var(--nier-beige);
+                border-left: 2px solid var(--nier-dark);
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 20px;
+                gap: 15px;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+                z-index: 50;
+                box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            }
+            #right-sidebar.open { right: 0; }
+            #right-sidebar .themebutton { justify-content: flex-start; padding: 12px 20px; }
         }
     </style>
 </head>
@@ -245,12 +279,13 @@
 
     <div class="coreSystem">
         <div class="top-bar">
-            <div class="toolbar-group">
+            <div class="top-bar-header">
                 <button class="themebutton" id="toggle-sidebar" title="Toggle Sidebar"><i class="fas fa-bars"></i></button>
                 <h1 class="title-main" id="pdf-title">Nier PDF Document</h1>
+                <button class="themebutton mobile-only" id="toggle-right-sidebar" title="Menu"><i class="fas fa-ellipsis-v"></i></button>
             </div>
             
-            <div class="toolbar-group">
+            <div class="pagination-group">
                 <button class="themebutton" id="prev-page"><i class="fas fa-chevron-left"></i></button>
                 <input type="number" id="page-num" class="toolzone" value="1" min="1">
                 <span class="separator">/</span>
@@ -258,61 +293,99 @@
                 <button class="themebutton" id="next-page"><i class="fas fa-chevron-right"></i></button>
             </div>
 
-            <div class="toolbar-group">
-                <button class="themebutton" id="zoom-out"><i class="fas fa-search-minus"></i></button>
-                <span class="separator" id="zoom-val">100%</span>
-                <button class="themebutton" id="zoom-in"><i class="fas fa-search-plus"></i></button>
-                <button class="themebutton" id="fit-width"><i class="fas fa-arrows-alt-h"></i></button>
-            </div>
-
-            <div class="toolbar-group">
-                <button class="themebutton" id="toggle-theme" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="theme-icon"></i></button>
-                <button class="themebutton" id="download-pdf" title="Download"><i class="fas fa-download"></i></button>
-                <button class="themebutton" id="print-pdf" title="Print"><i class="fas fa-print"></i></button>
+            <div class="right-controls">
+                <div class="toolbar-group zoom-group">
+                    <button class="themebutton" id="zoom-out"><i class="fas fa-search-minus"></i></button>
+                    <span class="separator" id="zoom-val">100%</span>
+                    <button class="themebutton" id="zoom-in"><i class="fas fa-search-plus"></i></button>
+                    <button class="themebutton" id="fit-width" title="Toggle Fit Width"><i class="fas fa-arrows-alt-h" id="fit-icon"></i></button>
+                </div>
+                <div class="toolbar-group tools-group">
+                    <button class="themebutton toggle-theme-btn" title="Toggle Dark/Light Mode"><i class="fas fa-moon theme-icon-el"></i></button>
+                    <button class="themebutton download-pdf-btn" title="Download"><i class="fas fa-download"></i></button>
+                    <button class="themebutton print-pdf-btn" title="Print"><i class="fas fa-print"></i></button>
+                </div>
             </div>
         </div>
 
         <div class="content-area">
             <div class="sidebar" id="sidebar">
-                <div class="sidebar-thumbnails" id="sidebar-thumbnails">
-                    </div>
+                <div class="sidebar-thumbnails" id="sidebar-thumbnails"></div>
             </div>
 
             <div class="main-viewer" id="main-viewer">
                 <div id="loading-msg">INITIALIZING SYSTEM...</div>
-                </div>
+            </div>
+
+            <div id="right-sidebar" class="mobile-only">
+                <button class="themebutton toggle-theme-btn"><i class="fas fa-moon theme-icon-el"></i> <span class="mobile-text">Dark Mode</span></button>
+                <button class="themebutton download-pdf-btn"><i class="fas fa-download"></i> <span class="mobile-text">Download File</span></button>
+                <button class="themebutton print-pdf-btn"><i class="fas fa-print"></i> <span class="mobile-text">Print Document</span></button>
+            </div>
         </div>
     </div>
 
     <iframe id="print-frame" style="display:none;"></iframe>
 
     <script>
-        // Chỉ giữ lại âm thanh hover, vô hiệu hóa âm thanh click tránh ồn
         const hoverSound = document.getElementById("hover-sound");
         $(document).on('mouseenter', '.themebutton, .toolzone, .thumbnail-wrapper', () => { 
             hoverSound.currentTime = 0; hoverSound.play(); 
         });
 
-        // Toggle Sidebar
+        // 1. Quản lý Đóng Mở Sidebar Trái / Phải
         const sidebar = document.getElementById('sidebar');
-        document.getElementById('toggle-sidebar').addEventListener('click', () => {
+        const rightSidebar = document.getElementById('right-sidebar');
+        const btnToggleLeft = document.getElementById('toggle-sidebar');
+        const btnToggleRight = document.getElementById('toggle-right-sidebar');
+
+        // Mặc định đóng sidebar trái trên Mobile
+        if (window.innerWidth <= 920) {
+            sidebar.classList.add('closed');
+        }
+
+        btnToggleLeft.addEventListener('click', () => {
             sidebar.classList.toggle('closed');
+            if (window.innerWidth <= 920) rightSidebar.classList.remove('open');
         });
 
-        // Toggle Dark/Light Theme
-        let isDarkTheme = false;
-        document.getElementById('toggle-theme').addEventListener('click', () => {
-            isDarkTheme = !isDarkTheme;
-            const icon = document.getElementById('theme-icon');
-            if(isDarkTheme) {
-                document.body.setAttribute('data-theme', 'dark');
-                icon.classList.replace('fa-moon', 'fa-sun');
-            } else {
-                document.body.removeAttribute('data-theme');
-                icon.classList.replace('fa-sun', 'fa-moon');
+        btnToggleRight.addEventListener('click', () => {
+            rightSidebar.classList.toggle('open');
+            sidebar.classList.add('closed');
+        });
+
+        // Tự động đóng sidebar khi click ra ngoài (chỉ kích hoạt trên màn hình nhỏ)
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 920) {
+                // Click ra ngoài Left Sidebar
+                if (!sidebar.contains(e.target) && !btnToggleLeft.contains(e.target)) {
+                    sidebar.classList.add('closed');
+                }
+                // Click ra ngoài Right Sidebar
+                if (!rightSidebar.contains(e.target) && !btnToggleRight.contains(e.target)) {
+                    rightSidebar.classList.remove('open');
+                }
             }
         });
 
+        // 2. Quản lý Dark/Light Theme (Dùng chung cho Desktop và Mobile buttons)
+        let isDarkTheme = false;
+        const themeBtns = document.querySelectorAll('.toggle-theme-btn');
+        themeBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                isDarkTheme = !isDarkTheme;
+                const icons = document.querySelectorAll('.theme-icon-el');
+                if(isDarkTheme) {
+                    document.body.setAttribute('data-theme', 'dark');
+                    icons.forEach(i => i.classList.replace('fa-moon', 'fa-sun'));
+                } else {
+                    document.body.removeAttribute('data-theme');
+                    icons.forEach(i => i.classList.replace('fa-sun', 'fa-moon'));
+                }
+            });
+        });
+
+        // 3. Khởi tạo PDF
         const urlParams = new URLSearchParams(window.location.search);
         const pdfUrl = urlParams.get('file');
         
@@ -327,7 +400,8 @@
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
         let pdfDoc = null;
-        let scale = 1.0; // Mặc định luôn là 100%
+        let scale = 1.0; 
+        let isFitWidthMode = false;
         let pageViewports = []; 
         let renderQueue = [];
         let isRendering = false;
@@ -335,7 +409,6 @@
         const mainViewer = document.getElementById('main-viewer');
         const sidebarThumbnails = document.getElementById('sidebar-thumbnails');
         
-        // Hàm hàng đợi xử lý render để trình duyệt không bị đóng băng
         async function processRenderQueue() {
             if (isRendering || renderQueue.length === 0) return;
             isRendering = true;
@@ -350,16 +423,15 @@
             processRenderQueue();
         }
 
-        // Tự động nhảy số trang khi cuộn
+        // Nhảy trang khi scroll
         mainViewer.addEventListener('scroll', () => {
             let closestPage = 1;
             let minDistance = Infinity;
             const wrappers = document.querySelectorAll('.page-wrapper');
-            const viewerTop = mainViewer.getBoundingClientRect().top; // Tọa độ top của vùng nhìn
+            const viewerTop = mainViewer.getBoundingClientRect().top;
 
             wrappers.forEach(wrapper => {
                 const rect = wrapper.getBoundingClientRect();
-                // Khoảng cách từ đỉnh viewport đến đỉnh của mỗi trang
                 const distance = Math.abs(rect.top - viewerTop);
                 if (distance < minDistance) {
                     minDistance = distance;
@@ -367,34 +439,30 @@
                 }
             });
 
-            // Cập nhật giao diện nếu trang đổi
             const currentInput = document.getElementById('page-num');
             if(currentInput.value !== closestPage) {
                 currentInput.value = closestPage;
-                // Highlight Sidebar
                 document.querySelectorAll('.thumbnail-wrapper').forEach(t => t.classList.remove('active'));
                 const activeThumb = document.getElementById(`thumb-${closestPage}`);
                 if(activeThumb) {
                     activeThumb.classList.add('active');
-                    // Tự động cuộn sidebar theo nhẹ nhàng
                     activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 }
             }
         });
 
-        // Hàm cuộn tới trang cụ thể (Từ Sidebar hoặc Input/Nút)
         function scrollToPage(num) {
             const targetPage = document.getElementById(`page-${num}`);
             if(targetPage) {
                 targetPage.scrollIntoView({ behavior: 'smooth' });
+                // Trên mobile, bấm xong tự đóng sidebar cho thoáng
+                if (window.innerWidth <= 920) sidebar.classList.add('closed');
             }
         }
 
-        // Quản lý Zoom
+        // 4. Logic Zoom & Toggle Fit Width
         function updateZoomUI() {
             document.getElementById('zoom-val').innerText = Math.round(scale * 100) + '%';
-            
-            // Xóa toàn bộ render cũ, chỉnh lại khung và bắt đầu hứng Intersection Observer lại
             document.querySelectorAll('.page-wrapper').forEach(wrapper => {
                 const num = wrapper.dataset.page;
                 const canvas = wrapper.querySelector('canvas');
@@ -409,16 +477,35 @@
             });
         }
 
-        const zoomIn = () => { scale += 0.25; updateZoomUI(); };
-        const zoomOut = () => { if (scale <= 0.5) return; scale -= 0.25; updateZoomUI(); };
-        const fitWidth = () => {
-            // Lấy trang 1 làm hệ quy chiếu tính tỷ lệ Fit
-            const containerWidth = mainViewer.clientWidth - 50; 
-            scale = containerWidth / pageViewports[1].width;
-            updateZoomUI();
+        const resetFitWidth = () => {
+            if (isFitWidthMode) {
+                isFitWidthMode = false;
+                document.getElementById('fit-icon').classList.remove('rotate-90');
+            }
         };
 
-        // Bắt sự kiện Toolbar
+        const zoomIn = () => { scale += 0.25; resetFitWidth(); updateZoomUI(); };
+        const zoomOut = () => { if (scale <= 0.5) return; scale -= 0.25; resetFitWidth(); updateZoomUI(); };
+        
+        document.getElementById('fit-width').addEventListener('click', () => {
+            if (!isFitWidthMode) {
+                // Kích hoạt Fit Width
+                const containerWidth = mainViewer.clientWidth - 50; // Trừ hao khoảng padding và scrollbar
+                scale = containerWidth / pageViewports[1].width;
+                isFitWidthMode = true;
+                document.getElementById('fit-icon').classList.add('rotate-90');
+            } else {
+                // Trở về mặc định 100%
+                scale = 1.0;
+                resetFitWidth(); // Sẽ bỏ biến cờ và xoay lại icon
+            }
+            updateZoomUI();
+        });
+
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+
+        // 5. Events Toolbars
         document.getElementById('prev-page').addEventListener('click', () => {
             let cur = parseInt(document.getElementById('page-num').value);
             if (cur > 1) scrollToPage(cur - 1);
@@ -427,26 +514,28 @@
             let cur = parseInt(document.getElementById('page-num').value);
             if (cur < pdfDoc.numPages) scrollToPage(cur + 1);
         });
-        document.getElementById('zoom-in').addEventListener('click', zoomIn);
-        document.getElementById('zoom-out').addEventListener('click', zoomOut);
-        document.getElementById('fit-width').addEventListener('click', fitWidth);
-        document.getElementById('download-pdf').addEventListener('click', () => {
+        document.getElementById('page-num').addEventListener('change', (e) => {
+            let num = parseInt(e.target.value);
+            if(num >= 1 && num <= pdfDoc.numPages) scrollToPage(num);
+            else e.target.value = 1;
+        });
+
+        // Download / Print dùng chung
+        const downloadFile = () => {
             if (!pdfUrl) return;
             const a = document.createElement('a');
             a.href = pdfUrl; a.download = pdfTitleRaw.endsWith('.pdf') ? pdfTitleRaw : pdfTitleRaw + ".pdf";
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        });
-        document.getElementById('print-pdf').addEventListener('click', () => {
+        };
+        const printDoc = () => {
             if (!pdfUrl) return;
             const iframe = document.getElementById('print-frame');
             iframe.src = pdfUrl;
             iframe.onload = () => { iframe.contentWindow.print(); };
-        });
-        document.getElementById('page-num').addEventListener('change', (e) => {
-            let num = parseInt(e.target.value);
-            if(num >= 1 && num <= pdfDoc.numPages) scrollToPage(num);
-            else e.target.value = 1; // Revert nếu sai
-        });
+        };
+
+        document.querySelectorAll('.download-pdf-btn').forEach(btn => btn.addEventListener('click', downloadFile));
+        document.querySelectorAll('.print-pdf-btn').forEach(btn => btn.addEventListener('click', printDoc));
 
         // INIT SYSTEM
         if(pdfUrl) {
@@ -455,7 +544,6 @@
                 document.getElementById('page-count').textContent = pdfDoc.numPages;
                 document.getElementById('loading-msg').innerText = "CALCULATING MATRICES...";
 
-                // Lấy kích thước chuẩn (Viewports) của toàn bộ các trang trước
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     const page = await pdfDoc.getPage(num);
                     pageViewports[num] = page.getViewport({ scale: 1.0 });
@@ -463,7 +551,6 @@
 
                 document.getElementById('loading-msg').style.display = 'none';
 
-                // Intersection Observer theo dõi: Trang nào lọt vào màn hình mới đem đi Render để tối ưu bộ nhớ
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
@@ -472,7 +559,6 @@
                                 canvas.dataset.rendered = 'true';
                                 const num = entry.target.dataset.page;
                                 enqueueRenderTask(async () => {
-                                    // Bỏ qua nếu user zoom liên tục lúc đang ở trong hàng đợi
                                     if(canvas.dataset.rendered === 'false') return; 
                                     const page = await pdfDoc.getPage(parseInt(num));
                                     const viewport = page.getViewport({scale: scale});
@@ -485,11 +571,10 @@
                     });
                 }, { root: mainViewer, rootMargin: '500px 0px' });
 
-                // Dựng DOM Khung Trang & Thumbnails
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     const vp = pageViewports[num];
 
-                    // 1. Dựng Thumbnail cho Sidebar
+                    // Thumbnail
                     const thumbWrap = document.createElement('div');
                     thumbWrap.className = 'thumbnail-wrapper' + (num === 1 ? ' active' : '');
                     thumbWrap.id = `thumb-${num}`;
@@ -504,7 +589,6 @@
                     thumbWrap.appendChild(numDiv);
                     sidebarThumbnails.appendChild(thumbWrap);
 
-                    // Xếp Thumbnail vào hàng đợi Render (Kích thước nhỏ ~0.2)
                     enqueueRenderTask(async () => {
                         const page = await pdfDoc.getPage(num);
                         const thumbVp = page.getViewport({scale: 0.2});
@@ -513,7 +597,7 @@
                         await page.render({canvasContext: thumbCanvas.getContext('2d'), viewport: thumbVp}).promise;
                     });
 
-                    // 2. Dựng Main Page (Trang chính lớn)
+                    // Main Page
                     const pageWrap = document.createElement('div');
                     pageWrap.className = 'page-wrapper';
                     pageWrap.id = `page-${num}`;
@@ -522,11 +606,10 @@
                     pageWrap.style.height = (vp.height * scale) + 'px';
 
                     const mainCanvas = document.createElement('canvas');
-                    mainCanvas.dataset.rendered = 'false'; // Cờ đánh dấu chưa render thực tế
+                    mainCanvas.dataset.rendered = 'false'; 
                     pageWrap.appendChild(mainCanvas);
                     mainViewer.appendChild(pageWrap);
 
-                    // Đăng ký cho khung trang này vào Observer để render lười (Lazy Render)
                     observer.observe(pageWrap);
                 }
 
