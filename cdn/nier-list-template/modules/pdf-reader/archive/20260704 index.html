@@ -15,6 +15,7 @@
         @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
 
         :root {
+            /* Light Theme Variables */
             --nier-dark: #4b4340;
             --nier-beige: #ccc6b0;
             --nier-panel: rgba(216, 210, 186, .5);
@@ -24,6 +25,7 @@
         }
 
         [data-theme="dark"] {
+            /* Dark Theme Variables */
             --nier-dark: #d3cebb;
             --nier-beige: #201e1d;
             --nier-panel: rgba(45, 42, 40, 0.8);
@@ -33,7 +35,9 @@
         }
 
         * {
-            box-sizing: border-box; margin: 0; padding: 0;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
             scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
             scrollbar-width: auto;
         }
@@ -54,14 +58,23 @@
         }
 
         .coreSystem {
-            width: 100vw; height: 100vh; display: flex; flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
         }
 
+        /* ----- TOP BAR ----- */
         .top-bar {
-            background: var(--nier-panel); border-bottom: 2px solid var(--nier-dark);
-            padding: 10px 20px; display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0px 2px 10px rgba(0,0,0,0.2); z-index: 20;
+            background: var(--nier-panel);
+            border-bottom: 2px solid var(--nier-dark);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.2);
+            z-index: 20;
             transition: background 0.3s, border-color 0.3s;
         }
 
@@ -70,86 +83,189 @@
         .right-controls { flex: 1; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
 
         .title-main {
-            font-size: 18px; text-shadow: 2px 2px rgba(100, 98, 86, .3);
-            text-transform: uppercase; white-space: nowrap; overflow: hidden;
-            text-overflow: ellipsis; font-weight: 700;
+            font-size: 18px;
+            text-shadow: 2px 2px rgba(100, 98, 86, .3);
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 700;
         }
 
-        .toolbar-group { display: flex; align-items: center; gap: 10px; }
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         .toolzone {
-            padding: 6px; font-family: 'Montserrat', sans-serif; font-size: 14px;
-            font-weight: bold; border: 2px solid var(--nier-dark);
-            background: rgba(100, 98, 86, 0.2); color: var(--nier-dark);
-            outline: none; text-align: center; width: 60px; transition: all 0.3s;
+            padding: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            border: 2px solid var(--nier-dark);
+            background: rgba(100, 98, 86, 0.2);
+            color: var(--nier-dark);
+            outline: none;
+            text-align: center;
+            width: 60px;
+            transition: all 0.3s;
         }
 
         .themebutton {
-            cursor: pointer; padding: 6px 12px; font-size: 13px; font-weight: bold;
-            color: var(--nier-dark); border: 2px solid var(--nier-dark);
-            background: var(--nier-bg-btn); background-size: 200% 100%;
-            background-position: right bottom; transition: all .2s ease-out;
-            font-family: 'Montserrat', sans-serif; text-transform: uppercase;
-            display: flex; align-items: center; justify-content: center; gap: 6px; min-width: 35px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--nier-dark);
+            border: 2px solid var(--nier-dark);
+            background: var(--nier-bg-btn);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            min-width: 35px;
         }
 
-        .themebutton:hover { color: var(--nier-text-invert); background-position: left bottom; }
+        .themebutton:hover {
+            color: var(--nier-text-invert);
+            background-position: left bottom;
+        }
+
         .separator { font-weight: bold; font-size: 16px; }
-        .rotate-90 { transform: rotate(90deg); }
-        #fit-icon { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* Rotate Icon Animation */
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+        #fit-icon {
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         .mobile-only { display: none !important; }
         .mobile-text { display: none; }
 
-        .content-area { display: flex; flex: 1; overflow: hidden; position: relative; }
-
-        .sidebar {
-            width: 250px; flex-shrink: 0; background: var(--nier-panel);
-            border-right: 2px solid var(--nier-dark); display: flex; flex-direction: column;
-            overflow-y: auto; transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s;
-            margin-left: 0; z-index: 10;
+        /* ----- CONTENT AREA ----- */
+        .content-area {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            position: relative;
         }
+
+        /* ----- LEFT SIDEBAR ----- */
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: var(--nier-panel);
+            border-right: 2px solid var(--nier-dark);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s;
+            margin-left: 0;
+            z-index: 10;
+        }
+
         .sidebar.closed { margin-left: -250px; }
 
-        .sidebar-thumbnails { padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
+        .sidebar-thumbnails {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
 
         .thumbnail-wrapper {
-            cursor: pointer; border: 2px solid transparent; padding: 4px; text-align: center;
-            transition: all 0.2s; background: rgba(100, 98, 86, 0.1); width: 100%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            padding: 4px;
+            text-align: center;
+            transition: all 0.2s;
+            background: rgba(100, 98, 86, 0.1);
+            width: 100%;
         }
-        .thumbnail-wrapper canvas { max-width: 100%; height: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.3); background: #fff; }
-        .thumbnail-wrapper.active { border-color: var(--nier-dark); background: rgba(100, 98, 86, 0.4); }
+
+        .thumbnail-wrapper canvas {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background: #fff;
+        }
+
+        .thumbnail-wrapper.active {
+            border-color: var(--nier-dark);
+            background: rgba(100, 98, 86, 0.4);
+        }
+
         .thumbnail-number { font-size: 12px; font-weight: bold; margin-top: 5px; color: var(--nier-dark); }
 
+        /* ----- MAIN VIEWER ----- */
         .main-viewer {
-            flex: 1; overflow: auto; display: flex; flex-direction: column; align-items: center;
-            padding: 30px 0; background: rgba(100, 98, 86, 0.05); scroll-behavior: smooth;
+            flex: 1;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            background: rgba(100, 98, 86, 0.05);
+            scroll-behavior: smooth;
         }
 
         .page-wrapper {
-            margin-bottom: 25px; box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
-            background: #fff; position: relative;
+            margin-bottom: 25px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+            background: #fff;
+            position: relative;
         }
 
         #loading-msg {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 24px; font-weight: bold; text-shadow: 2px 2px rgba(100, 98, 86, .5);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px rgba(100, 98, 86, .5);
         }
 
+        /* ----- RESPONSIVE (MOBILE & TABLET) ----- */
         @media (max-width: 920px) {
             .top-bar { flex-direction: column; align-items: stretch; gap: 10px; padding: 10px; }
             .top-bar-header { width: 100%; justify-content: space-between; }
             .pagination-group { width: 100%; order: 2; margin-bottom: 5px; }
-            .right-controls { display: none !important; }
+            .right-controls { display: none !important; /* Thay thế bằng Right Sidebar */ }
+            
             .title-main { flex: 1; text-align: left; padding: 0 10px; font-size: 16px; }
             .zoom-group { display: none !important; }
             .mobile-only { display: flex !important; }
             .mobile-text { display: inline-block; margin-left: 10px; font-size: 14px; }
+
+            /* Left Sidebar Overlays Main Content */
             .sidebar { position: absolute; height: 100%; box-shadow: 5px 0 15px rgba(0,0,0,0.5); z-index: 50; }
+
+            /* Right Burger Menu Sidebar */
             #right-sidebar {
-                position: absolute; top: 0; right: -250px; width: 220px; height: 100%;
-                background: var(--nier-beige); border-left: 2px solid var(--nier-dark);
-                display: flex; flex-direction: column; align-items: stretch; padding: 20px; gap: 15px;
-                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s; z-index: 50;
+                position: absolute;
+                top: 0;
+                right: -250px;
+                width: 220px;
+                height: 100%;
+                background: var(--nier-beige);
+                border-left: 2px solid var(--nier-dark);
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                padding: 20px;
+                gap: 15px;
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s;
+                z-index: 50;
                 box-shadow: -5px 0 15px rgba(0,0,0,0.5);
             }
             #right-sidebar.open { right: 0; }
@@ -196,9 +312,11 @@
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-thumbnails" id="sidebar-thumbnails"></div>
             </div>
+
             <div class="main-viewer" id="main-viewer">
                 <div id="loading-msg">INITIALIZING SYSTEM...</div>
             </div>
+
             <div id="right-sidebar" class="mobile-only">
                 <button class="themebutton toggle-theme-btn"><i class="fas fa-moon theme-icon-el"></i> <span class="mobile-text">Dark Mode</span></button>
                 <button class="themebutton download-pdf-btn"><i class="fas fa-download"></i> <span class="mobile-text">Download File</span></button>
@@ -215,12 +333,16 @@
             hoverSound.currentTime = 0; hoverSound.play(); 
         });
 
+        // 1. Quản lý Đóng Mở Sidebar Trái / Phải
         const sidebar = document.getElementById('sidebar');
         const rightSidebar = document.getElementById('right-sidebar');
         const btnToggleLeft = document.getElementById('toggle-sidebar');
         const btnToggleRight = document.getElementById('toggle-right-sidebar');
 
-        if (window.innerWidth <= 920) sidebar.classList.add('closed');
+        // Mặc định đóng sidebar trái trên Mobile
+        if (window.innerWidth <= 920) {
+            sidebar.classList.add('closed');
+        }
 
         btnToggleLeft.addEventListener('click', () => {
             sidebar.classList.toggle('closed');
@@ -232,15 +354,24 @@
             sidebar.classList.add('closed');
         });
 
+        // Tự động đóng sidebar khi click ra ngoài (chỉ kích hoạt trên màn hình nhỏ)
         document.addEventListener('click', (e) => {
             if (window.innerWidth <= 920) {
-                if (!sidebar.contains(e.target) && !btnToggleLeft.contains(e.target)) sidebar.classList.add('closed');
-                if (!rightSidebar.contains(e.target) && !btnToggleRight.contains(e.target)) rightSidebar.classList.remove('open');
+                // Click ra ngoài Left Sidebar
+                if (!sidebar.contains(e.target) && !btnToggleLeft.contains(e.target)) {
+                    sidebar.classList.add('closed');
+                }
+                // Click ra ngoài Right Sidebar
+                if (!rightSidebar.contains(e.target) && !btnToggleRight.contains(e.target)) {
+                    rightSidebar.classList.remove('open');
+                }
             }
         });
 
+        // 2. Quản lý Dark/Light Theme (Dùng chung cho Desktop và Mobile buttons)
         let isDarkTheme = false;
-        document.querySelectorAll('.toggle-theme-btn').forEach(btn => {
+        const themeBtns = document.querySelectorAll('.toggle-theme-btn');
+        themeBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 isDarkTheme = !isDarkTheme;
                 const icons = document.querySelectorAll('.theme-icon-el');
@@ -254,6 +385,7 @@
             });
         });
 
+        // 3. Khởi tạo PDF
         const urlParams = new URLSearchParams(window.location.search);
         const pdfUrl = urlParams.get('file');
         
@@ -271,65 +403,27 @@
         let scale = 1.0; 
         let isFitWidthMode = false;
         let pageViewports = []; 
-        
-        // CÁC BIẾN QUẢN LÝ RENDER THÔNG MINH
-        let visiblePages = new Set();
-        let renderTasks = {}; 
+        let renderQueue = [];
+        let isRendering = false;
 
         const mainViewer = document.getElementById('main-viewer');
         const sidebarThumbnails = document.getElementById('sidebar-thumbnails');
         
-        // HÀM VẼ TRANG ĐƠN LẺ
-        async function renderPage(num) {
-            const wrapper = document.getElementById(`page-${num}`);
-            const canvas = wrapper.querySelector('canvas');
-
-            // Bỏ qua nếu trang đã được vẽ ở đúng tỷ lệ scale hiện tại
-            if (canvas.dataset.renderedScale == scale) return;
-
-            // Nếu đang vẽ dở một tỷ lệ cũ, hủy ngay lập tức để tiết kiệm CPU
-            if (renderTasks[num]) {
-                if (renderTasks[num].scale !== scale) {
-                    renderTasks[num].task.cancel();
-                } else {
-                    return; 
-                }
-            }
-
-            canvas.dataset.renderedScale = 'rendering';
-            const ctx = canvas.getContext('2d', { willReadFrequently: true });
-
-            try {
-                const page = await pdfDoc.getPage(num);
-                const viewport = page.getViewport({ scale: scale });
-                canvas.width = viewport.width;
-                canvas.height = viewport.height;
-                wrapper.style.width = viewport.width + 'px';
-                wrapper.style.height = viewport.height + 'px';
-
-                const renderTask = page.render({ canvasContext: ctx, viewport: viewport });
-                renderTasks[num] = { task: renderTask, scale: scale };
-
-                await renderTask.promise;
-                canvas.dataset.renderedScale = scale; // Vẽ thành công
-            } catch (e) {
-                if (e.name !== 'RenderingCancelledException') {
-                    console.error('Lỗi khi vẽ trang:', e);
-                    canvas.dataset.renderedScale = 'error';
-                }
-            } finally {
-                delete renderTasks[num]; // Xóa task khỏi bộ nhớ
-            }
+        async function processRenderQueue() {
+            if (isRendering || renderQueue.length === 0) return;
+            isRendering = true;
+            const task = renderQueue.shift();
+            try { await task(); } catch(e) { console.error(e); }
+            isRendering = false;
+            processRenderQueue();
         }
 
-        // HÀM GỌI VẼ TOÀN BỘ CÁC TRANG ĐANG HIỂN THỊ TRONG MÀN HÌNH
-        function renderVisiblePages() {
-            visiblePages.forEach(num => {
-                renderPage(num);
-            });
+        function enqueueRenderTask(task) {
+            renderQueue.push(task);
+            processRenderQueue();
         }
 
-        // TRACKING CUỘN TRANG CỰC MƯỢT
+        // Nhảy trang khi scroll
         mainViewer.addEventListener('scroll', () => {
             let closestPage = 1;
             let minDistance = Infinity;
@@ -361,24 +455,26 @@
             const targetPage = document.getElementById(`page-${num}`);
             if(targetPage) {
                 targetPage.scrollIntoView({ behavior: 'smooth' });
+                // Trên mobile, bấm xong tự đóng sidebar cho thoáng
                 if (window.innerWidth <= 920) sidebar.classList.add('closed');
             }
         }
 
-        // ZOOM XỬ LÝ LẠI - KHÔNG XÓA TRẮNG NẾU CHƯA VẼ XONG, RENDER LẠI NGAY VÙNG NHÌN THẤY
+        // 4. Logic Zoom & Toggle Fit Width
         function updateZoomUI() {
             document.getElementById('zoom-val').innerText = Math.round(scale * 100) + '%';
-            
             document.querySelectorAll('.page-wrapper').forEach(wrapper => {
                 const num = wrapper.dataset.page;
+                const canvas = wrapper.querySelector('canvas');
                 const vp = pageViewports[num];
-                // Cập nhật lại kích thước khung chứa ngay lập tức để không bị nhảy trang
+                
                 wrapper.style.width = (vp.width * scale) + 'px';
                 wrapper.style.height = (vp.height * scale) + 'px';
+                
+                canvas.dataset.rendered = 'false';
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
             });
-
-            // Lập tức gọi vẽ lại những trang đang hiển thị
-            renderVisiblePages();
         }
 
         const resetFitWidth = () => {
@@ -393,13 +489,15 @@
         
         document.getElementById('fit-width').addEventListener('click', () => {
             if (!isFitWidthMode) {
-                const containerWidth = mainViewer.clientWidth - 50; 
+                // Kích hoạt Fit Width
+                const containerWidth = mainViewer.clientWidth - 50; // Trừ hao khoảng padding và scrollbar
                 scale = containerWidth / pageViewports[1].width;
                 isFitWidthMode = true;
                 document.getElementById('fit-icon').classList.add('rotate-90');
             } else {
+                // Trở về mặc định 100%
                 scale = 1.0;
-                resetFitWidth(); 
+                resetFitWidth(); // Sẽ bỏ biến cờ và xoay lại icon
             }
             updateZoomUI();
         });
@@ -407,6 +505,7 @@
         document.getElementById('zoom-in').addEventListener('click', zoomIn);
         document.getElementById('zoom-out').addEventListener('click', zoomOut);
 
+        // 5. Events Toolbars
         document.getElementById('prev-page').addEventListener('click', () => {
             let cur = parseInt(document.getElementById('page-num').value);
             if (cur > 1) scrollToPage(cur - 1);
@@ -421,6 +520,7 @@
             else e.target.value = 1;
         });
 
+        // Download / Print dùng chung
         const downloadFile = () => {
             if (!pdfUrl) return;
             const a = document.createElement('a');
@@ -437,7 +537,7 @@
         document.querySelectorAll('.download-pdf-btn').forEach(btn => btn.addEventListener('click', downloadFile));
         document.querySelectorAll('.print-pdf-btn').forEach(btn => btn.addEventListener('click', printDoc));
 
-        // KHỞI TẠO DỮ LIỆU
+        // INIT SYSTEM
         if(pdfUrl) {
             pdfjsLib.getDocument(pdfUrl).promise.then(async pdfDoc_ => {
                 pdfDoc = pdfDoc_;
@@ -451,28 +551,30 @@
 
                 document.getElementById('loading-msg').style.display = 'none';
 
-                // THEO DÕI GIAO CẮT HIỆU QUẢ HƠN
                 const observer = new IntersectionObserver((entries) => {
-                    let visibilityChanged = false;
                     entries.forEach(entry => {
-                        const num = parseInt(entry.target.dataset.page);
                         if (entry.isIntersecting) {
-                            visiblePages.add(num);
-                            visibilityChanged = true;
-                        } else {
-                            visiblePages.delete(num);
+                            const canvas = entry.target.querySelector('canvas');
+                            if (canvas.dataset.rendered === 'false') {
+                                canvas.dataset.rendered = 'true';
+                                const num = entry.target.dataset.page;
+                                enqueueRenderTask(async () => {
+                                    if(canvas.dataset.rendered === 'false') return; 
+                                    const page = await pdfDoc.getPage(parseInt(num));
+                                    const viewport = page.getViewport({scale: scale});
+                                    canvas.width = viewport.width;
+                                    canvas.height = viewport.height;
+                                    await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+                                });
+                            }
                         }
                     });
-                    
-                    if (visibilityChanged) {
-                        renderVisiblePages();
-                    }
-                }, { root: mainViewer, rootMargin: '300px 0px' }); // Giảm root margin xuống để hủy kịp các trang xa
+                }, { root: mainViewer, rootMargin: '500px 0px' });
 
                 for (let num = 1; num <= pdfDoc.numPages; num++) {
                     const vp = pageViewports[num];
 
-                    // Thumbnail Sidebar
+                    // Thumbnail
                     const thumbWrap = document.createElement('div');
                     thumbWrap.className = 'thumbnail-wrapper' + (num === 1 ? ' active' : '');
                     thumbWrap.id = `thumb-${num}`;
@@ -487,15 +589,15 @@
                     thumbWrap.appendChild(numDiv);
                     sidebarThumbnails.appendChild(thumbWrap);
 
-                    // Vẽ Thumbnail nền ngầm (do kích thước rất nhỏ nên k lo tốn CPU)
-                    pdfDoc.getPage(num).then(page => {
+                    enqueueRenderTask(async () => {
+                        const page = await pdfDoc.getPage(num);
                         const thumbVp = page.getViewport({scale: 0.2});
                         thumbCanvas.width = thumbVp.width;
                         thumbCanvas.height = thumbVp.height;
-                        page.render({canvasContext: thumbCanvas.getContext('2d'), viewport: thumbVp});
+                        await page.render({canvasContext: thumbCanvas.getContext('2d'), viewport: thumbVp}).promise;
                     });
 
-                    // Khung Canvas Chính
+                    // Main Page
                     const pageWrap = document.createElement('div');
                     pageWrap.className = 'page-wrapper';
                     pageWrap.id = `page-${num}`;
@@ -504,7 +606,7 @@
                     pageWrap.style.height = (vp.height * scale) + 'px';
 
                     const mainCanvas = document.createElement('canvas');
-                    mainCanvas.dataset.renderedScale = '0'; // Ban đầu là 0
+                    mainCanvas.dataset.rendered = 'false'; 
                     pageWrap.appendChild(mainCanvas);
                     mainViewer.appendChild(pageWrap);
 
