@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Template prototype & content definition. Type: Nier-list source: hoanganhdinhngoc.github.io/cdn/nier-list-template -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Nier list template" />
+  <meta name="author" content="HoangAnhDinhNgoc" />
+  <link rel="icon" href="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png">
+
+
+    <!--
+  //////////////////////////////////////////////////////
+
+  MADE with <3 by Hoang Anh Dinh Ngoc
+
+  Website: 		http://hoanganhdinhngoc.github.io
+  Email: 			hanh2122011@gmail.com
+  Twitter: 		https://twitter.com/Hanh2122011
+  Facebook: 	https://www.facebook.com/HoangAnhDinhNgoc
+  LinkedIn:   https://vn.linkedin.com/in/hoang-anh-dinh-ngoc-1a2037129
+
+  //////////////////////////////////////////////////////
+  -->
+
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+  <!--
+  //////////////////////////////////////////////
+
+  Nier list theme materials
+
+  //////////////////////////////////////////////
+  -->
+
+  <!-- Popup module -->
+  <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+  <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+
+  <title>CDN || Main menu</title>
+
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-K6GLMCB');</script>
+  <!-- End Google Tag Manager -->
+
+  <!-- CSS STYLE SECTION -->
+
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400');
+
+
+    * {
+      margin: 0px;
+      padding: 0px;
+      scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+      scrollbar-width: auto;
+    }
+
+    .title {
+      padding: 20px;
+      font-family: 'Montserrat', sans-serif;
+      color: #4b4340;
+      text-shadow: 4px 5px rgba(162, 156, 142, .8);
+    }
+
+    .sectionTitle {
+      padding: 1% 1%;
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+    }
+
+    ::-moz-selection {
+      /* Code for Firefox */
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+    }
+
+    ::selection {
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+    }
+
+    body {
+      background-color: #ccc6b0;
+      background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+        linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+      background-size: 5px 5px;
+    }
+
+    .coreSystem {
+      display: inline-block;
+      width: 100%;
+      min-height: 100vh;
+      box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .section {
+      margin: 20px 30px;
+      padding: 0 0 1px 0;
+      background: rgba(216, 210, 186, .5);
+      font-family: 'Montserrat', sans-serif;
+      line-height: 20pt;
+      color: #4b4340;
+      box-shadow: 2px 2px 1px #4f4b42;
+    }
+
+    .dropContent {
+      display: block;
+      padding: 2px;
+      margin: 3px 8px;
+      cursor: pointer;
+    }
+
+    .dropContent:hover {
+      color: #d3cebb;
+      background: #4e493a;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0px 8px;
+    }
+
+    li,
+    .toolTaoShortCode {
+      margin-left: 20px;
+    }
+
+    li:last-of-type {
+      margin-bottom: 8px;
+    }
+
+    .selected {
+      font-weight: bold;
+    }
+
+    .top-logo {
+      margin: 0px 30px;
+      padding: 0 0 1px 0;
+      filter: saturate(30%);
+    }
+
+    a {
+      color: #4b4340;
+      font-weight: bold;
+    }
+
+    .toolzone {
+      display: block;
+      margin: 1em;
+      width: 100%;
+      max-width: 90%;
+      outline: none;
+      border: 2px solid rgba(100, 98, 86, 1);
+    }
+
+    #hexToTextInput,
+    #textToHexInput,
+    #encryptPassInput,
+    #encryptUrlInput {
+      padding: 10px;
+      margin: 10px 0;
+      height: 0px;
+      overflow: hidden;
+      box-sizing: border-box;
+      resize: none;
+      color: #4b4340;
+      background: rgba(216, 210, 186, .5);
+    }
+
+    #textToHexInput {
+      min-height: 5em;
+    }
+
+    #textToHexOutput,
+    #hexToTextOutput,
+    #encryptResultOutput {
+      padding: 10px;
+      margin: 10px 0;
+      min-height: 10em;
+      overflow: hidden;
+      box-sizing: border-box;
+      resize: none;
+      color: #d3cebb;
+      background: rgba(100, 98, 86, 0.8);
+    }
+
+    .themebutton {
+      cursor: pointer;
+      width: 10em;
+      height: 2em;
+      font-weight: bold;
+      color: #4b4340;
+      border: none;
+      background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0.2) 50%);
+      background-size: 200% 100%;
+      background-position: right bottom;
+      transition: all .2s ease-out;
+    }
+
+    .themebutton:hover {
+      color: #d3cebb;
+      background-position: left bottom;
+    }
+
+    .linkbutton {
+      text-align: center;
+      text-decoration: none;
+      margin-left: 0px;
+      font-size: 0.9em;
+    }
+
+    .soundControl {
+      position: relative;
+      float: right;
+      right: 1em;
+      top: 0.5em;
+      font-size: 2em;
+      color: rgba(100, 98, 86, 0.8);
+    }
+
+    /* For mobile */
+
+    @media only screen and (max-width: 600px) {
+
+      .sectionTitle,
+      #info {
+        font-size: 15px;
+        padding: 0.5em 0.5em;
+      }
+
+      .content {
+        margin: 0.5em 0em;
+      }
+    }
+  </style>
+
+  <script>
+
+    $(document).ready(function () {
+
+      // Sounds
+      var tutorialSound = document.getElementById("tutorial-sound");
+      var hoverSound = document.getElementById("hover-sound");
+      var clickSound = document.getElementById("click-sound");
+      var openlinkSound = document.getElementById("open-link-sound");
+      $(".dropContent,.tutorial").hover(function () {
+        hoverSound.play();
+      }, function () {
+        hoverSound.load();
+      });
+
+      $(".tutorial").click(function () {
+        tutorialSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
+      $(".dropContent,.themebutton").click(function () {
+        clickSound.play();
+      });
+
+      $("a").click(function () {
+        openlinkSound.play();
+      });
+
+    });
+
+
+  </script>
+
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6GLMCB" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <!-- Add Tomoko AI Assistant -->
+  <iframe src="https://hoanganhdinhngoc.github.io/cdn/tomoko-assistant/"
+    style="position: fixed; z-index: 9999; bottom: 0px; right: 0px; border: none; overflow: hidden;" width="170"
+    height="70" id="chatIframe"></iframe>
+
+  <script>
+    window.addEventListener("message", (event) => {
+      if (event.data.type === "chatState") {
+        const iframe = document.getElementById("chatIframe");
+        if (event.data.expanded) {
+          iframe.width = "375";  // Expanded chatbox size
+          iframe.height = "650";
+        } else {
+          iframe.width = "170";  // Collapsed rectangle size
+          iframe.height = "70";
+        }
+      }
+    });
+  </script>
+
+  <audio id="tutorial-sound">
+    <source src="sounds/core_1.ogg" type="audio/ogg">
+  </audio>
+  <audio id="hover-sound">
+    <source src="sounds/core_16.ogg" type="audio/ogg">
+  </audio>
+  <audio id="click-sound">
+    <source src="sounds/core_52.ogg" type="audio/ogg">
+  </audio>
+  <audio id="open-link-sound">
+    <source src="sounds/core_58.ogg" type="audio/ogg">
+  </audio>
+
+
+
+
+
+  <div class='coreSystem'>
+
+    <h1 class="title">CDN</h1>
+
+    <div class="logoSection">
+      <a href="https://hoanganhdinhngoc.github.io" class="logo" target="_blank">
+        <img width="120" height="120" src="https://hoanganhdinhngoc.github.io/cdn/images/YoRHa.png" class="top-logo" alt=""
+          srcset="https://hoanganhdinhngoc.github.io/cdn/images/YoRHa.png 275w, https://hoanganhdinhngoc.github.io/images/YoRHa.png 150w"
+          sizes="(max-width: 275px) 100vw, 275px"></a>
+      <audio id="themeSong" loop src="sounds/fortress-of-lies-the-bunker.ogg" preload="auto"></audio>
+      <i id="controlButton" class="fas fa-play soundControl"></i>
+    </div>
+
+    <!-- System Info -->
+
+
+    <div class='section' id='info'>
+      <h2 class="tutorial" style='padding: 1% 1%; cursor: pointer;'>Tutorial</h2>
+      <ul class='content'>
+        <li>
+          <p><b>Sử dụng: </b>Ấn vào tool cần sử dụng trong list bên dưới, vậy thôi</p>
+        </li>
+        <li>Đây là giao diện chính của page CDN</li>
+      </ul>
+    </div>
+
+    <a href="https://hoanganhdinhngoc.github.io/cdn/document/ken-jutsu-school-version.pdf" class="pdf" target="_blank">Ken Jutsu School Version</a>
+
+    <!-- Start testing -->
+
+    <script src="[https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/pdf-reader/nier-pdf-render.js](https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/pdf-reader/nier-pdf-render.js)"></script>
+
+    <!-- Done testing-->
+
+  </div>
+
+
+  <!-- Interactive -->
+
+  <script type='text/javascript'>
+    // fade in section
+    $('.section').hide();
+    $('.section').fadeIn(500);
+
+    // hide all content class to toggle
+    $('.content').hide();
+
+    //toggle dropContent
+    $('.dropContent').click(function () {
+      $(this).next().slideToggle(300);
+      $(this).toggleClass("selected");
+    });
+    $('.tutorial').click(function () {
+      $(this).next().slideToggle(300);
+    });
+  </script>
+
+
+  <!-- Sound control -->
+  <script>
+    var themeSong = document.getElementById("themeSong");
+    var isPlaying;
+
+    function togglePlay() {
+      if (isPlaying) {
+        themeSong.pause();
+        $('#controlButton').removeClass('fa-pause').addClass('fa-play');
+      } else {
+        themeSong.play();
+        $('#controlButton').removeClass('fa-play').addClass('fa-pause');
+      }
+    }
+
+    $('#controlButton').click(togglePlay);
+
+    themeSong.onplaying = function () {
+      isPlaying = true;
+    };
+
+    themeSong.onpause = function () {
+      isPlaying = false;
+    };
+
+    $(document).keydown(function (event) {
+      if ((event.key === " " || event.keyCode === 32) && !isTyping()) {
+        event.preventDefault();
+        togglePlay();
+      }
+    });
+
+    function isTyping() {
+      const activeElement = document.activeElement;
+      return activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA" ||
+        activeElement.isContentEditable;
+    }
+  </script>
+
+
+</body>
+
+</html>
