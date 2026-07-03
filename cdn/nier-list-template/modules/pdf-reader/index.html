@@ -15,13 +15,23 @@
         @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
 
         :root {
-            --primary-color: #008a008a;
-            --secondary-color: #85000083;
+            /* Light Theme Variables */
             --nier-dark: #4b4340;
             --nier-beige: #ccc6b0;
             --nier-panel: rgba(216, 210, 186, .5);
-            --nier-bg-btn: #4e493a;
-            --nier-text-light: #d3cebb;
+            --nier-bg-btn: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+            --nier-bg-pattern: rgba(198, 192, 170, .5);
+            --nier-text-invert: #d3cebb;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --nier-dark: #d3cebb;
+            --nier-beige: #201e1d;
+            --nier-panel: rgba(45, 42, 40, 0.8);
+            --nier-bg-btn: linear-gradient(to right, #8a8275 50%, rgba(0, 0, 0, 0) 50%);
+            --nier-bg-pattern: rgba(60, 56, 52, .5);
+            --nier-text-invert: #201e1d;
         }
 
         * {
@@ -32,27 +42,30 @@
             scrollbar-width: auto;
         }
 
-        ::-moz-selection { background: rgba(100, 98, 86, 0.8); color: #d3cebb; }
-        ::selection { background: rgba(100, 98, 86, 0.8); color: #d3cebb; }
+        ::-moz-selection { background: rgba(100, 98, 86, 0.8); color: var(--nier-text-invert); }
+        ::selection { background: rgba(100, 98, 86, 0.8); color: var(--nier-text-invert); }
 
         body {
             font-family: 'Montserrat', sans-serif;
             background-color: var(--nier-beige);
-            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
-                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-image: 
+                linear-gradient(90deg, var(--nier-bg-pattern) 30%, transparent 30%),
+                linear-gradient(var(--nier-bg-pattern) 30%, transparent 30%);
             background-size: 5px 5px;
             color: var(--nier-dark);
             overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .coreSystem {
-            width: 100%;
+            width: 100vw;
             height: 100vh;
             display: flex;
             flex-direction: column;
             box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
         }
 
+        /* ----- TOP BAR ----- */
         .top-bar {
             background: var(--nier-panel);
             border-bottom: 2px solid var(--nier-dark);
@@ -61,12 +74,13 @@
             align-items: center;
             justify-content: space-between;
             box-shadow: 0px 2px 10px rgba(0,0,0,0.2);
-            z-index: 10;
+            z-index: 20;
+            transition: background 0.3s, border-color 0.3s;
         }
 
         .title-main {
             font-size: 18px;
-            text-shadow: 2px 2px rgba(162, 156, 142, .8);
+            text-shadow: 2px 2px rgba(100, 98, 86, .3);
             text-transform: uppercase;
             white-space: nowrap;
             overflow: hidden;
@@ -87,11 +101,12 @@
             font-size: 14px;
             font-weight: bold;
             border: 2px solid var(--nier-dark);
-            background: rgba(216, 210, 186, .5);
-            color: #4b4340;
+            background: rgba(100, 98, 86, 0.2);
+            color: var(--nier-dark);
             outline: none;
             text-align: center;
             width: 60px;
+            transition: all 0.3s;
         }
 
         .themebutton {
@@ -99,9 +114,9 @@
             padding: 6px 12px;
             font-size: 13px;
             font-weight: bold;
-            color: #4b4340;
+            color: var(--nier-dark);
             border: 2px solid var(--nier-dark);
-            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+            background: var(--nier-bg-btn);
             background-size: 200% 100%;
             background-position: right bottom;
             transition: all .2s ease-out;
@@ -109,11 +124,13 @@
             text-transform: uppercase;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
+            min-width: 35px;
         }
 
         .themebutton:hover {
-            color: #d3cebb;
+            color: var(--nier-text-invert);
             background-position: left bottom;
         }
 
@@ -122,18 +139,86 @@
             font-size: 16px;
         }
 
-        .pdf-viewer-container {
-            flex-grow: 1;
-            overflow: auto;
+        /* ----- CONTENT AREA ----- */
+        .content-area {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
             position: relative;
+        }
+
+        /* ----- SIDEBAR ----- */
+        .sidebar {
+            width: 250px;
+            flex-shrink: 0;
+            background: var(--nier-panel);
+            border-right: 2px solid var(--nier-dark);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s, border-color 0.3s;
+            margin-left: 0;
+            z-index: 10;
+        }
+
+        .sidebar.closed {
+            margin-left: -250px;
+        }
+
+        .sidebar-thumbnails {
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 15px;
         }
 
-        canvas {
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-            margin: 20px auto;
+        .thumbnail-wrapper {
+            cursor: pointer;
+            border: 2px solid transparent;
+            padding: 4px;
+            text-align: center;
+            transition: all 0.2s;
+            background: rgba(100, 98, 86, 0.1);
+            width: 100%;
+        }
+
+        .thumbnail-wrapper canvas {
+            max-width: 100%;
+            height: auto;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            background: #fff; /* PDF Pages always white natively */
+        }
+
+        .thumbnail-wrapper.active {
+            border-color: var(--nier-dark);
+            background: rgba(100, 98, 86, 0.4);
+        }
+
+        .thumbnail-number {
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 5px;
+            color: var(--nier-dark);
+        }
+
+        /* ----- MAIN VIEWER ----- */
+        .main-viewer {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Tự động căn giữa không gian trống */
+            padding: 30px 0;
+            background: rgba(100, 98, 86, 0.05);
+            scroll-behavior: smooth;
+        }
+
+        .page-wrapper {
+            margin-bottom: 25px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.4);
+            background: #fff; /* Nền trang PDF luôn trắng chuẩn */
+            position: relative;
         }
 
         #loading-msg {
@@ -143,25 +228,27 @@
             transform: translate(-50%, -50%);
             font-size: 24px;
             font-weight: bold;
-            text-shadow: 2px 2px rgba(162, 156, 142, .8);
-            display: none;
+            text-shadow: 2px 2px rgba(100, 98, 86, .5);
         }
 
         @media (max-width: 920px) {
             .top-bar { flex-direction: column; gap: 10px; }
             .title-main { max-width: 100%; }
             .toolbar-group { justify-content: center; width: 100%; flex-wrap: wrap; }
+            .sidebar { position: absolute; height: 100%; box-shadow: 5px 0 15px rgba(0,0,0,0.5); }
         }
     </style>
 </head>
 
 <body>
     <audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
-    <audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
 
     <div class="coreSystem">
         <div class="top-bar">
-            <h1 class="title-main" id="pdf-title">Nier PDF Document</h1>
+            <div class="toolbar-group">
+                <button class="themebutton" id="toggle-sidebar" title="Toggle Sidebar"><i class="fas fa-bars"></i></button>
+                <h1 class="title-main" id="pdf-title">Nier PDF Document</h1>
+            </div>
             
             <div class="toolbar-group">
                 <button class="themebutton" id="prev-page"><i class="fas fa-chevron-left"></i></button>
@@ -179,122 +266,274 @@
             </div>
 
             <div class="toolbar-group">
-                <button class="themebutton" id="download-pdf"><i class="fas fa-download"></i></button>
-                <button class="themebutton" id="print-pdf"><i class="fas fa-print"></i></button>
+                <button class="themebutton" id="toggle-theme" title="Toggle Dark/Light Mode"><i class="fas fa-moon" id="theme-icon"></i></button>
+                <button class="themebutton" id="download-pdf" title="Download"><i class="fas fa-download"></i></button>
+                <button class="themebutton" id="print-pdf" title="Print"><i class="fas fa-print"></i></button>
             </div>
         </div>
 
-        <div class="pdf-viewer-container" id="canvas-container">
-            <div id="loading-msg">INITIALIZING SYSTEM...</div>
-            <canvas id="pdf-render"></canvas>
+        <div class="content-area">
+            <div class="sidebar" id="sidebar">
+                <div class="sidebar-thumbnails" id="sidebar-thumbnails">
+                    </div>
+            </div>
+
+            <div class="main-viewer" id="main-viewer">
+                <div id="loading-msg">INITIALIZING SYSTEM...</div>
+                </div>
         </div>
     </div>
 
     <iframe id="print-frame" style="display:none;"></iframe>
 
     <script>
+        // Chỉ giữ lại âm thanh hover, vô hiệu hóa âm thanh click tránh ồn
         const hoverSound = document.getElementById("hover-sound");
-        const clickSound = document.getElementById("click-sound");
+        $(document).on('mouseenter', '.themebutton, .toolzone, .thumbnail-wrapper', () => { 
+            hoverSound.currentTime = 0; hoverSound.play(); 
+        });
 
-        $(document).on('mouseenter', '.themebutton, .toolzone', () => { hoverSound.currentTime = 0; hoverSound.play(); });
-        $(document).on('click', '.themebutton', () => { clickSound.currentTime = 0; clickSound.play(); });
+        // Toggle Sidebar
+        const sidebar = document.getElementById('sidebar');
+        document.getElementById('toggle-sidebar').addEventListener('click', () => {
+            sidebar.classList.toggle('closed');
+        });
+
+        // Toggle Dark/Light Theme
+        let isDarkTheme = false;
+        document.getElementById('toggle-theme').addEventListener('click', () => {
+            isDarkTheme = !isDarkTheme;
+            const icon = document.getElementById('theme-icon');
+            if(isDarkTheme) {
+                document.body.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            } else {
+                document.body.removeAttribute('data-theme');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            }
+        });
 
         const urlParams = new URLSearchParams(window.location.search);
         const pdfUrl = urlParams.get('file');
         
-        // Xử lý lấy title mặc định nếu không truyền hoặc rỗng
         let pdfTitleRaw = urlParams.get('title') ? urlParams.get('title').trim() : '';
-        if (!pdfTitleRaw && pdfUrl) {
-            pdfTitleRaw = pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1);
-        }
-        if (!pdfTitleRaw) {
-            pdfTitleRaw = 'Nier PDF Document';
-        }
+        if (!pdfTitleRaw && pdfUrl) pdfTitleRaw = pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1);
+        if (!pdfTitleRaw) pdfTitleRaw = 'Nier PDF Document';
         
-        // Đồng bộ hóa Title trang (Tab) và Title trong Layout UI
         document.title = `${pdfTitleRaw} || Nier System`;
         document.getElementById('pdf-title').innerText = pdfTitleRaw;
 
         const pdfjsLib = window['pdfjs-dist/build/pdf'];
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null, scale = 1.0,
-            canvas = document.getElementById('pdf-render'), ctx = canvas.getContext('2d'),
-            container = document.getElementById('canvas-container');
+        let pdfDoc = null;
+        let scale = 1.0; // Mặc định luôn là 100%
+        let pageViewports = []; 
+        let renderQueue = [];
+        let isRendering = false;
 
-        const renderPage = num => {
-            pageIsRendering = true;
-            pdfDoc.getPage(num).then(page => {
-                const viewport = page.getViewport({ scale });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const renderCtx = { canvasContext: ctx, viewport: viewport };
-                page.render(renderCtx).promise.then(() => {
-                    pageIsRendering = false;
-                    if (pageNumIsPending !== null) { renderPage(pageNumIsPending); pageNumIsPending = null; }
-                });
-
-                document.getElementById('page-num').value = num;
-                document.getElementById('zoom-val').innerText = Math.round(scale * 100) + '%';
-            });
-        };
-
-        const queueRenderPage = num => { if (pageIsRendering) { pageNumIsPending = num; } else { renderPage(num); } };
-        const showPrevPage = () => { if (pageNum <= 1) return; pageNum--; queueRenderPage(pageNum); };
-        const showNextPage = () => { if (pageNum >= pdfDoc.numPages) return; pageNum++; queueRenderPage(pageNum); };
-        const zoomIn = () => { scale += 0.25; queueRenderPage(pageNum); };
-        const zoomOut = () => { if (scale <= 0.5) return; scale -= 0.25; queueRenderPage(pageNum); };
+        const mainViewer = document.getElementById('main-viewer');
+        const sidebarThumbnails = document.getElementById('sidebar-thumbnails');
         
-        const fitWidth = () => {
-            pdfDoc.getPage(pageNum).then(page => {
-                const unscaledViewport = page.getViewport({ scale: 1 });
-                const containerWidth = container.clientWidth - 50; 
-                scale = containerWidth / unscaledViewport.width;
-                queueRenderPage(pageNum);
+        // Hàm hàng đợi xử lý render để trình duyệt không bị đóng băng
+        async function processRenderQueue() {
+            if (isRendering || renderQueue.length === 0) return;
+            isRendering = true;
+            const task = renderQueue.shift();
+            try { await task(); } catch(e) { console.error(e); }
+            isRendering = false;
+            processRenderQueue();
+        }
+
+        function enqueueRenderTask(task) {
+            renderQueue.push(task);
+            processRenderQueue();
+        }
+
+        // Tự động nhảy số trang khi cuộn
+        mainViewer.addEventListener('scroll', () => {
+            let closestPage = 1;
+            let minDistance = Infinity;
+            const wrappers = document.querySelectorAll('.page-wrapper');
+            const viewerTop = mainViewer.getBoundingClientRect().top; // Tọa độ top của vùng nhìn
+
+            wrappers.forEach(wrapper => {
+                const rect = wrapper.getBoundingClientRect();
+                // Khoảng cách từ đỉnh viewport đến đỉnh của mỗi trang
+                const distance = Math.abs(rect.top - viewerTop);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPage = wrapper.dataset.page;
+                }
+            });
+
+            // Cập nhật giao diện nếu trang đổi
+            const currentInput = document.getElementById('page-num');
+            if(currentInput.value !== closestPage) {
+                currentInput.value = closestPage;
+                // Highlight Sidebar
+                document.querySelectorAll('.thumbnail-wrapper').forEach(t => t.classList.remove('active'));
+                const activeThumb = document.getElementById(`thumb-${closestPage}`);
+                if(activeThumb) {
+                    activeThumb.classList.add('active');
+                    // Tự động cuộn sidebar theo nhẹ nhàng
+                    activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+        });
+
+        // Hàm cuộn tới trang cụ thể (Từ Sidebar hoặc Input/Nút)
+        function scrollToPage(num) {
+            const targetPage = document.getElementById(`page-${num}`);
+            if(targetPage) {
+                targetPage.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // Quản lý Zoom
+        function updateZoomUI() {
+            document.getElementById('zoom-val').innerText = Math.round(scale * 100) + '%';
+            
+            // Xóa toàn bộ render cũ, chỉnh lại khung và bắt đầu hứng Intersection Observer lại
+            document.querySelectorAll('.page-wrapper').forEach(wrapper => {
+                const num = wrapper.dataset.page;
+                const canvas = wrapper.querySelector('canvas');
+                const vp = pageViewports[num];
+                
+                wrapper.style.width = (vp.width * scale) + 'px';
+                wrapper.style.height = (vp.height * scale) + 'px';
+                
+                canvas.dataset.rendered = 'false';
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
             });
         }
 
-        const downloadPDF = () => {
+        const zoomIn = () => { scale += 0.25; updateZoomUI(); };
+        const zoomOut = () => { if (scale <= 0.5) return; scale -= 0.25; updateZoomUI(); };
+        const fitWidth = () => {
+            // Lấy trang 1 làm hệ quy chiếu tính tỷ lệ Fit
+            const containerWidth = mainViewer.clientWidth - 50; 
+            scale = containerWidth / pageViewports[1].width;
+            updateZoomUI();
+        };
+
+        // Bắt sự kiện Toolbar
+        document.getElementById('prev-page').addEventListener('click', () => {
+            let cur = parseInt(document.getElementById('page-num').value);
+            if (cur > 1) scrollToPage(cur - 1);
+        });
+        document.getElementById('next-page').addEventListener('click', () => {
+            let cur = parseInt(document.getElementById('page-num').value);
+            if (cur < pdfDoc.numPages) scrollToPage(cur + 1);
+        });
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+        document.getElementById('fit-width').addEventListener('click', fitWidth);
+        document.getElementById('download-pdf').addEventListener('click', () => {
             if (!pdfUrl) return;
             const a = document.createElement('a');
             a.href = pdfUrl; a.download = pdfTitleRaw.endsWith('.pdf') ? pdfTitleRaw : pdfTitleRaw + ".pdf";
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
-        };
-
-        const printPDF = () => {
+        });
+        document.getElementById('print-pdf').addEventListener('click', () => {
             if (!pdfUrl) return;
             const iframe = document.getElementById('print-frame');
             iframe.src = pdfUrl;
             iframe.onload = () => { iframe.contentWindow.print(); };
-        };
-
-        document.getElementById('prev-page').addEventListener('click', showPrevPage);
-        document.getElementById('next-page').addEventListener('click', showNextPage);
-        document.getElementById('zoom-in').addEventListener('click', zoomIn);
-        document.getElementById('zoom-out').addEventListener('click', zoomOut);
-        document.getElementById('fit-width').addEventListener('click', fitWidth);
-        document.getElementById('download-pdf').addEventListener('click', downloadPDF);
-        document.getElementById('print-pdf').addEventListener('click', printPDF);
-
+        });
         document.getElementById('page-num').addEventListener('change', (e) => {
             let num = parseInt(e.target.value);
-            if(num >= 1 && num <= pdfDoc.numPages) { pageNum = num; queueRenderPage(pageNum); } 
-            else { e.target.value = pageNum; }
+            if(num >= 1 && num <= pdfDoc.numPages) scrollToPage(num);
+            else e.target.value = 1; // Revert nếu sai
         });
 
+        // INIT SYSTEM
         if(pdfUrl) {
-            document.getElementById('loading-msg').style.display = 'block';
-            pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc_ => {
+            pdfjsLib.getDocument(pdfUrl).promise.then(async pdfDoc_ => {
                 pdfDoc = pdfDoc_;
-                document.getElementById('loading-msg').style.display = 'none';
                 document.getElementById('page-count').textContent = pdfDoc.numPages;
-                fitWidth(); 
+                document.getElementById('loading-msg').innerText = "CALCULATING MATRICES...";
+
+                // Lấy kích thước chuẩn (Viewports) của toàn bộ các trang trước
+                for (let num = 1; num <= pdfDoc.numPages; num++) {
+                    const page = await pdfDoc.getPage(num);
+                    pageViewports[num] = page.getViewport({ scale: 1.0 });
+                }
+
+                document.getElementById('loading-msg').style.display = 'none';
+
+                // Intersection Observer theo dõi: Trang nào lọt vào màn hình mới đem đi Render để tối ưu bộ nhớ
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const canvas = entry.target.querySelector('canvas');
+                            if (canvas.dataset.rendered === 'false') {
+                                canvas.dataset.rendered = 'true';
+                                const num = entry.target.dataset.page;
+                                enqueueRenderTask(async () => {
+                                    // Bỏ qua nếu user zoom liên tục lúc đang ở trong hàng đợi
+                                    if(canvas.dataset.rendered === 'false') return; 
+                                    const page = await pdfDoc.getPage(parseInt(num));
+                                    const viewport = page.getViewport({scale: scale});
+                                    canvas.width = viewport.width;
+                                    canvas.height = viewport.height;
+                                    await page.render({canvasContext: canvas.getContext('2d'), viewport}).promise;
+                                });
+                            }
+                        }
+                    });
+                }, { root: mainViewer, rootMargin: '500px 0px' });
+
+                // Dựng DOM Khung Trang & Thumbnails
+                for (let num = 1; num <= pdfDoc.numPages; num++) {
+                    const vp = pageViewports[num];
+
+                    // 1. Dựng Thumbnail cho Sidebar
+                    const thumbWrap = document.createElement('div');
+                    thumbWrap.className = 'thumbnail-wrapper' + (num === 1 ? ' active' : '');
+                    thumbWrap.id = `thumb-${num}`;
+                    thumbWrap.onclick = () => scrollToPage(num);
+
+                    const thumbCanvas = document.createElement('canvas');
+                    const numDiv = document.createElement('div');
+                    numDiv.className = 'thumbnail-number';
+                    numDiv.innerText = num;
+                    
+                    thumbWrap.appendChild(thumbCanvas);
+                    thumbWrap.appendChild(numDiv);
+                    sidebarThumbnails.appendChild(thumbWrap);
+
+                    // Xếp Thumbnail vào hàng đợi Render (Kích thước nhỏ ~0.2)
+                    enqueueRenderTask(async () => {
+                        const page = await pdfDoc.getPage(num);
+                        const thumbVp = page.getViewport({scale: 0.2});
+                        thumbCanvas.width = thumbVp.width;
+                        thumbCanvas.height = thumbVp.height;
+                        await page.render({canvasContext: thumbCanvas.getContext('2d'), viewport: thumbVp}).promise;
+                    });
+
+                    // 2. Dựng Main Page (Trang chính lớn)
+                    const pageWrap = document.createElement('div');
+                    pageWrap.className = 'page-wrapper';
+                    pageWrap.id = `page-${num}`;
+                    pageWrap.dataset.page = num;
+                    pageWrap.style.width = (vp.width * scale) + 'px';
+                    pageWrap.style.height = (vp.height * scale) + 'px';
+
+                    const mainCanvas = document.createElement('canvas');
+                    mainCanvas.dataset.rendered = 'false'; // Cờ đánh dấu chưa render thực tế
+                    pageWrap.appendChild(mainCanvas);
+                    mainViewer.appendChild(pageWrap);
+
+                    // Đăng ký cho khung trang này vào Observer để render lười (Lazy Render)
+                    observer.observe(pageWrap);
+                }
+
             }).catch(err => {
                 document.getElementById('loading-msg').innerText = "ERROR: SYSTEM DATA CORRUPTED.";
             });
         } else {
-            document.getElementById('loading-msg').style.display = 'block';
             document.getElementById('loading-msg').innerText = "NO PDF TARGET ACQUIRED.";
         }
     </script>
