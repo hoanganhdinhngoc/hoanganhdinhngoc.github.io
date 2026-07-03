@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png">
+    <title>Nier PDF Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #85000083;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+            scrollbar-width: auto;
+        }
+
+        ::-moz-selection { background: rgba(100, 98, 86, 0.8); color: #d3cebb; }
+        ::selection { background: rgba(100, 98, 86, 0.8); color: #d3cebb; }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px;
+            color: var(--nier-dark);
+            overflow: hidden;
+        }
+
+        .coreSystem {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .top-bar {
+            background: var(--nier-panel);
+            border-bottom: 2px solid var(--nier-dark);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0px 2px 10px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .title-main {
+            font-size: 18px;
+            text-shadow: 2px 2px rgba(162, 156, 142, .8);
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 350px;
+            font-weight: 700;
+        }
+
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .toolzone {
+            padding: 6px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            border: 2px solid var(--nier-dark);
+            background: rgba(216, 210, 186, .5);
+            color: #4b4340;
+            outline: none;
+            text-align: center;
+            width: 60px;
+        }
+
+        .themebutton {
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #4b4340;
+            border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            transition: all .2s ease-out;
+            font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .themebutton:hover {
+            color: #d3cebb;
+            background-position: left bottom;
+        }
+
+        .separator {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .pdf-viewer-container {
+            flex-grow: 1;
+            overflow: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        canvas {
+            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+            margin: 20px auto;
+        }
+
+        #loading-msg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 2px 2px rgba(162, 156, 142, .8);
+            display: none;
+        }
+
+        @media (max-width: 920px) {
+            .top-bar { flex-direction: column; gap: 10px; }
+            .title-main { max-width: 100%; }
+            .toolbar-group { justify-content: center; width: 100%; flex-wrap: wrap; }
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="hover-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg" type="audio/ogg"></audio>
+    <audio id="click-sound"><source src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg" type="audio/ogg"></audio>
+
+    <div class="coreSystem">
+        <div class="top-bar">
+            <h1 class="title-main" id="pdf-title">Nier PDF Document</h1>
+            
+            <div class="toolbar-group">
+                <button class="themebutton" id="prev-page"><i class="fas fa-chevron-left"></i></button>
+                <input type="number" id="page-num" class="toolzone" value="1" min="1">
+                <span class="separator">/</span>
+                <span class="separator" id="page-count">--</span>
+                <button class="themebutton" id="next-page"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <button class="themebutton" id="zoom-out"><i class="fas fa-search-minus"></i></button>
+                <span class="separator" id="zoom-val">100%</span>
+                <button class="themebutton" id="zoom-in"><i class="fas fa-search-plus"></i></button>
+                <button class="themebutton" id="fit-width"><i class="fas fa-arrows-alt-h"></i></button>
+            </div>
+
+            <div class="toolbar-group">
+                <button class="themebutton" id="download-pdf"><i class="fas fa-download"></i></button>
+                <button class="themebutton" id="print-pdf"><i class="fas fa-print"></i></button>
+            </div>
+        </div>
+
+        <div class="pdf-viewer-container" id="canvas-container">
+            <div id="loading-msg">INITIALIZING SYSTEM...</div>
+            <canvas id="pdf-render"></canvas>
+        </div>
+    </div>
+
+    <iframe id="print-frame" style="display:none;"></iframe>
+
+    <script>
+        const hoverSound = document.getElementById("hover-sound");
+        const clickSound = document.getElementById("click-sound");
+
+        $(document).on('mouseenter', '.themebutton, .toolzone', () => { hoverSound.currentTime = 0; hoverSound.play(); });
+        $(document).on('click', '.themebutton', () => { clickSound.currentTime = 0; clickSound.play(); });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const pdfUrl = urlParams.get('file');
+        
+        // Xử lý lấy title mặc định nếu không truyền hoặc rỗng
+        let pdfTitleRaw = urlParams.get('title') ? urlParams.get('title').trim() : '';
+        if (!pdfTitleRaw && pdfUrl) {
+            pdfTitleRaw = pdfUrl.substring(pdfUrl.lastIndexOf('/') + 1);
+        }
+        if (!pdfTitleRaw) {
+            pdfTitleRaw = 'Nier PDF Document';
+        }
+        
+        // Đồng bộ hóa Title trang (Tab) và Title trong Layout UI
+        document.title = `${pdfTitleRaw} || Nier System`;
+        document.getElementById('pdf-title').innerText = pdfTitleRaw;
+
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let pdfDoc = null, pageNum = 1, pageIsRendering = false, pageNumIsPending = null, scale = 1.0,
+            canvas = document.getElementById('pdf-render'), ctx = canvas.getContext('2d'),
+            container = document.getElementById('canvas-container');
+
+        const renderPage = num => {
+            pageIsRendering = true;
+            pdfDoc.getPage(num).then(page => {
+                const viewport = page.getViewport({ scale });
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                const renderCtx = { canvasContext: ctx, viewport: viewport };
+                page.render(renderCtx).promise.then(() => {
+                    pageIsRendering = false;
+                    if (pageNumIsPending !== null) { renderPage(pageNumIsPending); pageNumIsPending = null; }
+                });
+
+                document.getElementById('page-num').value = num;
+                document.getElementById('zoom-val').innerText = Math.round(scale * 100) + '%';
+            });
+        };
+
+        const queueRenderPage = num => { if (pageIsRendering) { pageNumIsPending = num; } else { renderPage(num); } };
+        const showPrevPage = () => { if (pageNum <= 1) return; pageNum--; queueRenderPage(pageNum); };
+        const showNextPage = () => { if (pageNum >= pdfDoc.numPages) return; pageNum++; queueRenderPage(pageNum); };
+        const zoomIn = () => { scale += 0.25; queueRenderPage(pageNum); };
+        const zoomOut = () => { if (scale <= 0.5) return; scale -= 0.25; queueRenderPage(pageNum); };
+        
+        const fitWidth = () => {
+            pdfDoc.getPage(pageNum).then(page => {
+                const unscaledViewport = page.getViewport({ scale: 1 });
+                const containerWidth = container.clientWidth - 50; 
+                scale = containerWidth / unscaledViewport.width;
+                queueRenderPage(pageNum);
+            });
+        }
+
+        const downloadPDF = () => {
+            if (!pdfUrl) return;
+            const a = document.createElement('a');
+            a.href = pdfUrl; a.download = pdfTitleRaw.endsWith('.pdf') ? pdfTitleRaw : pdfTitleRaw + ".pdf";
+            document.body.appendChild(a); a.click(); document.body.removeChild(a);
+        };
+
+        const printPDF = () => {
+            if (!pdfUrl) return;
+            const iframe = document.getElementById('print-frame');
+            iframe.src = pdfUrl;
+            iframe.onload = () => { iframe.contentWindow.print(); };
+        };
+
+        document.getElementById('prev-page').addEventListener('click', showPrevPage);
+        document.getElementById('next-page').addEventListener('click', showNextPage);
+        document.getElementById('zoom-in').addEventListener('click', zoomIn);
+        document.getElementById('zoom-out').addEventListener('click', zoomOut);
+        document.getElementById('fit-width').addEventListener('click', fitWidth);
+        document.getElementById('download-pdf').addEventListener('click', downloadPDF);
+        document.getElementById('print-pdf').addEventListener('click', printPDF);
+
+        document.getElementById('page-num').addEventListener('change', (e) => {
+            let num = parseInt(e.target.value);
+            if(num >= 1 && num <= pdfDoc.numPages) { pageNum = num; queueRenderPage(pageNum); } 
+            else { e.target.value = pageNum; }
+        });
+
+        if(pdfUrl) {
+            document.getElementById('loading-msg').style.display = 'block';
+            pdfjsLib.getDocument(pdfUrl).promise.then(pdfDoc_ => {
+                pdfDoc = pdfDoc_;
+                document.getElementById('loading-msg').style.display = 'none';
+                document.getElementById('page-count').textContent = pdfDoc.numPages;
+                fitWidth(); 
+            }).catch(err => {
+                document.getElementById('loading-msg').innerText = "ERROR: SYSTEM DATA CORRUPTED.";
+            });
+        } else {
+            document.getElementById('loading-msg').style.display = 'block';
+            document.getElementById('loading-msg').innerText = "NO PDF TARGET ACQUIRED.";
+        }
+    </script>
+</body>
+</html>
