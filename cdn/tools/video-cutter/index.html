@@ -9,8 +9,8 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
-    <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
 
     <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
     <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
@@ -363,9 +363,22 @@
         const { fetchFile } = window.FFmpegUtil;
         let ffmpeg = null;
 
+        // --- FFMPEG VIDEO CUTTING (v0.12 API - KHÔNG CẦN SHARED ARRAY BUFFER) ---
+        let ffmpeg = null;
+
         document.getElementById('btnProcess').addEventListener('click', async () => {
             actionSound.play();
             
+            // BƯỚC CHỐNG LỖI: Kiểm tra xem thư viện đã được tải thành công chưa
+            if (typeof window.FFmpegWASM === 'undefined') {
+                showPopup("SYSTEM ERROR", "<p style='text-align:center; color: var(--nier-error-red);'>Không tìm thấy lõi FFmpeg. Vui lòng kiểm tra lại kết nối mạng hoặc tắt trình chặn quảng cáo (Adblock) rồi tải lại trang.</p>");
+                return;
+            }
+
+            // Gọi đúng chuẩn từ window object
+            const { FFmpeg } = window.FFmpegWASM;
+            const { fetchFile } = window.FFmpegUtil;
+
             if (!ffmpeg) {
                 showPopup("INITIALIZING CORE", "Loading Single-Thread FFmpeg modules...", []);
                 $('#popupButtons').hide();
@@ -374,15 +387,24 @@
                 
                 ffmpeg.on('progress', ({ progress }) => {
                     const percent = Math.max(0, Math.min(100, Math.round(progress * 100)));
-                    document.getElementById('vidProgressBar').style.width = percent + '%';
-                    document.getElementById('vidProgressText').textContent = `PROCESSING ${percent}%`;
+                    const bar = document.getElementById('vidProgressBar');
+                    const text = document.getElementById('vidProgressText');
+                    if (bar) bar.style.width = percent + '%';
+                    if (text) text.textContent = `PROCESSING ${percent}%`;
                 });
 
-                await ffmpeg.load({
-                    coreURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
-                    wasmURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
-                });
-                closePopup();
+                try {
+                    // Load Core từ jsDelivr thay vì unpkg
+                    await ffmpeg.load({
+                        coreURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+                        wasmURL: 'https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
+                    });
+                    closePopup();
+                } catch (loadErr) {
+                    showPopup("SYSTEM ERROR", `<p>Core load failed: ${loadErr.message}</p>`);
+                    console.error(loadErr);
+                    return;
+                }
             }
 
             const sTime = (startPercent / 100) * videoDuration;
