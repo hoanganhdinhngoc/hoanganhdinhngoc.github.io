@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png">
+    <title>CDN || NieR Video Cutter</title>
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+
+    <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+    <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/gzuidhof/coi-serviceworker@master/coi-serviceworker.min.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #850000;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+            --nier-error-red: #850000;
+        }
+
+        * {
+            box-sizing: border-box; margin: 0; padding: 0;
+            scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+            scrollbar-width: auto;
+            user-select: none;
+        }
+
+        ::-moz-selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+        ::selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+
+        body {
+            font-family: 'Montserrat', sans-serif; background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh;
+        }
+
+        .coreSystem { display: inline-block; width: 100%; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 20px; }
+        .warp-container { margin-top: 1em; width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 30px; text-transform: uppercase; padding-left: 10px; }
+        
+        .section { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 25px; margin-bottom: 25px; display: flex; flex-direction: column; }
+        .sectionTitle { padding: 10px 15px; color: #d3cebb; background: rgba(100, 98, 86, 0.8); font-weight: bold; margin-bottom: 20px; font-size: 14px; text-transform: uppercase; }
+
+        /* --- UPLOAD ZONE --- */
+        .dropzone { width: 100%; padding: 40px 20px; border: 2px dashed var(--nier-dark); background: rgba(216, 210, 186, 0.3); text-align: center; cursor: pointer; transition: all 0.2s; }
+        .dropzone.hover { background: rgba(100, 98, 86, 0.2); border-color: var(--nier-bg-btn); }
+        .dropzone p { font-weight: bold; font-size: 14px; pointer-events: none; }
+        .dropzone small { font-size: 11px; opacity: 0.8; pointer-events: none; }
+        #fileInput { display: none; }
+
+        /* --- WORKSPACE --- */
+        #workspace { display: none; flex-direction: column; gap: 20px; }
+        
+        /* --- VIDEO PLAYER --- */
+        .video-container { width: 100%; max-width: 800px; margin: 0 auto; border: 2px solid var(--nier-dark); background: #000; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); position: relative; }
+        video { width: 100%; height: auto; max-height: 50vh; display: block; }
+        
+        /* --- TIMELINE AREA --- */
+        .timeline-wrapper { position: relative; width: 100%; margin-top: 20px; padding: 20px 0; }
+        .timeline-container { position: relative; width: 100%; height: 80px; background: rgba(100, 98, 86, 0.3); border: 2px solid var(--nier-dark); overflow: hidden; cursor: pointer; display: flex; }
+        
+        /* Thumbnails in timeline */
+        .thumb-strip { display: flex; width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; }
+        .thumb-strip img { height: 100%; flex-grow: 1; object-fit: cover; opacity: 1; border-right: 1px solid rgba(0,0,0,0.2); }
+        
+        /* Desaturation Overlays */
+        .overlay-left, .overlay-right { position: absolute; top: 0; height: 100%; background: rgba(204, 198, 176, 0.6); backdrop-filter: grayscale(100%); z-index: 2; pointer-events: none; }
+        .overlay-left { left: 0; width: 0%; border-right: 1px solid var(--nier-dark); }
+        .overlay-right { right: 0; width: 0%; border-left: 1px solid var(--nier-dark); }
+        
+        /* Current Time Playhead */
+        .playhead { position: absolute; top: -5px; bottom: -5px; width: 2px; background: var(--secondary-color); z-index: 4; pointer-events: none; left: 0%; box-shadow: 0 0 5px var(--secondary-color); }
+        .playhead::before { content: ''; position: absolute; top: -5px; left: -4px; width: 10px; height: 10px; background: var(--secondary-color); transform: rotate(45deg); }
+
+        /* Sliders / Handles */
+        .slider-handle { position: absolute; top: 0; height: 100%; width: 14px; background: var(--nier-dark); z-index: 5; cursor: ew-resize; display: flex; align-items: center; justify-content: center; box-shadow: 2px 0 5px rgba(0,0,0,0.4); transform: translateX(-50%); }
+        .slider-handle::after { content: ''; height: 30%; width: 2px; background: var(--nier-beige); margin: 0 1px; }
+        .slider-handle::before { content: ''; height: 30%; width: 2px; background: var(--nier-beige); margin: 0 1px; }
+        #startHandle { left: 0%; }
+        #endHandle { left: 100%; }
+
+        /* Time markers */
+        .time-markers { display: flex; justify-content: space-between; margin-top: 10px; font-size: 11px; font-weight: bold; color: var(--nier-dark); }
+        .selected-time-info { text-align: center; font-size: 13px; font-weight: bold; margin-top: 15px; background: rgba(100, 98, 86, 0.2); padding: 10px; border: 1px solid var(--nier-dark); }
+
+        /* --- BUTTONS --- */
+        .btn-group { display: flex; gap: 15px; margin-top: 20px; }
+        .themebutton {
+            cursor: pointer; padding: 12px 20px; font-weight: bold; color: #4b4340; border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%); background-size: 200% 100%;
+            background-position: right bottom; transition: all .2s ease-out; font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase; text-align: center; flex: 1; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
+        .themebutton:disabled { opacity: 0.5; cursor: not-allowed; }
+        .themebutton.highlight { background-color: var(--nier-dark); color: var(--nier-text-light); }
+
+        /* Progress Bar Module */
+        .progress-container { width: 100%; border: 2px solid var(--nier-dark); background: rgba(100, 98, 86, 0.2); height: 30px; position: relative; margin: 20px 0; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--nier-dark); transition: width 0.2s ease; }
+        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #d3cebb; font-weight: bold; font-size: 12px; mix-blend-mode: difference; }
+    </style>
+</head>
+<body>
+    <audio id="hover-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg"></audio>
+    <audio id="click-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg"></audio>
+    <audio id="action-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg"></audio>
+
+    <div class="coreSystem">
+        <div class="warp-container">
+            <h1 class="title-main">Video Cutter System</h1>
+            
+            <div class="section" id="uploadSection">
+                <h2 class="sectionTitle">Input Source</h2>
+                <div class="dropzone" id="dropZone">
+                    <p>CLICK HERE OR DROP MP4 VIDEO TO UPLOAD</p>
+                    <small>(Supported: MP4, WEBM, MOV)</small>
+                    <input type="file" id="fileInput" accept="video/mp4,video/webm,video/quicktime">
+                </div>
+            </div>
+
+            <div class="section" id="workspace">
+                <h2 class="sectionTitle">Sequence Editor</h2>
+                
+                <div class="video-container">
+                    <video id="videoPlayer" controls></video>
+                </div>
+
+                <div class="timeline-wrapper">
+                    <div class="timeline-container" id="timelineContainer">
+                        <div class="thumb-strip" id="thumbStrip"></div>
+                        <div class="overlay-left" id="overlayLeft"></div>
+                        <div class="overlay-right" id="overlayRight"></div>
+                        
+                        <div class="playhead" id="playhead"></div>
+                        
+                        <div class="slider-handle" id="startHandle" data-type="start"></div>
+                        <div class="slider-handle" id="endHandle" data-type="end"></div>
+                    </div>
+                    
+                    <div class="time-markers">
+                        <span id="timeStart">00:00</span>
+                        <span id="timeEnd">00:00</span>
+                    </div>
+
+                    <div class="selected-time-info">
+                        SELECTED RANGE: <span id="selStartTime">00:00.0</span> - <span id="selEndTime">00:00.0</span> 
+                        (Duration: <span id="selDuration">00:00.0</span>)
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button id="btnPlayPause" class="themebutton"><i class="fas fa-play"></i> Play / Pause</button>
+                    <button id="btnProcess" class="themebutton"><i class="fas fa-cut"></i> Process Cutting</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="thumbCanvas" style="display:none;"></canvas>
+
+    <script>
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: true });
+
+        // Sounds
+        const hoverSound = document.getElementById("hover-sound");
+        const clickSound = document.getElementById("click-sound");
+        const actionSound = document.getElementById("action-sound");
+
+        $(document).on('mouseenter', '.themebutton, .dropzone, .slider-handle', () => { 
+            hoverSound.currentTime = 0; hoverSound.play(); 
+        });
+
+        // Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const workspace = document.getElementById('workspace');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const thumbStrip = document.getElementById('thumbStrip');
+        
+        const timelineContainer = document.getElementById('timelineContainer');
+        const startHandle = document.getElementById('startHandle');
+        const endHandle = document.getElementById('endHandle');
+        const overlayLeft = document.getElementById('overlayLeft');
+        const overlayRight = document.getElementById('overlayRight');
+        const playhead = document.getElementById('playhead');
+        
+        // State
+        let videoFile = null;
+        let videoDuration = 0;
+        let startPercent = 0;
+        let endPercent = 100;
+        let isDragging = false;
+        let activeHandle = null;
+
+        // --- UPLOAD HANDLING ---
+        dropZone.addEventListener('click', () => { clickSound.play(); fileInput.click(); });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('hover'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('hover'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault(); dropZone.classList.remove('hover');
+            if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
+        });
+        fileInput.addEventListener('change', (e) => { handleFile(e.target.files[0]); fileInput.value = ''; });
+
+        function handleFile(file) {
+            if(!file.type.startsWith('video/')) return;
+            videoFile = file;
+            const fileURL = URL.createObjectURL(file);
+            videoPlayer.src = fileURL;
+            
+            videoPlayer.onloadedmetadata = () => {
+                videoDuration = videoPlayer.duration;
+                document.getElementById('timeEnd').innerText = formatTime(videoDuration);
+                document.getElementById('uploadSection').style.display = 'none';
+                workspace.style.display = 'flex';
+                
+                generateThumbnails(fileURL);
+                updateSelectionInfo();
+            };
+        }
+
+        // --- THUMBNAIL GENERATION ---
+        async function generateThumbnails(url) {
+            thumbStrip.innerHTML = '';
+            const numThumbs = 12; // Số lượng ảnh thumbnails trên thanh timeline
+            const interval = videoDuration / numThumbs;
+            
+            // Dùng 1 video element ẩn để seek nhanh hơn
+            const hiddenVid = document.createElement('video');
+            hiddenVid.src = url;
+            hiddenVid.muted = true;
+            
+            const canvas = document.getElementById('thumbCanvas');
+            const ctx = canvas.getContext('2d');
+
+            await new Promise(r => hiddenVid.onloadedmetadata = r);
+            
+            // Đặt kích thước canvas thấp để load nhanh
+            canvas.width = 160; 
+            canvas.height = (hiddenVid.videoHeight / hiddenVid.videoWidth) * 160;
+
+            showPopup("EXTRACTING DATA", "Scanning memory sequence...", []);
+            $('#popupButtons').hide();
+
+            for (let i = 0; i < numThumbs; i++) {
+                const targetTime = i * interval + (interval / 2);
+                hiddenVid.currentTime = targetTime;
+                
+                await new Promise(resolve => {
+                    hiddenVid.onseeked = () => {
+                        ctx.drawImage(hiddenVid, 0, 0, canvas.width, canvas.height);
+                        const img = document.createElement('img');
+                        img.src = canvas.toDataURL('image/jpeg', 0.6);
+                        thumbStrip.appendChild(img);
+                        resolve();
+                    };
+                });
+            }
+            
+            closePopup();
+        }
+
+        // --- TIMELINE INTERACTION & SLIDERS ---
+        function updateHandles() {
+            startHandle.style.left = startPercent + '%';
+            endHandle.style.left = endPercent + '%';
+            overlayLeft.style.width = startPercent + '%';
+            overlayRight.style.width = (100 - endPercent) + '%';
+            updateSelectionInfo();
+        }
+
+        function updateSelectionInfo() {
+            const sTime = (startPercent / 100) * videoDuration;
+            const eTime = (endPercent / 100) * videoDuration;
+            document.getElementById('selStartTime').innerText = formatTime(sTime, true);
+            document.getElementById('selEndTime').innerText = formatTime(eTime, true);
+            document.getElementById('selDuration').innerText = formatTime(eTime - sTime, true);
+        }
+
+        // Dragging Logic
+        function onMouseMove(e) {
+            if (!isDragging) return;
+            const rect = timelineContainer.getBoundingClientRect();
+            let x = e.clientX - rect.left;
+            let percent = (x / rect.width) * 100;
+            percent = Math.max(0, Math.min(100, percent));
+
+            if (activeHandle === 'start') {
+                if (percent >= endPercent - 2) percent = endPercent - 2; // Keep gap
+                startPercent = percent;
+                videoPlayer.currentTime = (startPercent / 100) * videoDuration;
+            } else if (activeHandle === 'end') {
+                if (percent <= startPercent + 2) percent = startPercent + 2;
+                endPercent = percent;
+                videoPlayer.currentTime = (endPercent / 100) * videoDuration;
+            }
+            updateHandles();
+        }
+
+        function onMouseUp() {
+            if(isDragging) {
+                isDragging = false;
+                document.removeEventListener('mousemove', onMouseMove);
+                document.removeEventListener('mouseup', onMouseUp);
+            }
+        }
+
+        startHandle.addEventListener('mousedown', (e) => {
+            isDragging = true; activeHandle = 'start';
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            e.stopPropagation();
+        });
+
+        endHandle.addEventListener('mousedown', (e) => {
+            isDragging = true; activeHandle = 'end';
+            document.addEventListener('mousemove', onMouseMove);
+            document.addEventListener('mouseup', onMouseUp);
+            e.stopPropagation();
+        });
+
+        // Click on timeline to seek
+        timelineContainer.addEventListener('click', (e) => {
+            if(isDragging) return;
+            const rect = timelineContainer.getBoundingClientRect();
+            const percent = ((e.clientX - rect.left) / rect.width) * 100;
+            videoPlayer.currentTime = (percent / 100) * videoDuration;
+        });
+
+        // Update Playhead
+        videoPlayer.addEventListener('timeupdate', () => {
+            const percent = (videoPlayer.currentTime / videoDuration) * 100;
+            playhead.style.left = percent + '%';
+            
+            // Auto pause if reached end slider
+            const eTime = (endPercent / 100) * videoDuration;
+            if (videoPlayer.currentTime >= eTime && !videoPlayer.paused) {
+                videoPlayer.pause();
+            }
+        });
+
+        // --- PLAY/PAUSE ---
+        document.getElementById('btnPlayPause').addEventListener('click', () => {
+            clickSound.play();
+            const sTime = (startPercent / 100) * videoDuration;
+            const eTime = (endPercent / 100) * videoDuration;
+
+            if (videoPlayer.paused) {
+                if (videoPlayer.currentTime < sTime || videoPlayer.currentTime >= eTime) {
+                    videoPlayer.currentTime = sTime;
+                }
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        });
+
+        // --- FFMPEG VIDEO CUTTING ---
+        document.getElementById('btnProcess').addEventListener('click', async () => {
+            actionSound.play();
+            
+            if (!ffmpeg.isLoaded()) {
+                showPopup("INITIALIZING CORE", "Loading FFmpeg web assembly modules...", []);
+                $('#popupButtons').hide();
+                await ffmpeg.load();
+                closePopup();
+            }
+
+            const sTime = (startPercent / 100) * videoDuration;
+            const eTime = (endPercent / 100) * videoDuration;
+            const cutDuration = eTime - sTime;
+
+            showPopup("PROCESSING CUT", 
+                `<p style="text-align:center; font-size:12px;">Cutting sequence from ${formatTime(sTime)} to ${formatTime(eTime)}</p>
+                 <div class="progress-container">
+                    <div id="vidProgressBar" class="progress-bar"></div>
+                    <div id="vidProgressText" class="progress-text">STANDBY...</div>
+                 </div>`, 
+            []);
+            $('#popupButtons').hide();
+
+            try {
+                // Read file to FFmpeg FS
+                const { name } = videoFile;
+                const ext = name.split('.').pop();
+                const outputName = `Nier_Cut_${Date.now()}.${ext}`;
+
+                ffmpeg.FS('writeFile', name, await fetchFile(videoFile));
+
+                ffmpeg.setProgress(({ ratio }) => {
+                    const percent = Math.max(0, Math.min(100, Math.round(ratio * 100)));
+                    document.getElementById('vidProgressBar').style.width = percent + '%';
+                    document.getElementById('vidProgressText').textContent = `PROCESSING ${percent}%`;
+                });
+
+                // Run FFmpeg command: -ss (start), -t (duration), -c copy (copy streams without re-encoding to be extremely fast)
+                await ffmpeg.run('-ss', sTime.toString(), '-i', name, '-t', cutDuration.toString(), '-c', 'copy', outputName);
+
+                const data = ffmpeg.FS('readFile', outputName);
+                const cutBlob = new Blob([data.buffer], { type: videoFile.type });
+                const cutUrl = URL.createObjectURL(cutBlob);
+
+                $('#popupButtons').show();
+                showPopup("OPERATION SUCCESSFUL", 
+                    `<p style="text-align:center;">Video segment successfully isolated.</p>`, 
+                    [
+                        {
+                            text: "DOWNLOAD SEQUENCE",
+                            action: function() {
+                                actionSound.currentTime=0; actionSound.play();
+                                const a = document.createElement('a');
+                                a.href = cutUrl;
+                                a.download = outputName;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                            }
+                        },
+                        {
+                            text: "CLOSE",
+                            action: function() { clickSound.play(); closePopup(); }
+                        }
+                    ]
+                );
+
+                // Gắn màu cho nút download
+                $('.popup-btn:first-child').css({'background-color': 'var(--nier-dark)', 'color': '#d3cebb'});
+
+            } catch (err) {
+                showPopup("SYSTEM ERROR", `<p>Error during processing: ${err.message}</p>`);
+            }
+        });
+
+        // Utilities
+        function formatTime(seconds, includeDecimals = false) {
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            if(includeDecimals) {
+                const ms = Math.floor((seconds % 1) * 10).toString();
+                return `${m}:${s}.${ms}`;
+            }
+            return `${m}:${s}`;
+        }
+        
+        // Cảnh báo COOP/COEP nếu cần thiết (Do FFmpeg.wasm sử dụng SharedArrayBuffer)
+        if (typeof SharedArrayBuffer === 'undefined') {
+            console.warn("SharedArrayBuffer is not available. FFmpeg.wasm might fail or run slowly. Ensure COOP/COEP headers are set on the server.");
+        }
+    </script>
+</body>
+</html>
