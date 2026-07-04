@@ -9,11 +9,11 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <script src="https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.12.10/dist/umd/ffmpeg.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/util@0.12.1/dist/umd/index.js"></script>
 
     <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
     <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
-    <script src="coi-serviceworker.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css?family=Montserrat:200,400,700');
@@ -105,7 +105,6 @@
         }
         .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
         .themebutton:disabled { opacity: 0.5; cursor: not-allowed; }
-        .themebutton.highlight { background-color: var(--nier-dark); color: var(--nier-text-light); }
 
         /* Progress Bar Module */
         .progress-container { width: 100%; border: 2px solid var(--nier-dark); background: rgba(100, 98, 86, 0.2); height: 30px; position: relative; margin: 20px 0; overflow: hidden; }
@@ -172,9 +171,6 @@
     <canvas id="thumbCanvas" style="display:none;"></canvas>
 
     <script>
-        const { createFFmpeg, fetchFile } = FFmpeg;
-        const ffmpeg = createFFmpeg({ log: true });
-
         // Sounds
         const hoverSound = document.getElementById("hover-sound");
         const clickSound = document.getElementById("click-sound");
@@ -236,10 +232,9 @@
         // --- THUMBNAIL GENERATION ---
         async function generateThumbnails(url) {
             thumbStrip.innerHTML = '';
-            const numThumbs = 12; // Số lượng ảnh thumbnails trên thanh timeline
+            const numThumbs = 12; 
             const interval = videoDuration / numThumbs;
             
-            // Dùng 1 video element ẩn để seek nhanh hơn
             const hiddenVid = document.createElement('video');
             hiddenVid.src = url;
             hiddenVid.muted = true;
@@ -249,7 +244,6 @@
 
             await new Promise(r => hiddenVid.onloadedmetadata = r);
             
-            // Đặt kích thước canvas thấp để load nhanh
             canvas.width = 160; 
             canvas.height = (hiddenVid.videoHeight / hiddenVid.videoWidth) * 160;
 
@@ -291,7 +285,6 @@
             document.getElementById('selDuration').innerText = formatTime(eTime - sTime, true);
         }
 
-        // Dragging Logic
         function onMouseMove(e) {
             if (!isDragging) return;
             const rect = timelineContainer.getBoundingClientRect();
@@ -300,7 +293,7 @@
             percent = Math.max(0, Math.min(100, percent));
 
             if (activeHandle === 'start') {
-                if (percent >= endPercent - 2) percent = endPercent - 2; // Keep gap
+                if (percent >= endPercent - 2) percent = endPercent - 2; 
                 startPercent = percent;
                 videoPlayer.currentTime = (startPercent / 100) * videoDuration;
             } else if (activeHandle === 'end') {
@@ -333,7 +326,6 @@
             e.stopPropagation();
         });
 
-        // Click on timeline to seek
         timelineContainer.addEventListener('click', (e) => {
             if(isDragging) return;
             const rect = timelineContainer.getBoundingClientRect();
@@ -341,19 +333,16 @@
             videoPlayer.currentTime = (percent / 100) * videoDuration;
         });
 
-        // Update Playhead
         videoPlayer.addEventListener('timeupdate', () => {
             const percent = (videoPlayer.currentTime / videoDuration) * 100;
             playhead.style.left = percent + '%';
             
-            // Auto pause if reached end slider
             const eTime = (endPercent / 100) * videoDuration;
             if (videoPlayer.currentTime >= eTime && !videoPlayer.paused) {
                 videoPlayer.pause();
             }
         });
 
-        // --- PLAY/PAUSE ---
         document.getElementById('btnPlayPause').addEventListener('click', () => {
             clickSound.play();
             const sTime = (startPercent / 100) * videoDuration;
@@ -369,14 +358,30 @@
             }
         });
 
-        // --- FFMPEG VIDEO CUTTING ---
+        // --- FFMPEG VIDEO CUTTING (v0.12 API - KHÔNG CẦN SHARED ARRAY BUFFER) ---
+        const { FFmpeg } = window.FFmpeg;
+        const { fetchFile } = window.FFmpegUtil;
+        let ffmpeg = null;
+
         document.getElementById('btnProcess').addEventListener('click', async () => {
             actionSound.play();
             
-            if (!ffmpeg.isLoaded()) {
-                showPopup("INITIALIZING CORE", "Loading FFmpeg web assembly modules...", []);
+            if (!ffmpeg) {
+                showPopup("INITIALIZING CORE", "Loading Single-Thread FFmpeg modules...", []);
                 $('#popupButtons').hide();
-                await ffmpeg.load();
+                
+                ffmpeg = new FFmpeg();
+                
+                ffmpeg.on('progress', ({ progress }) => {
+                    const percent = Math.max(0, Math.min(100, Math.round(progress * 100)));
+                    document.getElementById('vidProgressBar').style.width = percent + '%';
+                    document.getElementById('vidProgressText').textContent = `PROCESSING ${percent}%`;
+                });
+
+                await ffmpeg.load({
+                    coreURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.js',
+                    wasmURL: 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd/ffmpeg-core.wasm'
+                });
                 closePopup();
             }
 
@@ -394,23 +399,15 @@
             $('#popupButtons').hide();
 
             try {
-                // Read file to FFmpeg FS
                 const { name } = videoFile;
                 const ext = name.split('.').pop();
                 const outputName = `Nier_Cut_${Date.now()}.${ext}`;
 
-                ffmpeg.FS('writeFile', name, await fetchFile(videoFile));
+                await ffmpeg.writeFile(name, await fetchFile(videoFile));
 
-                ffmpeg.setProgress(({ ratio }) => {
-                    const percent = Math.max(0, Math.min(100, Math.round(ratio * 100)));
-                    document.getElementById('vidProgressBar').style.width = percent + '%';
-                    document.getElementById('vidProgressText').textContent = `PROCESSING ${percent}%`;
-                });
+                await ffmpeg.exec(['-ss', sTime.toString(), '-i', name, '-t', cutDuration.toString(), '-c', 'copy', outputName]);
 
-                // Run FFmpeg command: -ss (start), -t (duration), -c copy (copy streams without re-encoding to be extremely fast)
-                await ffmpeg.run('-ss', sTime.toString(), '-i', name, '-t', cutDuration.toString(), '-c', 'copy', outputName);
-
-                const data = ffmpeg.FS('readFile', outputName);
+                const data = await ffmpeg.readFile(outputName);
                 const cutBlob = new Blob([data.buffer], { type: videoFile.type });
                 const cutUrl = URL.createObjectURL(cutBlob);
 
@@ -437,16 +434,17 @@
                     ]
                 );
 
-                // Gắn màu cho nút download
                 $('.popup-btn:first-child').css({'background-color': 'var(--nier-dark)', 'color': '#d3cebb'});
 
             } catch (err) {
                 showPopup("SYSTEM ERROR", `<p>Error during processing: ${err.message}</p>`);
+                console.error(err);
             }
         });
 
         // Utilities
         function formatTime(seconds, includeDecimals = false) {
+            if(isNaN(seconds)) return "00:00";
             const m = Math.floor(seconds / 60).toString().padStart(2, '0');
             const s = Math.floor(seconds % 60).toString().padStart(2, '0');
             if(includeDecimals) {
@@ -454,11 +452,6 @@
                 return `${m}:${s}.${ms}`;
             }
             return `${m}:${s}`;
-        }
-        
-        // Cảnh báo COOP/COEP nếu cần thiết (Do FFmpeg.wasm sử dụng SharedArrayBuffer)
-        if (typeof SharedArrayBuffer === 'undefined') {
-            console.warn("SharedArrayBuffer is not available. FFmpeg.wasm might fail or run slowly. Ensure COOP/COEP headers are set on the server.");
         }
     </script>
 </body>
