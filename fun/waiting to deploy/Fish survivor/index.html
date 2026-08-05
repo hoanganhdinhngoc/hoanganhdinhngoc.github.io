@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cá Lớn Nuốt Cá Bé - Khổng Lồ</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #03305d; /* Màu nước theo đúng chuẩn */
+            font-family: sans-serif;
+            user-select: none;
+        }
+        canvas {
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            pointer-events: none;
+        }
+        #ui h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        #deathScreen {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 100;
+        }
+        #deathScreen h1 {
+            font-size: 60px;
+            color: #ff3333;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        #deathScreen button {
+            padding: 15px 40px;
+            font-size: 24px;
+            background-color: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, background 0.2s;
+        }
+        #deathScreen button:hover {
+            background-color: #00cc6a;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h2>Size: <span id="score">5</span></h2>
+    </div>
+
+    <div id="deathScreen">
+        <h1>YOU DIED</h1>
+        <button onclick="resetGame()">Restart?</button>
+    </div>
+
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const deathScreen = document.getElementById('deathScreen');
+
+        let width, height;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // ==============================================================
+        // BẢNG ĐIỀU KHIỂN TỔNG HỢP (GAME CONFIGURATION)
+        // Tất cả thông số quan trọng đã được gom lại đây để Sir dễ dàng tinh chỉnh
+        // ==============================================================
+        const GAME_CONFIG = {
+            // [THÔNG SỐ: Zoom Default (Mức thu phóng khởi đầu)]
+            // Quyết định mức độ phóng to của camera ban đầu.
+            // Số lớn hơn -> Cá trông to hơn, vùng nhìn bao quát hẹp lại.
+            // Số nhỏ hơn -> Cá trông nhỏ đi, vùng nhìn bao quát rộng hơn ra.
+            // Yêu cầu: Đã giảm xuống còn 1/4 so với bản cũ (48 giảm còn 12).
+            INITIAL_ZOOM_FACTOR: 20,
+
+            // [THÔNG SỐ: Khoảng cách spawn lúc khởi tạo game]
+            // Quyết định khoảng cách tối thiểu giữa các con cá khi game vừa bắt đầu.
+            // Số lớn hơn -> Cá khởi đầu nằm cách xa nhau và không bị dính cục rối rắm.
+            INIT_SPAWN_PADDING_MULTIPLIER: 50,
+
+            // [THÔNG SỐ: Mật độ Cá và Tảo trên bản đồ]
+            // Số lớn hơn -> Bản đồ đông đúc hơn nhưng có thể gây nặng máy.
+            ALGAE_DENSITY: 50, 
+            MAX_ALGAE: 20000,     
+            FISH_DENSITY: 200,
+
+            // [THÔNG SỐ: Tốc độ lớn của Tảo]
+            // Số giây để tảo đạt kích thước tối đa.
+            // Số lớn hơn -> Tảo lớn chậm đi. Số nhỏ hơn -> Tảo lớn nhanh.
+            ALGAE_MAX_AGE: 12000000,
+            ALGAE_MAX_RADIUS: 10000,
+
+            // [THÔNG SỐ: Tốc độ sinh sôi của Tảo]
+            // Số giây để cụm tảo đẻ thêm 1 viên tảo mới.
+            // Số nhỏ hơn -> Tảo đẻ nhanh hơn.
+            ALGAE_REPRODUCE_RATE: 3,
+
+            // [THÔNG SỐ: Tốc độ di chuyển của Cá]
+            // Base Speed: Vận tốc cơ bản. Multiplier: Tốc độ cộng thêm dựa trên kích cỡ (để tỷ lệ thuận với độ phóng to của Zoom).
+            // Yêu cầu: Đã giảm vận tốc tổng thể xuống 1/4 (từ 20 xuống 5).
+            PLAYER_BASE_SPEED: 10,
+            PLAYER_SPEED_MULTIPLIER: 8, 
+            
+            NPC_BASE_SPEED: 8,
+            NPC_SPEED_MULTIPLIER: 6,
+            // CAPPING YÊU CẦU: Cá NPC không bao giờ bơi nhanh hơn cá User trừ đi khoảng penalty này.
+            NPC_SPEED_PENALTY: 5,
+
+            // [THÔNG SỐ: Khả năng quay người của cá NPC]
+            // Hàm tính tốc độ quay: tốc độ cơ bản * (bán kính ^ số mũ).
+            // Số mũ âm (-0.15) giúp cá càng to quay người càng chậm, nhưng rất từ từ.
+            NPC_TURN_SPEED_BASE: 0.05,
+            NPC_TURN_SPEED_POWER: -0.15,
+
+            // [THÔNG SỐ: Kích cỡ cá NPC lớn nhất]
+            // Số lần tối đa kích cỡ cá NPC so với User tại thời điểm spawn.
+            // Yêu cầu: Không con cá nào lớn quá 20 lần User.
+            MAX_NPC_SIZE_MULTIPLIER: 10,
+
+            // [THÔNG SỐ: Tỷ lệ spawn cá khổng lồ]
+            // Số mũ áp dụng cho hàm ngẫu nhiên (0 -> 1).
+            // Số mũ lớn hơn -> Xác suất spawn cá cực to càng hiếm đi cực kì nhiều.
+            // Yêu cầu: Xác suất spawn cá chênh lệch kích thước lớn chỉ còn 1/10 (tăng số mũ lên 15).
+            NPC_SPAWN_SCALE_POWER: 10
+        };
+        // ==============================================================
+
+        const WORLD_SIZE = 100000000; 
+
+        const fishTypes = [];
+        for (let i = 0; i < 50; i++) {
+            fishTypes.push({
+                color: `hsl(${Math.random() * 360}, ${70 + Math.random() * 30}%, ${40 + Math.random() * 40}%)`,
+                lengthRatio: 0.8 + Math.random() * 2.5,
+                isAggro: Math.random() > 0.5,
+                tailSize: 0.5 + Math.random() * 0.8
+            });
+        }
+
+        const camera = { x: 0, y: 0 };
+        let userZoom = 1;
+        let baseZoom = 1;
+        const mouse = { x: width/2, y: height/2 };
+        let worldMouse = { x: 0, y: 0 };
+        let isGameOver = false;
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) userZoom *= 0.85;
+            else userZoom *= 1.15;
+            userZoom = Math.max(0.01, Math.min(userZoom, 15)); 
+        });
+
+        class Algae {
+            constructor(x, y, radius = 1, age = 0) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius;
+                this.age = age;
+                this.reproduceTimer = 0;
+            }
+
+            update(dt, allAlgae) {
+                this.age += dt;
+                if (this.age < GAME_CONFIG.ALGAE_MAX_AGE) {
+                    this.radius = 1 + (GAME_CONFIG.ALGAE_MAX_RADIUS - 1) * Math.pow(this.age / GAME_CONFIG.ALGAE_MAX_AGE, 0.5);
+                } else {
+                    this.radius = GAME_CONFIG.ALGAE_MAX_RADIUS;
+                }
+
+                this.reproduceTimer += dt;
+                if (this.reproduceTimer >= GAME_CONFIG.ALGAE_REPRODUCE_RATE) {
+                    this.reproduceTimer = 0;
+                    if (allAlgae.length < GAME_CONFIG.MAX_ALGAE) {
+                        const angle = Math.random() * Math.PI * 2;
+                        const offset = this.radius + 1.5;
+                        
+                        const minVisRadius = 0.5 / (baseZoom * userZoom);
+                        const spawnRadius = Math.max(1, minVisRadius);
+                        
+                        allAlgae.push(new Algae(this.x + Math.cos(angle) * offset, this.y + Math.sin(angle) * offset, spawnRadius, 0));
+                    }
+                }
+
+                for (let other of allAlgae) {
+                    if (other === this) continue;
+                    const dx = this.x - other.x;
+                    const dy = this.y - other.y;
+                    const dist = Math.hypot(dx, dy);
+                    const minDist = this.radius + other.radius;
+                    
+                    if (dist < minDist * 1.5) {
+                        const overlap = minDist - dist; 
+                        const force = overlap * 2 * dt; 
+                        if (dist > 0.1) {
+                            this.x += (dx / dist) * force;
+                            this.y += (dy / dist) * force;
+                        }
+                    }
+                }
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = '#4cd137'; 
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.strokeStyle = '#2ed573';
+                ctx.lineWidth = Math.max(this.radius * 0.1, 0.5);
+                ctx.stroke();
+            }
+        }
+
+        class Fish {
+            constructor(x, y, radius, isPlayer = false) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius; 
+                this.isPlayer = isPlayer;
+                
+                this.vx = 0;
+                this.vy = 0;
+                this.angle = 0;
+                
+                this.type = isPlayer ? fishTypes[0] : fishTypes[Math.floor(Math.random() * fishTypes.length)];
+                this.mouthOpen = 0; 
+                this.eatTimer = 0;
+                this.speed = this.calculateSpeed();
+            }
+
+            calculateSpeed() {
+                // Sử dụng thông số từ GAME_CONFIG
+                if (this.isPlayer) {
+                    return GAME_CONFIG.PLAYER_BASE_SPEED + this.radius * GAME_CONFIG.PLAYER_SPEED_MULTIPLIER; 
+                } else {
+                    let npcSpeed = GAME_CONFIG.NPC_BASE_SPEED + this.radius * GAME_CONFIG.NPC_SPEED_MULTIPLIER;
+                    
+                    // Giới hạn tuyệt đối tốc độ NPC
+                    if (typeof player !== 'undefined' && player) {
+                        let playerSpeed = GAME_CONFIG.PLAYER_BASE_SPEED + player.radius * GAME_CONFIG.PLAYER_SPEED_MULTIPLIER;
+                        if (npcSpeed > playerSpeed - GAME_CONFIG.NPC_SPEED_PENALTY) {
+                            npcSpeed = Math.max(0, playerSpeed - GAME_CONFIG.NPC_SPEED_PENALTY); 
+                        }
+                    }
+                    return npcSpeed; 
+                }
+            }
+
+            update(dt, allFish) {
+                this.speed = this.calculateSpeed();
+
+                if (this.isPlayer) {
+                    const totalZoom = baseZoom * userZoom;
+                    worldMouse.x = (mouse.x - width / 2) / totalZoom + camera.x;
+                    worldMouse.y = (mouse.y - height / 2) / totalZoom + camera.y;
+
+                    const dx = worldMouse.x - this.x;
+                    const dy = worldMouse.y - this.y;
+                    const dist = Math.hypot(dx, dy);
+
+                    if (dist > this.radius * 0.2) {
+                        this.angle = Math.atan2(dy, dx);
+                        this.vx = Math.cos(this.angle) * this.speed;
+                        this.vy = Math.sin(this.angle) * this.speed;
+                    } else {
+                        this.vx *= 0.9;
+                        this.vy *= 0.9;
+                    }
+                } else {
+                    let closestPredator = null, closestPrey = null;
+                    let minDistPredator = Infinity, minDistPrey = Infinity;
+
+                    for (let other of allFish) {
+                        if (other === this) continue;
+                        const dist = Math.hypot(other.x - this.x, other.y - this.y);
+                        
+                        if (dist < this.radius * 20 + other.radius) {
+                            if (other.radius > this.radius * 1.05 && dist < minDistPredator) {
+                                minDistPredator = dist; closestPredator = other;
+                            } else if (other.radius < this.radius * 0.95 && dist < minDistPrey) {
+                                minDistPrey = dist; closestPrey = other;
+                            }
+                        }
+                    }
+
+                    let targetAngle = this.angle;
+                    if (closestPredator && minDistPredator < this.radius * 15) {
+                        targetAngle = Math.atan2(this.y - closestPredator.y, this.x - closestPredator.x);
+                    } else if (closestPrey && minDistPrey < this.radius * 20) {
+                        targetAngle = Math.atan2(closestPrey.y - this.y, closestPrey.x - this.x);
+                    } else {
+                        if (Math.random() < 0.02) targetAngle += (Math.random() - 0.5) * Math.PI;
+                    }
+
+                    let angleDiff = targetAngle - this.angle;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                    
+                    // Xử lý góc xoay của cá NPC dùng GAME_CONFIG
+                    let turnSpeed = GAME_CONFIG.NPC_TURN_SPEED_BASE * Math.pow(this.radius, GAME_CONFIG.NPC_TURN_SPEED_POWER); 
+                    turnSpeed = Math.max(0.01, Math.min(turnSpeed, 0.08)); 
+                    
+                    this.angle += angleDiff * turnSpeed;
+
+                    this.vx = Math.cos(this.angle) * this.speed;
+                    this.vy = Math.sin(this.angle) * this.speed;
+                }
+
+                this.x += this.vx * dt;
+                this.y += this.vy * dt;
+
+                const limit = WORLD_SIZE / 2;
+                this.x = Math.max(-limit, Math.min(limit, this.x));
+                this.y = Math.max(-limit, Math.min(limit, this.y));
+
+                if (this.eatTimer > 0) {
+                    this.eatTimer -= dt;
+                    this.mouthOpen = Math.abs(Math.sin(this.eatTimer * 15)); 
+                } else {
+                    this.mouthOpen = 0.1;
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                
+                let normAngle = Math.atan2(Math.sin(this.angle), Math.cos(this.angle));
+                let flipY = 1;
+                if (Math.abs(normAngle) > Math.PI / 2) {
+                    flipY = -1;
+                }
+                
+                ctx.rotate(normAngle);
+                ctx.scale(1, flipY); 
+
+                const length = this.radius * this.type.lengthRatio;
+                const widthRadius = this.radius;
+
+                ctx.fillStyle = this.type.color;
+                ctx.beginPath();
+                ctx.moveTo(-length * 0.6, 0);
+                ctx.lineTo(-length * (1 + this.type.tailSize), -widthRadius * 0.8 * this.type.tailSize);
+                ctx.lineTo(-length * (1 + this.type.tailSize), widthRadius * 0.8 * this.type.tailSize);
+                ctx.fill();
+
+                ctx.beginPath();
+                ctx.moveTo(-length * 0.2, -widthRadius * 0.8);
+                ctx.lineTo(-length * 0.5, -widthRadius * 1.5);
+                ctx.lineTo(length * 0.1, -widthRadius * 0.9);
+                ctx.fill();
+
+                ctx.beginPath();
+                let mouthAngle = this.mouthOpen * 0.6; 
+                ctx.ellipse(0, 0, length, widthRadius, 0, mouthAngle, Math.PI * 2 - mouthAngle);
+                ctx.lineTo(0, 0); 
+                ctx.fill();
+
+                if (this.isPlayer) {
+                    // SỬA LỖI ĐỒ HỌA MÚP MÍP Ở MIỆNG: 
+                    // Bằng cách dùng luôn đường nét thân ở trên và stroke, sẽ không sinh ra một elip thừa lấp miệng.
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.lineWidth = Math.max(this.radius * 0.05, 1);
+                    ctx.stroke();
+                }
+
+                const eyeX = length * 0.5;
+                const eyeY = -widthRadius * 0.4;
+                const eyeSize = Math.max(this.radius * 0.15, 1);
+
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(eyeX, eyeY, eyeSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(eyeX + eyeSize * 0.2, eyeY, eyeSize * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (this.type.isAggro) {
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = Math.max(eyeSize * 0.3, 0.5);
+                    ctx.beginPath();
+                    ctx.moveTo(eyeX - eyeSize * 1.2, eyeY - eyeSize * 1.2);
+                    ctx.lineTo(eyeX + eyeSize, eyeY - eyeSize * 0.2);
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        let fishes = [];
+        let algaes = [];
+        let player;
+
+        function getVisibleRadius() {
+            const totalZoom = baseZoom * userZoom;
+            return (Math.max(width, height) / totalZoom) / 2;
+        }
+
+        function getSimRadius() {
+            return getVisibleRadius() * 2.5;
+        }
+
+        function initGame() {
+            fishes = [];
+            algaes = [];
+            isGameOver = false;
+            deathScreen.style.display = 'none';
+            userZoom = 1;
+            camera.x = 0; camera.y = 0;
+
+            player = new Fish(0, 0, 5, true);
+            player.type = { color: '#00ff88', lengthRatio: 1.5, isAggro: false, tailSize: 0.8 };
+            
+            // Lấy thông số khởi đầu từ GAME_CONFIG
+            baseZoom = GAME_CONFIG.INITIAL_ZOOM_FACTOR / player.radius; 
+            
+            fishes.push(player);
+
+            for(let i = 0; i < GAME_CONFIG.FISH_DENSITY; i++) spawnFish(true);
+            for(let i = 0; i < GAME_CONFIG.ALGAE_DENSITY; i++) spawnAlgae(true);
+            
+            lastTime = performance.now();
+            if(!gameLoopRunning) {
+                gameLoopRunning = true;
+                requestAnimationFrame(gameLoop);
+            }
+        }
+
+        function spawnFish(isInit = false) {
+            if (!player) return;
+            
+            let radius;
+            const rand = Math.random();
+            const totalZoom = baseZoom * userZoom;
+            
+            if (rand < 0.80) {
+                radius = player.radius * (0.05 + Math.random() * 0.7);
+            } else if (rand < 0.95) {
+                radius = player.radius * (0.8 + Math.random() * 0.5); 
+            } else {
+                // Sử dụng GAME_CONFIG.NPC_SPAWN_SCALE_POWER (15) để ép xác suất cực nhỏ với cá lớn.
+                // Giới hạn cứng tối đa MAX_NPC_SIZE_MULTIPLIER = 20
+                const scaleModifier = Math.pow(Math.random(), GAME_CONFIG.NPC_SPAWN_SCALE_POWER); 
+                radius = player.radius * (1.5 + scaleModifier * (GAME_CONFIG.MAX_NPC_SIZE_MULTIPLIER - 1.5)); 
+            }
+
+            const minVisRadius = 0.5 / totalZoom;
+            if (radius < minVisRadius) radius = minVisRadius;
+
+            const visibleRad = getVisibleRadius();
+            const simRadius = getSimRadius();
+            let distance, x, y;
+            const angle = Math.random() * Math.PI * 2;
+
+            if (isInit) {
+                // Khoảng cách an toàn dãn cách tối đa lúc bắt đầu game
+                const padding = (radius + player.radius) * GAME_CONFIG.INIT_SPAWN_PADDING_MULTIPLIER;
+                distance = padding + Math.random() * (simRadius * 1.5);
+            } else {
+                distance = visibleRad + radius + Math.random() * (simRadius - visibleRad);
+            }
+            
+            x = player.x + Math.cos(angle) * distance;
+            y = player.y + Math.sin(angle) * distance;
+
+            fishes.push(new Fish(x, y, radius));
+        }
+
+        function spawnAlgae(isInit = false) {
+            if (!player) return;
+            if (algaes.length >= GAME_CONFIG.MAX_ALGAE) return;
+
+            const visibleRad = getVisibleRadius();
+            const simRadius = getSimRadius();
+            const angle = Math.random() * Math.PI * 2;
+            
+            const distance = isInit ? (Math.random() * visibleRad * 1.5) : (visibleRad + Math.random() * (simRadius - visibleRad));
+            
+            const x = player.x + Math.cos(angle) * distance;
+            const y = player.y + Math.sin(angle) * distance;
+            
+            const minVisRadius = 0.5 / (baseZoom * userZoom);
+            const startRadius = Math.max(1, minVisRadius);
+            
+            algaes.push(new Algae(x, y, startRadius, 0));
+        }
+
+        function resetGame() {
+            location.reload();
+        }
+
+        let lastTime;
+        let gameLoopRunning = false;
+
+        function gameLoop(time) {
+            if (isGameOver) {
+                gameLoopRunning = false;
+                return; 
+            }
+
+            const dt = Math.min((time - lastTime) / 1000, 0.1); 
+            lastTime = time;
+
+            const targetBaseZoom = GAME_CONFIG.INITIAL_ZOOM_FACTOR / player.radius;
+            baseZoom += (targetBaseZoom - baseZoom) * 0.6 * dt; 
+            
+            const totalZoom = baseZoom * userZoom;
+
+            camera.x += (player.x - camera.x) * 5 * dt;
+            camera.y += (player.y - camera.y) * 5 * dt;
+
+            const simRadius = getSimRadius();
+
+            for (let i = algaes.length - 1; i >= 0; i--) {
+                const algae = algaes[i];
+                algae.update(dt, algaes);
+                
+                const distToPlayer = Math.hypot(algae.x - player.x, algae.y - player.y);
+                if (distToPlayer > simRadius + algae.radius + 500) {
+                    algaes.splice(i, 1); 
+                    continue;
+                }
+
+                const screenRadius = algae.radius * totalZoom;
+                if (screenRadius < 0.5) {
+                    algaes.splice(i, 1);
+                    continue;
+                }
+            }
+            while (algaes.length < GAME_CONFIG.ALGAE_DENSITY) spawnAlgae();
+
+            for (let i = fishes.length - 1; i >= 0; i--) {
+                const fish = fishes[i];
+                fish.update(dt, fishes);
+
+                if (!fish.isPlayer) {
+                    const distToPlayer = Math.hypot(fish.x - player.x, fish.y - player.y);
+                    if (distToPlayer > simRadius + fish.radius + 500) {
+                        fishes.splice(i, 1);
+                        continue;
+                    }
+
+                    const screenRadius = fish.radius * totalZoom;
+                    if (screenRadius < 0.5) {
+                        fishes.splice(i, 1);
+                        continue;
+                    }
+                }
+            }
+            while (fishes.length < GAME_CONFIG.FISH_DENSITY) spawnFish();
+
+            for (let i = 0; i < fishes.length; i++) {
+                for (let j = 0; j < fishes.length; j++) {
+                    if (i === j) continue;
+                    const f1 = fishes[i];
+                    const f2 = fishes[j];
+
+                    const dist = Math.hypot(f1.x - f2.x, f1.y - f2.y);
+                    if (dist < f1.radius + f2.radius * 0.5) {
+                        if (f1.radius > f2.radius * 1.05) {
+                            f1.eatTimer = 0.5;
+                            const f1Area = Math.PI * f1.radius * f1.radius;
+                            const f2Area = Math.PI * f2.radius * f2.radius;
+                            f1.radius = Math.sqrt((f1Area + f2Area * 0.8) / Math.PI); 
+
+                            if (f2.isPlayer) {
+                                isGameOver = true;
+                                deathScreen.style.display = 'flex';
+                                break;
+                            } else {
+                                fishes.splice(j, 1);
+                                if (j < i) i--; 
+                            }
+                        }
+                    }
+                }
+                if (isGameOver) break;
+            }
+
+            if (!isGameOver) {
+                for (let fish of fishes) {
+                    for (let k = algaes.length - 1; k >= 0; k--) {
+                        const algae = algaes[k];
+                        const dx = fish.x - algae.x;
+                        const dy = fish.y - algae.y;
+                        const dist = Math.hypot(dx, dy);
+
+                        if (dist < fish.radius + algae.radius) {
+                            if (fish.radius > algae.radius) {
+                                fish.eatTimer = 0.5;
+                                const fishArea = Math.PI * fish.radius * fish.radius;
+                                const algaeArea = Math.PI * algae.radius * algae.radius;
+                                fish.radius = Math.sqrt((fishArea + algaeArea) / Math.PI);
+                                algaes.splice(k, 1);
+                            } else {
+                                const overlap = (fish.radius + algae.radius) - dist;
+                                if (dist > 0 && overlap > 0) {
+                                    fish.x += (dx / dist) * overlap * 0.5;
+                                    fish.y += (dy / dist) * overlap * 0.5;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            scoreEl.innerText = player.radius.toLocaleString('en-US', {maximumFractionDigits: 1});
+
+            ctx.fillStyle = '#03305d'; 
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(totalZoom, totalZoom);
+            ctx.translate(-camera.x, -camera.y);
+
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = Math.max(1 / totalZoom, 0.1); 
+            
+            const gridSize = Math.pow(10, Math.floor(Math.log10(player.radius * 5))); 
+            const startX = Math.floor((camera.x - width/2/totalZoom) / gridSize) * gridSize;
+            const startY = Math.floor((camera.y - height/2/totalZoom) / gridSize) * gridSize;
+            const endX = startX + width/totalZoom + gridSize*2;
+            const endY = startY + height/totalZoom + gridSize*2;
+
+            ctx.beginPath();
+            for (let x = startX; x <= endX; x += gridSize) { ctx.moveTo(x, startY); ctx.lineTo(x, endY); }
+            for (let y = startY; y <= endY; y += gridSize) { ctx.moveTo(startX, y); ctx.lineTo(endX, y); }
+            ctx.stroke();
+
+            for (let algae of algaes) algae.draw(ctx);
+
+            fishes.sort((a, b) => a.radius - b.radius);
+            for (let fish of fishes) fish.draw(ctx);
+
+            ctx.restore();
+
+            if (!isGameOver) requestAnimationFrame(gameLoop);
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

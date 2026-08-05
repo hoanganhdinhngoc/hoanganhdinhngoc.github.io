@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cá Lớn Nuốt Cá Bé</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #081b29;
+            font-family: sans-serif;
+        }
+        canvas {
+            display: block;
+        }
+        #ui {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            text-shadow: 1px 1px 2px black;
+            pointer-events: none;
+        }
+        #controls {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <h2>Kích thước hiện tại: <span id="score">10</span></h2>
+    </div>
+    <div id="controls">
+        Di chuyển chuột để điều khiển • Cuộn chuột để Zoom In/Zoom Out
+    </div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+
+        let width, height;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 50 Loại cá khác nhau
+        const fishTypes = [];
+        for (let i = 0; i < 50; i++) {
+            fishTypes.push({
+                id: i,
+                color: `hsl(${Math.random() * 360}, ${60 + Math.random() * 40}%, ${40 + Math.random() * 40}%)`,
+                lengthRatio: 0.8 + Math.random() * 2.5, // Tỷ lệ chiều dài / chiều rộng (1 là tròn, 3 là dài)
+                isAggro: Math.random() > 0.5, // Mắt hung dữ hay hiền lành
+                tailSize: 0.5 + Math.random() * 0.8
+            });
+        }
+
+        // Camera và World
+        const camera = { x: 0, y: 0 };
+        let userZoom = 1;
+        let baseZoom = 1;
+        
+        const mouse = { x: 0, y: 0 };
+        let worldMouse = { x: 0, y: 0 };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('wheel', (e) => {
+            if (e.deltaY > 0) userZoom *= 0.9;
+            else userZoom *= 1.1;
+            userZoom = Math.max(0.05, Math.min(userZoom, 10)); // Giới hạn zoom
+        });
+
+        class Fish {
+            constructor(x, y, radius, isPlayer = false) {
+                this.x = x;
+                this.y = y;
+                this.radius = radius; // Kích thước thể hiện bằng bán kính cơ sở
+                this.isPlayer = isPlayer;
+                
+                this.vx = 0;
+                this.vy = 0;
+                this.angle = 0;
+                
+                this.type = isPlayer ? fishTypes[0] : fishTypes[Math.floor(Math.random() * fishTypes.length)];
+                
+                this.mouthOpen = 0; // 0 đến 1
+                this.isEating = false;
+                this.eatTimer = 0;
+                
+                this.speed = this.calculateSpeed();
+            }
+
+            calculateSpeed() {
+                // Cá càng to càng chậm lại một chút để cân bằng, nhưng vẫn đủ nhanh để đuổi
+                return 150 * Math.pow(this.radius, -0.15); 
+            }
+
+            update(dt, allFish) {
+                this.speed = this.calculateSpeed();
+
+                if (this.isPlayer) {
+                    // Update world mouse position based on camera
+                    const totalZoom = baseZoom * userZoom;
+                    worldMouse.x = (mouse.x - width / 2) / totalZoom + camera.x;
+                    worldMouse.y = (mouse.y - height / 2) / totalZoom + camera.y;
+
+                    const dx = worldMouse.x - this.x;
+                    const dy = worldMouse.y - this.y;
+                    const dist = Math.hypot(dx, dy);
+
+                    if (dist > this.radius * 0.2) {
+                        this.angle = Math.atan2(dy, dx);
+                        this.vx = Math.cos(this.angle) * this.speed;
+                        this.vy = Math.sin(this.angle) * this.speed;
+                    } else {
+                        this.vx *= 0.9;
+                        this.vy *= 0.9;
+                    }
+                } else {
+                    // AI Logic: Sinh tồn
+                    let closestPredator = null;
+                    let closestPrey = null;
+                    let minDistPredator = Infinity;
+                    let minDistPrey = Infinity;
+
+                    for (let other of allFish) {
+                        if (other === this) continue;
+                        const dist = Math.hypot(other.x - this.x, other.y - this.y);
+                        
+                        // Nếu trong tầm nhìn (khoảng 10 lần bán kính hoặc một hằng số lớn)
+                        if (dist < this.radius * 15 + other.radius) {
+                            if (other.radius > this.radius * 1.05 && dist < minDistPredator) {
+                                minDistPredator = dist;
+                                closestPredator = other;
+                            } else if (other.radius < this.radius * 0.95 && dist < minDistPrey) {
+                                minDistPrey = dist;
+                                closestPrey = other;
+                            }
+                        }
+                    }
+
+                    let targetAngle = this.angle;
+
+                    if (closestPredator && minDistPredator < this.radius * 8) {
+                        // Chạy trốn
+                        targetAngle = Math.atan2(this.y - closestPredator.y, this.x - closestPredator.x);
+                    } else if (closestPrey && minDistPrey < this.radius * 12) {
+                        // Đuổi theo
+                        targetAngle = Math.atan2(closestPrey.y - this.y, closestPrey.x - this.x);
+                    } else {
+                        // Đi lang thang
+                        if (Math.random() < 0.02) {
+                            targetAngle += (Math.random() - 0.5) * Math.PI;
+                        }
+                    }
+
+                    // Smooth turning
+                    let angleDiff = targetAngle - this.angle;
+                    while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+                    while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+                    this.angle += angleDiff * 0.05;
+
+                    this.vx = Math.cos(this.angle) * this.speed;
+                    this.vy = Math.sin(this.angle) * this.speed;
+                }
+
+                this.x += this.vx * dt;
+                this.y += this.vy * dt;
+
+                // Animation miệng cá
+                if (this.eatTimer > 0) {
+                    this.eatTimer -= dt;
+                    this.mouthOpen = Math.abs(Math.sin(this.eatTimer * 10)); // Mấp máy miệng
+                } else {
+                    this.mouthOpen = 0.1; // Hơi mở lúc bình thường
+                }
+            }
+
+            draw(ctx) {
+                ctx.save();
+                ctx.translate(this.x, this.y);
+                ctx.rotate(this.angle);
+
+                const length = this.radius * this.type.lengthRatio;
+                const width = this.radius;
+
+                // Vẽ đuôi
+                ctx.fillStyle = this.type.color;
+                ctx.beginPath();
+                ctx.moveTo(-length * 0.6, 0);
+                ctx.lineTo(-length * (1 + this.type.tailSize), -width * 0.8 * this.type.tailSize);
+                ctx.lineTo(-length * (1 + this.type.tailSize), width * 0.8 * this.type.tailSize);
+                ctx.fill();
+
+                // Vẽ vây
+                ctx.beginPath();
+                ctx.moveTo(-length * 0.2, -width * 0.8);
+                ctx.lineTo(-length * 0.5, -width * 1.5);
+                ctx.lineTo(length * 0.1, -width * 0.9);
+                ctx.fill();
+
+                // Vẽ thân cá (cắt miệng nếu có)
+                ctx.beginPath();
+                let mouthAngle = this.mouthOpen * 0.6; // Góc mở miệng tối đa
+                
+                // Vẽ nửa trên, lưng, thân
+                ctx.ellipse(0, 0, length, width, 0, mouthAngle, Math.PI * 2 - mouthAngle);
+                ctx.lineTo(0, 0); // Về tâm để tạo hình chữ V cho miệng
+                ctx.fill();
+
+                // Vẽ mắt
+                const eyeX = length * 0.5;
+                const eyeY = -width * 0.4;
+                const eyeSize = Math.max(this.radius * 0.15, 1);
+
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(eyeX, eyeY, eyeSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = 'black';
+                ctx.beginPath();
+                ctx.arc(eyeX + eyeSize * 0.2, eyeY, eyeSize * 0.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Lông mày/Dáng mắt hung dữ
+                if (this.type.isAggro) {
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = eyeSize * 0.3;
+                    ctx.beginPath();
+                    ctx.moveTo(eyeX - eyeSize * 1.2, eyeY - eyeSize * 1.2);
+                    ctx.lineTo(eyeX + eyeSize, eyeY - eyeSize * 0.2);
+                    ctx.stroke();
+                }
+
+                // Vẽ viền highlight cho người chơi
+                if (this.isPlayer) {
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                    ctx.lineWidth = this.radius * 0.1;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, length, width, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+        }
+
+        const fishes = [];
+        let player = new Fish(0, 0, 10, true);
+        player.type = { color: '#00ff88', lengthRatio: 1.5, isAggro: false, tailSize: 0.8 }; // Player đặc biệt xíu
+        fishes.push(player);
+
+        // Sinh ra cá ngẫu nhiên quanh người chơi
+        function spawnFish() {
+            const angle = Math.random() * Math.PI * 2;
+            const totalZoom = baseZoom * userZoom;
+            // Spawn ở ngoài màn hình một khoảng
+            const distance = Math.max(width, height) / totalZoom * (0.8 + Math.random() * 0.5);
+            
+            const x = player.x + Math.cos(angle) * distance;
+            const y = player.y + Math.sin(angle) * distance;
+
+            // Kích thước từ bé tí đến to hơn người chơi một chút (nguy hiểm)
+            let radius;
+            const rand = Math.random();
+            if (rand < 0.6) {
+                // Thức ăn nhỏ
+                radius = player.radius * (0.1 + Math.random() * 0.6);
+            } else if (rand < 0.9) {
+                // Cùng cỡ hoặc hơi lớn
+                radius = player.radius * (0.8 + Math.random() * 0.6);
+            } else {
+                // Cá mập khổng lồ
+                radius = player.radius * (1.5 + Math.random() * 2);
+            }
+
+            fishes.push(new Fish(x, y, Math.max(1, radius)));
+        }
+
+        // Tạo sẵn đàn cá ban đầu
+        for(let i = 0; i < 150; i++) spawnFish();
+
+        let lastTime = performance.now();
+
+        function gameLoop(time) {
+            const dt = (time - lastTime) / 1000;
+            lastTime = time;
+
+            // Update camera base zoom theo kích thước người chơi
+            baseZoom = 25 / player.radius;
+            const totalZoom = baseZoom * userZoom;
+
+            // Camera mượt bám theo player
+            camera.x += (player.x - camera.x) * 5 * dt;
+            camera.y += (player.y - camera.y) * 5 * dt;
+
+            // Cập nhật tất cả cá
+            for (let i = fishes.length - 1; i >= 0; i--) {
+                const fish = fishes[i];
+                fish.update(dt, fishes);
+
+                // Dọn dẹp cá bơi quá xa để tối ưu hiệu năng
+                const distToPlayer = Math.hypot(fish.x - player.x, fish.y - player.y);
+                const maxDist = Math.max(width, height) / totalZoom * 2.5;
+                if (!fish.isPlayer && distToPlayer > maxDist) {
+                    fishes.splice(i, 1);
+                    spawnFish(); // Sinh con mới thay thế
+                    continue;
+                }
+            }
+
+            // Xử lý ăn nhau
+            for (let i = 0; i < fishes.length; i++) {
+                for (let j = 0; j < fishes.length; j++) {
+                    if (i === j) continue;
+                    const f1 = fishes[i];
+                    const f2 = fishes[j];
+
+                    // Khoảng cách chạm nhau (ước lượng để miệng chạm vào)
+                    const dist = Math.hypot(f1.x - f2.x, f1.y - f2.y);
+                    
+                    if (dist < f1.radius + f2.radius * 0.5) {
+                        // Kẻ lớn ăn kẻ bé (phải lớn hơn ít nhất 5%)
+                        if (f1.radius > f2.radius * 1.05) {
+                            f1.eatTimer = 0.5; // Kích hoạt animation ăn
+                            
+                            // Tăng kích thước (cộng dồn diện tích)
+                            const f1Area = Math.PI * f1.radius * f1.radius;
+                            const f2Area = Math.PI * f2.radius * f2.radius;
+                            f1.radius = Math.sqrt((f1Area + f2Area * 0.2) / Math.PI); // Chỉ hấp thụ 20% dinh dưỡng để game không end quá nhanh
+
+                            if (f2.isPlayer) {
+                                // Người chơi bị ăn
+                                setTimeout(() => {
+                                    alert("Sir đã bị ăn thịt! Điểm: " + Math.floor(player.radius));
+                                    location.reload();
+                                }, 100);
+                            } else {
+                                fishes.splice(j, 1);
+                                if (j < i) i--; // Điều chỉnh index vì mảng bị rút ngắn
+                                spawnFish();
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (player.radius > 0) {
+                scoreEl.innerText = Math.floor(player.radius).toLocaleString('vi-VN');
+            }
+
+            // Vẽ World
+            ctx.fillStyle = '#0a1e3f'; // Màu biển sâu
+            ctx.fillRect(0, 0, width, height);
+
+            ctx.save();
+            ctx.translate(width / 2, height / 2);
+            ctx.scale(totalZoom, totalZoom);
+            ctx.translate(-camera.x, -camera.y);
+
+            // Vẽ lưới background cho dễ định vị
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.03)';
+            ctx.lineWidth = 1 / totalZoom;
+            const gridSize = 100;
+            const startX = Math.floor((camera.x - width/2/totalZoom) / gridSize) * gridSize;
+            const startY = Math.floor((camera.y - height/2/totalZoom) / gridSize) * gridSize;
+            const endX = startX + width/totalZoom + gridSize*2;
+            const endY = startY + height/totalZoom + gridSize*2;
+
+            ctx.beginPath();
+            for (let x = startX; x <= endX; x += gridSize) {
+                ctx.moveTo(x, startY); ctx.lineTo(x, endY);
+            }
+            for (let y = startY; y <= endY; y += gridSize) {
+                ctx.moveTo(startX, y); ctx.lineTo(endX, y);
+            }
+            ctx.stroke();
+
+            // Vẽ cá (sắp xếp để con nhỏ ở dưới, con to đè lên trên)
+            fishes.sort((a, b) => a.radius - b.radius);
+            for (let fish of fishes) {
+                fish.draw(ctx);
+            }
+
+            ctx.restore();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        requestAnimationFrame(gameLoop);
+    </script>
+</body>
+</html>
