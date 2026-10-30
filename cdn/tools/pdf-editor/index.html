@@ -691,6 +691,7 @@
         
         let uploadedFiles = []; 
         const pdfBuffersMap = new Map();
+        const pdfPasswordsMap = new Map();
         let generatedExportBlob = null;
         let currentPreviewData = null; 
         let currentPreviewId = null;
@@ -955,24 +956,146 @@
             });
         }
 
+        function showReadingDataPopup() {
+            $('#popupOverlay, #customPopup').stop(true, true);
+            $('#popupOverlay').css('pointer-events', 'none');
+            showPopup(
+                "READING DATA...",
+                `<p id="extractStatusText" style="text-align:center;">Extracting document pages...</p>
+                 <div class="progress-container">
+                    <div id="extractProgressBar" class="progress-bar"></div>
+                    <div id="extractProgressText" class="progress-text">STANDBY 0%</div>
+                 </div>`,
+                []
+            );
+            $('#popupButtons').hide();
+        }
+
+        function promptForPdfPassword(fileName, isRetry = false) {
+            return new Promise((resolve) => {
+                $('#popupOverlay, #customPopup').stop(true, true);
+                $('#popupOverlay').css('pointer-events', 'none');
+                $('#popupButtons').show();
+
+                const errorHtml = isRetry
+                    ? `<p style="color:var(--nier-error-red); font-size:12px; font-weight:700; text-align:center; margin-bottom:10px;">Incorrect password. Please try again.</p>`
+                    : '';
+
+                showPopup(
+                    "PASSWORD REQUIRED",
+                    `<p style="text-align:center; margin-bottom:10px;">Document <b>${fileName}</b> is protected by a password.</p>
+                     ${errorHtml}
+                     <div class="nier-form-group" style="margin-bottom:4px;">
+                        <label class="nier-form-label">Enter Document Password</label>
+                        <div class="nier-password-wrapper">
+                            <input type="password" id="unlockPdfPwdInput" class="nier-input" placeholder="Password...">
+                            <button type="button" id="toggleUnlockPwdEye" class="nier-pwd-eye" title="Show / Hide Password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                     </div>`,
+                    [
+                        {
+                            text: "UNLOCK",
+                            id: "confirmUnlockPdfBtn",
+                            action: function() {
+                                const val = $('#unlockPdfPwdInput').val();
+                                if (!val) {
+                                    $('#unlockPdfPwdInput').focus();
+                                    return;
+                                }
+                                actionSound.currentTime = 0; actionSound.play();
+                                resolve(val);
+                            }
+                        },
+                        {
+                            text: "SKIP FILE",
+                            action: function() {
+                                clickSound.currentTime = 0; clickSound.play();
+                                resolve(null);
+                            }
+                        }
+                    ]
+                );
+
+                $('#confirmUnlockPdfBtn').css({'background-color': 'var(--nier-dark)', 'color': '#d3cebb'});
+
+                setTimeout(() => {
+                    const inputEl = document.getElementById('unlockPdfPwdInput');
+                    if (inputEl) {
+                        inputEl.focus();
+                        inputEl.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                document.getElementById('confirmUnlockPdfBtn')?.click();
+                            }
+                        });
+                    }
+                }, 50);
+
+                $(document).off('click.unlockEye').on('click.unlockEye', '#toggleUnlockPwdEye', function(e) {
+                    e.preventDefault();
+                    clickSound.currentTime = 0; clickSound.play();
+                    const pwdInput = document.getElementById('unlockPdfPwdInput');
+                    const icon = this.querySelector('i');
+                    if (pwdInput.type === 'password') {
+                        pwdInput.type = 'text';
+                        icon.classList.replace('fa-eye', 'fa-eye-slash');
+                    } else {
+                        pwdInput.type = 'password';
+                        icon.classList.replace('fa-eye-slash', 'fa-eye');
+                    }
+                });
+            });
+        }
+
+        async function openPdfDocumentWithPrompt(file, arrayBuffer) {
+            let password = undefined;
+            let isRetry = false;
+
+            while (true) {
+                try {
+                    const params = { data: new Uint8Array(arrayBuffer.slice(0)) };
+                    if (password !== undefined) {
+                        params.password = password;
+                    }
+                    const loadingTask = pdfjsLib.getDocument(params);
+                    const pdfDoc = await loadingTask.promise;
+                    if (isRetry || password !== undefined) {
+                        showReadingDataPopup();
+                    }
+                    return { pdfDoc, password: password || null, skipped: false };
+                } catch (err) {
+                    const isPasswordErr =
+                        err && (
+                            err.name === 'PasswordException' ||
+                            err.code === 1 ||
+                            err.code === 2 ||
+                            /password/i.test(err.message || '')
+                        );
+
+                    if (isPasswordErr) {
+                        const userPwd = await promptForPdfPassword(file.name, isRetry);
+                        if (userPwd === null) {
+                            showReadingDataPopup();
+                            return { pdfDoc: null, password: null, skipped: true };
+                        }
+                        password = userPwd;
+                        isRetry = true;
+                    } else {
+                        throw err;
+                    }
+                }
+            }
+        }
+
         async function handleFiles(files) {
             const validFiles = Array.from(files).filter(f => isImageFile(f) || isPdfFile(f));
             if (validFiles.length === 0) return;
 
             const hasPdf = validFiles.some(f => isPdfFile(f));
             if (hasPdf) {
-                $('#popupOverlay, #customPopup').stop(true, true);
-                $('#popupOverlay').css('pointer-events', 'none');
-                showPopup(
-                    "READING DATA...",
-                    `<p id="extractStatusText" style="text-align:center;">Extracting document pages...</p>
-                     <div class="progress-container">
-                        <div id="extractProgressBar" class="progress-bar"></div>
-                        <div id="extractProgressText" class="progress-text">STANDBY 0%</div>
-                     </div>`,
-                    []
-                );
-                $('#popupButtons').hide();
+                showReadingDataPopup();
             }
 
             const newItems = [];
@@ -999,11 +1122,15 @@
                     } else if (isPdfFile(file)) {
                         try {
                             const arrayBuffer = await file.arrayBuffer();
+                            const { pdfDoc, password, skipped } = await openPdfDocumentWithPrompt(file, arrayBuffer);
+                            if (skipped || !pdfDoc) continue;
+
                             const pdfId = 'pdf_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
                             pdfBuffersMap.set(pdfId, arrayBuffer.slice(0));
+                            if (password) {
+                                pdfPasswordsMap.set(pdfId, password);
+                            }
 
-                            const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) });
-                            const pdfDoc = await loadingTask.promise;
                             const numPages = pdfDoc.numPages;
 
                             for (let p = 1; p <= numPages; p++) {
@@ -1055,7 +1182,7 @@
                     $('#popupOverlay').css('pointer-events', 'auto');
                     $('#popupButtons').show();
                     if (failedCount > 0) {
-                        showPopup("SYSTEM ALERT", `<p style="text-align:center;">Failed to read ${failedCount} PDF file(s). Please ensure the file is valid and not password-protected.</p>`);
+                        showPopup("SYSTEM ALERT", `<p style="text-align:center;">Failed to read ${failedCount} PDF file(s). Please ensure the file is not corrupted.</p>`);
                     } else {
                         $('#popupOverlay, #customPopup').stop(true, true).fadeOut(200);
                     }
@@ -1068,6 +1195,7 @@
             const stillUsed = uploadedFiles.some(item => item.pdfId === pdfId);
             if (!stillUsed) {
                 pdfBuffersMap.delete(pdfId);
+                pdfPasswordsMap.delete(pdfId);
             }
         }
 
@@ -1752,7 +1880,10 @@
                 let pdfDoc = loadedPdfDocs.get(item.pdfId);
                 if (!pdfDoc) {
                     const buf = pdfBuffersMap.get(item.pdfId).slice(0);
-                    pdfDoc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+                    const savedPwd = pdfPasswordsMap.get(item.pdfId);
+                    const docParams = { data: new Uint8Array(buf) };
+                    if (savedPwd) docParams.password = savedPwd;
+                    pdfDoc = await pdfjsLib.getDocument(docParams).promise;
                     loadedPdfDocs.set(item.pdfId, pdfDoc);
                 }
 
@@ -2041,7 +2172,7 @@
                     for (let i = 0; i < sequence.length; i++) {
                         const item = sequence[i];
 
-                        if (item.type === 'pdf-page' && pdfBuffersMap.has(item.pdfId) && quality >= 0.9) {
+                        if (item.type === 'pdf-page' && pdfBuffersMap.has(item.pdfId) && !pdfPasswordsMap.has(item.pdfId) && quality >= 0.9) {
                             try {
                                 let srcDoc = loadedSrcDocs.get(item.pdfId);
                                 if (!srcDoc) {
