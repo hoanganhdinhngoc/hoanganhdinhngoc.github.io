@@ -1249,64 +1249,112 @@
             }
         }
 
-        async function fetchUrlWithProgress(rawUrl, onProgress) {
-            const candidates = [
-                rawUrl,
-                `https://corsproxy.io/?url=${encodeURIComponent(rawUrl)}`,
-                `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`
-            ];
+        async function readResponseBufferWithProgress(response, onProgress, labelPrefix = 'DOWNLOADING') {
+            const contentLength = parseInt(response.headers.get('content-length') || '0', 10);
+            if (response.body && typeof response.body.getReader === 'function') {
+                const reader = response.body.getReader();
+                const chunks = [];
+                let receivedLength = 0;
 
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    if (value) {
+                        chunks.push(value);
+                        receivedLength += value.byteLength;
+                        if (contentLength > 0) {
+                            const pct = Math.min(82, Math.max(12, Math.round((receivedLength / contentLength) * 82)));
+                            onProgress(pct, `${labelPrefix} ${pct}% (${(receivedLength / 1024).toFixed(0)} KB)`);
+                        } else {
+                            onProgress(55, `${labelPrefix} ${(receivedLength / 1024).toFixed(0)} KB...`);
+                        }
+                    }
+                }
+
+                const combined = new Uint8Array(receivedLength);
+                let pos = 0;
+                for (const chunk of chunks) {
+                    combined.set(chunk, pos);
+                    pos += chunk.byteLength;
+                }
+                return combined.buffer;
+            } else {
+                onProgress(60, `${labelPrefix}...`);
+                return await response.arrayBuffer();
+            }
+        }
+
+        async function fetchUrlWithProgress(rawUrl, onProgress) {
             let lastError = null;
 
-            for (let c = 0; c < candidates.length; c++) {
-                const targetUrl = candidates[c];
-                try {
-                    const response = await fetch(targetUrl);
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`);
-                    }
-
-                    const contentType = (response.headers.get('content-type') || '').toLowerCase();
-                    const contentLength = parseInt(response.headers.get('content-length') || '0', 10);
-
-                    if (response.body && typeof response.body.getReader === 'function') {
-                        const reader = response.body.getReader();
-                        const chunks = [];
-                        let receivedLength = 0;
-
-                        while (true) {
-                            const { done, value } = await reader.read();
-                            if (done) break;
-                            if (value) {
-                                chunks.push(value);
-                                receivedLength += value.byteLength;
-                                if (contentLength > 0) {
-                                    const pct = Math.min(85, Math.max(10, Math.round((receivedLength / contentLength) * 85)));
-                                    onProgress(pct, `DOWNLOADING ${pct}%`);
-                                } else {
-                                    onProgress(50, `DOWNLOADING ${(receivedLength / 1024).toFixed(0)} KB...`);
-                                }
-                            }
-                        }
-
-                        const combined = new Uint8Array(receivedLength);
-                        let pos = 0;
-                        for (const chunk of chunks) {
-                            combined.set(chunk, pos);
-                            pos += chunk.byteLength;
-                        }
-                        return { buffer: combined.buffer, contentType };
-                    } else {
-                        onProgress(60, 'DOWNLOADING...');
-                        const buffer = await response.arrayBuffer();
-                        return { buffer, contentType };
-                    }
-                } catch (err) {
-                    lastError = err;
+            // Tầng 1: Tải trực tiếp từ trình duyệt (nếu server đích mở CORS)
+            try {
+                const directResp = await fetch(rawUrl, { mode: 'cors', credentials: 'omit' });
+                if (!directResp.ok) {
+                    throw new Error(`HTTP ${directResp.status}`);
                 }
+                const contentType = (directResp.headers.get('content-type') || '').toLowerCase();
+                const buffer = await readResponseBufferWithProgress(directResp, onProgress, 'DOWNLOADING');
+                if (buffer && buffer.byteLength > 0) {
+                    return { buffer, contentType };
+                }
+            } catch (err) {
+                lastError = err;
             }
 
-            throw lastError || new Error('Network or CORS error');
+            // Tầng 2: Reroute qua Core Server Webhook (Bypass CORS 100% cho cả PDF nặng và ảnh, giải nén ZIP trên RAM)
+            try {
+                onProgress(18, 'REROUTING TO CORE SERVER...');
+                const coreResp = await fetch('https://interdata.kurotheblackbear.io.vn/webhook/bulk-image-downloader', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        files: [{ url: rawUrl, filename: 'resource.bin' }],
+                        folder_name: 'temp'
+                    })
+                });
+
+                if (!coreResp.ok) {
+                    throw new Error(`Core Relay HTTP ${coreResp.status}`);
+                }
+
+                const zipBuffer = await readResponseBufferWithProgress(coreResp, onProgress, 'CORE STREAM');
+                onProgress(84, 'UNPACKING STREAM...');
+
+                const zip = await JSZip.loadAsync(zipBuffer);
+                const fileKeys = Object.keys(zip.files).filter(k => !zip.files[k].dir);
+                if (fileKeys.length === 0) {
+                    throw new Error('Remote server rejected download or file not found (404/403)');
+                }
+
+                const rawFileBuffer = await zip.files[fileKeys[0]].async('arraybuffer');
+                if (!rawFileBuffer || rawFileBuffer.byteLength === 0) {
+                    throw new Error('Extracted file is empty');
+                }
+
+                const inferredType = isBufferPdf(rawFileBuffer) ? 'application/pdf' : '';
+                return { buffer: rawFileBuffer, contentType: inferredType };
+            } catch (err) {
+                lastError = err;
+            }
+
+            // Tầng 3: Fallback qua WSRV CDN Proxy (cho ảnh hoặc khi Core Server bảo trì)
+            try {
+                onProgress(30, 'TRYING CDN PROXY...');
+                const proxyResp = await fetch(`https://wsrv.nl/?url=${encodeURIComponent(rawUrl)}`);
+                if (!proxyResp.ok) {
+                    throw new Error(`Proxy HTTP ${proxyResp.status}`);
+                }
+                const contentType = (proxyResp.headers.get('content-type') || '').toLowerCase();
+                const buffer = await readResponseBufferWithProgress(proxyResp, onProgress, 'PROXY STREAM');
+                if (buffer && buffer.byteLength > 0) {
+                    return { buffer, contentType };
+                }
+            } catch (err) {
+                if (!lastError) lastError = err;
+            }
+
+            throw lastError || new Error('Failed to fetch resource (CORS / Network blocked)');
         }
 
         document.getElementById('urlImportBtn').addEventListener('click', async () => {
