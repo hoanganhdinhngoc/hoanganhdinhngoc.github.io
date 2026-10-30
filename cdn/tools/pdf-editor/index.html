@@ -1,0 +1,2400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" href="https://hoanganhdinhngoc.github.io/cdn/images/Koi-Kanji.png">
+    <title>CDN || PDF Editor</title>
+    <meta name="description" content="Free online PDF Editor. Split, reorder, rotate, annotate, watermark, extract text, and export PDF or images with a unique NieR theme.">
+    <meta name="keywords" content="pdf editor, split pdf, rotate pdf, watermark pdf, extract text pdf, image to pdf, Nier theme tool, pdf converter">
+    <meta name="author" content="Hoang Anh Dinh Ngoc">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta http-equiv="content-language" content="en">
+
+    <link rel="canonical" href="https://hoanganhdinhngoc.github.io/cdn/tools/pdf-editor">
+
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hoanganhdinhngoc.github.io/cdn/tools/pdf-editor">
+    <meta property="og:title" content="PDF Editor & Converter 100% Free">
+    <meta property="og:description" content="Split, reorder, rotate, annotate, watermark PDF pages and convert between PDF, Images, and Text. 100% client-side processing.">
+    <meta property="og:image" content="https://hoanganhdinhngoc.github.io/cdn/images/Koi.jpg">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://hoanganhdinhngoc.github.io/cdn/tools/pdf-editor">
+    <meta name="twitter:title" content="CDN || PDF Editor">
+    <meta name="twitter:description" content="Full-featured client-side PDF Editor with NieR UI.">
+    <meta name="twitter:image" content="https://hoanganhdinhngoc.github.io/cdn/images/Koi.jpg">
+    
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <link rel="stylesheet" href="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.css">
+    <script src="https://hoanganhdinhngoc.github.io/cdn/nier-list-template/modules/popup/nier-popup.js"></script>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:200,200i,400,400i,600,700');
+
+        :root {
+            --primary-color: #008a008a;
+            --secondary-color: #850000;
+            --nier-dark: #4b4340;
+            --nier-beige: #ccc6b0;
+            --nier-panel: rgba(216, 210, 186, .5);
+            --nier-bg-btn: #4e493a;
+            --nier-text-light: #d3cebb;
+            --nier-error-red: #850000;
+        }
+
+        * {
+            box-sizing: border-box; margin: 0; padding: 0;
+            scrollbar-color: rgba(100, 98, 86, 0.8) rgba(143, 139, 122, 0.7);
+            scrollbar-width: auto;
+        }
+
+        ::-moz-selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+        ::selection { color: #d3cebb; background: rgba(100, 98, 86, 0.8); }
+
+        body {
+            font-family: 'Montserrat', sans-serif; background-color: var(--nier-beige);
+            background-image: linear-gradient(90deg, rgba(198, 192, 170, .5) 30%, transparent 30%),
+                linear-gradient(rgba(198, 192, 170, .5) 30%, transparent 30%);
+            background-size: 5px 5px; color: var(--nier-dark); min-height: 100vh;
+        }
+        
+        body.no-scroll { overflow: hidden !important; }
+
+        .coreSystem { display: inline-block; width: 100%; min-height: 100vh; box-shadow: inset 0px 0px 100px 20px rgba(0, 0, 0, 0.3); padding: 20px; }
+        .warp-container { margin-top: 1em; width: 100%; max-width: 1200px; margin-left: auto; margin-right: auto; }
+        .title-main { font-size: 26px; text-shadow: 4px 5px rgba(162, 156, 142, .8); margin-bottom: 20px; text-transform: uppercase; padding-left: 10px; }
+        
+        /* --- NIER COMMAND TOOLBAR --- */
+        .nier-toolbar {
+            background: var(--nier-panel);
+            box-shadow: 2px 2px 1px #4f4b42;
+            border-left: 6px solid var(--nier-dark);
+            padding: 12px 18px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            position: relative;
+        }
+        .nier-toolbar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 4px; right: 0;
+            height: 2px;
+            background: rgba(75, 67, 64, 0.35);
+            pointer-events: none;
+        }
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .toolbar-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #d3cebb;
+            background: rgba(100, 98, 86, 0.85);
+            padding: 6px 10px;
+            margin-right: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .toolbar-divider {
+            width: 2px;
+            height: 28px;
+            background: rgba(75, 67, 64, 0.35);
+            margin: 0 4px;
+        }
+        .tool-btn {
+            cursor: pointer;
+            padding: 7px 11px;
+            border: 1.5px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(216, 210, 186, 0.4) 50%);
+            background-size: 200% 100%;
+            background-position: right bottom;
+            color: var(--nier-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-position 0.2s ease-out, color 0.2s ease-out, transform 0.1s;
+            position: relative;
+            user-select: none;
+        }
+        .tool-btn i {
+            font-size: 12px;
+        }
+        .tool-btn:hover:not(:disabled) {
+            color: var(--nier-text-light);
+            background-position: left bottom;
+        }
+        .tool-btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+        .tool-btn.active-modifier {
+            background: var(--nier-dark);
+            color: var(--nier-text-light);
+            box-shadow: inset 0 0 0 1px var(--nier-beige);
+        }
+        .toolbar-status {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--nier-dark);
+            opacity: 0.85;
+            padding: 4px 10px;
+            border: 1px dashed rgba(75, 67, 64, 0.5);
+            background: rgba(216, 210, 186, 0.35);
+            white-space: nowrap;
+        }
+
+        /* --- NIER CURSOR TOOLTIP (1S DELAY IN, 0.2S FADE IN/OUT) --- */
+        #nierTooltip {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 999999;
+            pointer-events: none;
+            background: rgba(48, 44, 40, 0.96);
+            color: var(--nier-text-light);
+            border: 1.5px solid var(--nier-beige);
+            border-left: 5px solid var(--nier-beige);
+            box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.45);
+            padding: 8px 12px;
+            max-width: 270px;
+            text-align: left;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+        #nierTooltip.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        #nierTooltip .tip-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ece7d5;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            line-height: 1.35;
+            text-align: left;
+        }
+        #nierTooltip .tip-desc {
+            font-size: 11px;
+            font-weight: 400;
+            color: #c7c1ae;
+            margin-top: 4px;
+            line-height: 1.4;
+            text-align: left;
+            border-top: 1px solid rgba(211, 206, 187, 0.25);
+            padding-top: 4px;
+        }
+
+        /* --- MAIN WORKSPACE & STICKY PREVIEW --- */
+        .function-wrapper { display: flex; flex-direction: row; gap: 2em; align-items: flex-start; }
+        .section { background: var(--nier-panel); box-shadow: 2px 2px 1px #4f4b42; padding: 25px; display: flex; flex-direction: column; }
+        .input-panel { flex: 0 0 600px; }
+        .result-panel {
+            flex: 1;
+            min-width: 0;
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+        }
+        .sectionTitle { padding: 10px 15px; color: #d3cebb; background: rgba(100, 98, 86, 0.8); font-weight: bold; margin-bottom: 20px; font-size: 14px; text-transform: uppercase; }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 900px) {
+            .function-wrapper { flex-direction: column; align-items: stretch; }
+            .input-panel { flex: none; width: 100%; }
+            .result-panel { width: 100%; position: static; }
+            #previewWrapper { height: 45vh !important; }
+            .title-main { text-align: center; font-size: 22px; padding-left: 0; }
+            .gallery-nav { width: 25vw !important; }
+            #galleryPrev { width: calc(8vw + 15px) !important; padding-left: calc(8% + 15px) !important; }
+            #galleryNext { width: calc(8vw + 15px) !important; padding-right: calc(8% + 15px) !important; }
+            .dropzone { padding: 30px 15px; }
+            .coreSystem { padding: 10px; }
+            .section { padding: 15px; }
+            .nier-toolbar { padding: 10px 12px; }
+            .toolbar-divider { display: none; }
+            .toolbar-status { width: 100%; text-align: center; }
+        }
+
+        /* --- UPLOAD ZONE --- */
+        .dropzone { width: 100%; padding: 40px 20px; border: 2px dashed var(--nier-dark); background: rgba(216, 210, 186, 0.3); text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
+        .dropzone.hover { background: rgba(100, 98, 86, 0.2); border-color: var(--nier-bg-btn); }
+        .dropzone p { font-weight: bold; font-size: 14px; }
+        .dropzone small { font-size: 11px; opacity: 0.8; }
+        #fileInput { display: none; }
+
+        /* --- THUMBNAILS GRID & DRAG ANIMATIONS --- */
+        .thumb-grid { display: flex; flex-wrap: wrap; gap: 25px 15px; min-height: 150px; background: rgba(100, 98, 86, 0.1); padding: 15px; border: 1px solid var(--nier-dark); align-content: flex-start; }
+        
+        .thumb-wrapper {
+            display: flex; flex-direction: column; align-items: center; width: 100px;
+            transform-origin: center left; overflow: visible; 
+        }
+        
+        .thumb-wrapper.removing { 
+            width: 0 !important; margin: 0 !important; padding: 0 !important;
+            opacity: 0; overflow: hidden !important; transition: all 5ms linear;
+        }
+        .thumb-wrapper.removing * { display: none !important; }
+
+        .thumb-box {
+            width: 100%; height: 130px; border: 2px solid var(--nier-dark); background: #000;
+            position: relative; cursor: grab; display: flex; flex-direction: column;
+            box-shadow: 2px 2px 1px #4f4b42; margin-bottom: 8px; flex-shrink: 0;
+        }
+        .thumb-wrapper.active-target .thumb-box {
+            border-color: var(--nier-error-red);
+            box-shadow: 0 0 0 1px var(--nier-error-red), 2px 2px 4px rgba(0,0,0,0.6);
+        }
+        .thumb-box img { width: 100%; height: 100%; object-fit: contain; pointer-events: none; }
+        
+        .thumb-name {
+            color: var(--nier-dark); font-size: 11px; font-weight: bold; text-align: center;
+            width: 100%; line-height: 1.4; padding: 0 2px;
+            white-space: normal; word-wrap: break-word; pointer-events: none;
+        }
+
+        .thumb-checkbox { position: absolute; top: -5px; left: -5px; width: 18px; height: 18px; cursor: pointer; z-index: 5; accent-color: var(--nier-dark); box-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        
+        .thumb-delete {
+            position: absolute; top: -5px; right: -5px; width: 24px; height: 24px;
+            background: transparent; color: rgba(75, 67, 64, 0.4); 
+            border: 1px solid rgba(75, 67, 64, 0.4); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: bold; cursor: pointer; z-index: 5;
+            opacity: 0; transition: all 0.2s; box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .thumb-rotate {
+            position: absolute; bottom: -5px; right: -5px; width: 24px; height: 24px;
+            background: rgba(216, 210, 186, 0.75); color: var(--nier-dark);
+            border: 1px solid var(--nier-dark); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; cursor: pointer; z-index: 5;
+            opacity: 0; transition: all 0.2s; box-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .thumb-wrapper:hover .thumb-delete,
+        .thumb-wrapper:hover .thumb-rotate { opacity: 1; }
+        .show-delete-mobile .thumb-delete,
+        .show-delete-mobile .thumb-rotate { opacity: 1 !important; }
+        .thumb-delete:hover { 
+            background: rgba(216, 210, 186, 0.9) !important; color: var(--nier-error-red) !important; 
+            border-color: var(--nier-error-red) !important; transform: scale(1.1); 
+        }
+        .thumb-rotate:hover {
+            background: var(--nier-dark) !important; color: var(--nier-text-light) !important;
+            border-color: var(--nier-beige) !important; transform: rotate(90deg) scale(1.1);
+        }
+
+        /* --- Sortable Customization --- */
+        .nier-drag, .nier-fallback {
+            transition: none !important;
+        }
+        .nier-drag .thumb-box, .nier-fallback .thumb-box { 
+            transform: rotate(4deg) scale(1.05); 
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5); 
+            border-color: var(--nier-beige); 
+        }
+        .nier-fallback { 
+            opacity: 0.9 !important; z-index: 99999 !important; 
+            cursor: grabbing !important; width: 100px !important; 
+        }
+        .nier-ghost {
+            opacity: 0.4 !important; visibility: visible !important; 
+            background: rgba(100, 98, 86, 0.2); border: 2px dashed var(--nier-dark); box-shadow: none;
+            overflow: visible; display: flex; align-items: center; justify-content: center;
+            position: relative; height: 130px !important; width: 100px !important; margin-bottom: auto; border-radius: 2px;
+        }
+        .nier-ghost * { display: none !important; }
+        .nier-ghost::after {
+            content: attr(data-slot); font-family: 'Montserrat', sans-serif; font-size: 45px; font-weight: bold;
+            color: rgba(75, 67, 64, 0.4); text-shadow: 1px 1px 2px rgba(216, 210, 186, 0.8);
+            position: absolute; top: 35px;
+        }
+
+        /* --- DYNAMIC PREVIEW PANEL --- */
+        #previewWrapper { width: 100%; height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .preview-box {
+            width: 100%; height: 100%; background: rgba(0,0,0,0.8); border: 2px solid var(--nier-dark);
+            box-shadow: inset 0px 0px 20px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+            position: relative; margin-bottom: 0px; cursor: pointer; overflow: hidden;
+            transition: width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .preview-box img { width: 100%; height: 100%; object-fit: contain; display: none; transition: transform 0.2s; }
+        .preview-box:hover img { transform: scale(1.02); }
+        .preview-box p.placeholder { color: #d3cebb; font-size: 12px; opacity: 0.5; text-transform: uppercase; pointer-events: none; }
+        .preview-name-outside { color: var(--nier-dark); font-size: 13px; font-weight: bold; text-align: center; width: 100%; word-wrap: break-word; display: none; margin-top: 15px; }
+
+        /* --- BUTTONS --- */
+        .themebutton {
+            cursor: pointer; padding: 12px 20px; font-weight: bold; color: #4b4340; border: 2px solid var(--nier-dark);
+            background: linear-gradient(to right, #4e493a 50%, rgba(0, 0, 0, 0) 50%); background-size: 200% 100%;
+            background-position: right bottom; transition: all .2s ease-out; font-family: 'Montserrat', sans-serif;
+            text-transform: uppercase; text-align: center; width: 100%; margin-top: 15px;
+        }
+        .themebutton:hover:not(:disabled) { color: #d3cebb; background-position: left bottom; }
+
+        /* --- GALLERY OVERLAY --- */
+        #galleryOverlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.95); z-index: 10000; flex-direction: column; perspective: 1500px;
+            opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; 
+        }
+        #galleryOverlay.show { opacity: 1; visibility: visible; }
+        .gallery-main { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: default; }
+        .gallery-img-container {
+            position: absolute; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            transform-style: preserve-3d; transition: all 0.1s ease-out; pointer-events: none;
+        }
+        .gallery-img-container img { max-width: 95%; max-height: 85%; object-fit: contain; pointer-events: auto; }
+
+        .anim-out-left { transform: translateX(-50vw) rotateY(-45deg); opacity: 0; }
+        .anim-in-right { transform: translateX(50vw) rotateY(45deg); opacity: 0; }
+        .anim-out-right { transform: translateX(50vw) rotateY(45deg); opacity: 0; }
+        .anim-in-left { transform: translateX(-50vw) rotateY(-45deg); opacity: 0; }
+        .anim-center { transform: translateX(0) rotateY(0); opacity: 1; }
+
+        .gallery-nav {
+            position: absolute; top: 0; bottom: 80px; width: 15vw; display: flex; align-items: center; justify-content: center;
+            color: rgba(255,255,255,0.2); font-size: 45px; cursor: pointer; transition: 0.2s; z-index: 10000; transform: translateZ(0); 
+        }
+        #galleryPrev { left: -15px; width: calc(8vw + 15px); justify-content: flex-start; padding-left: calc(3% + 15px); }
+        #galleryPrev:hover { background: radial-gradient(ellipse 100% 40% at 15px center, rgba(216,210,186,0.2) 0%, transparent 100%); color: rgba(216, 210, 186, 0.8); }
+        #galleryNext { right: -15px; width: calc(8vw + 15px); justify-content: flex-end; padding-right: calc(3% + 15px); }
+        #galleryNext:hover { background: radial-gradient(ellipse 100% 40% at calc(100% - 15px) center, rgba(216,210,186,0.2) 0%, transparent 100%); color: rgba(216, 210, 186, 0.8); }
+        
+        .gallery-close { position: absolute; top: 25px; right: 35px; color: rgba(216, 210, 186, 0.5); font-size: 35px; cursor: pointer; z-index: 10005; padding: 10px; transition: color 0.2s;}
+        .gallery-close:hover { color: #ffffff; }
+        .gallery-counter { position: absolute; bottom: 110px; width: 100%; text-align: center; color: #fff; font-size: 14px; font-weight: bold; z-index: 10; text-shadow: 1px 1px 2px #000; pointer-events: none; }
+        .gallery-strip { height: 80px; width: 100%; background: rgba(20, 20, 20, 0.9); border-top: 1px solid var(--nier-dark); display: flex; align-items: center; gap: 10px; padding: 0 20px; overflow-x: auto; z-index: 10; }
+        .gallery-thumb { width: 50px; height: 60px; border: 2px solid transparent; opacity: 0.5; cursor: pointer; transition: 0.2s; object-fit: cover; }
+        .gallery-thumb:hover { opacity: 0.8; }
+        .gallery-thumb.active { border-color: var(--nier-beige); opacity: 1; transform: scale(1.1); }
+
+        /* --- POPUP FORM CONTROLS & CUSTOM NIER SELECT BOX --- */
+        .progress-container { width: 100%; border: 2px solid var(--nier-dark); background: rgba(100, 98, 86, 0.2); height: 30px; position: relative; margin: 20px 0; overflow: hidden; }
+        .progress-bar { height: 100%; width: 0%; background: var(--nier-dark); transition: width 0.2s ease; }
+        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #d3cebb; font-weight: bold; font-size: 12px; mix-blend-mode: difference; white-space: nowrap; }
+
+        .nier-form-group { margin-bottom: 12px; text-align: left; position: relative; }
+        .nier-form-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 5px; color: var(--nier-dark); }
+        .nier-select, .nier-input, .nier-textarea {
+            width: 100%; padding: 8px 10px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600;
+            color: var(--nier-dark); background: rgba(216, 210, 186, 0.65); border: 1.5px solid var(--nier-dark); outline: none;
+        }
+        .nier-input:focus, .nier-textarea:focus {
+            background: rgba(216, 210, 186, 0.9);
+            box-shadow: inset 3px 0 0 var(--nier-dark);
+        }
+        .nier-textarea { resize: vertical; min-height: 70px; font-weight: 400; }
+        .nier-row { display: flex; gap: 10px; }
+        .nier-row > * { flex: 1; min-width: 0; }
+        .nier-check-row {
+            display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700;
+            cursor: pointer; padding: 6px 0; user-select: none; text-align: left;
+        }
+        .nier-check-row input { width: 16px; height: 16px; accent-color: var(--nier-dark); cursor: pointer; }
+
+        /* Custom NieR Selection Box (Thay thế màu xanh dương mặc định của trình duyệt bằng màu tối NieR) */
+        .nier-select-native-hidden {
+            display: none !important;
+        }
+        .nier-custom-select {
+            position: relative;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            user-select: none;
+        }
+        .nier-select-trigger {
+            width: 100%;
+            padding: 8px 30px 8px 10px;
+            background: rgba(216, 210, 186, 0.75);
+            border: 1.5px solid var(--nier-dark);
+            color: var(--nier-dark);
+            cursor: pointer;
+            position: relative;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            transition: background 0.15s, color 0.15s;
+        }
+        .nier-select-trigger::after {
+            content: '\f078';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            font-size: 10px;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s ease;
+        }
+        .nier-custom-select.open .nier-select-trigger {
+            background: var(--nier-dark);
+            color: var(--nier-text-light);
+        }
+        .nier-custom-select.open .nier-select-trigger::after {
+            transform: translateY(-50%) rotate(180deg);
+        }
+        .nier-select-options {
+            display: none;
+            position: absolute;
+            top: calc(100% + 2px);
+            left: 0;
+            right: 0;
+            background: #d8d2ba;
+            border: 1.5px solid var(--nier-dark);
+            box-shadow: 3px 3px 0px rgba(75, 67, 64, 0.85);
+            max-height: 190px;
+            overflow-y: auto;
+            z-index: 10050;
+        }
+        .nier-custom-select.open .nier-select-options {
+            display: block;
+        }
+        .nier-select-option {
+            padding: 8px 10px;
+            color: var(--nier-dark);
+            cursor: pointer;
+            border-bottom: 1px solid rgba(75, 67, 64, 0.15);
+            transition: background 0.12s, color 0.12s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nier-select-option:last-child {
+            border-bottom: none;
+        }
+        .nier-select-option:hover,
+        .nier-select-option.selected {
+            background: var(--nier-dark) !important;
+            color: var(--nier-text-light) !important;
+        }
+        .nier-select-option.selected::before {
+            content: '■';
+            font-size: 9px;
+            color: var(--nier-text-light);
+        }
+
+        /* Range Slider NieR Style */
+        .nier-range {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(75, 67, 64, 0.3);
+            border: 1px solid var(--nier-dark);
+            outline: none;
+            margin-top: 6px;
+        }
+        .nier-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: var(--nier-dark);
+            border: 2px solid var(--nier-beige);
+            cursor: pointer;
+        }
+        .nier-range::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: var(--nier-dark);
+            border: 2px solid var(--nier-beige);
+            cursor: pointer;
+        }
+
+        /* Password Input with Eye Toggle */
+        .nier-password-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            align-items: center;
+        }
+        .nier-password-wrapper .nier-input {
+            padding-right: 36px;
+        }
+        .nier-pwd-eye {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--nier-dark);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px;
+            opacity: 0.75;
+            transition: opacity 0.15s;
+        }
+        .nier-pwd-eye:hover {
+            opacity: 1;
+        }
+
+        /* Estimated File Size Text (Italic & Left-Aligned) */
+        .estimate-size-text {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            font-style: italic;
+            font-size: 12px;
+            color: var(--nier-dark);
+            text-align: left;
+            margin-top: 12px;
+            margin-bottom: -6px;
+            letter-spacing: 0.2px;
+        }
+    </style>
+</head>
+<body>
+    <audio id="hover-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_16.ogg"></audio>
+    <audio id="click-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_52.ogg"></audio>
+    <audio id="action-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_58.ogg"></audio>
+    <audio id="open-close-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_1.ogg"></audio>
+    <audio id="delete-sound" src="https://hoanganhdinhngoc.github.io/cdn/sounds/core_76.ogg"></audio>
+
+    <!-- Nier Cursor Tooltip -->
+    <div id="nierTooltip">
+        <div class="tip-title" id="nierTipTitle"></div>
+        <div class="tip-desc" id="nierTipDesc"></div>
+    </div>
+
+    <div id="galleryOverlay">
+        <i class="fas fa-times gallery-close" id="galleryClose"></i>
+        <div class="gallery-nav" id="galleryPrev"><i class="fas fa-chevron-left"></i></div>
+        <div class="gallery-nav" id="galleryNext"><i class="fas fa-chevron-right"></i></div>
+        
+        <div class="gallery-main" id="galleryMain">
+            <div class="gallery-img-container anim-center" id="galleryImgContainer">
+                <img src="" id="galleryMainImg">
+            </div>
+        </div>
+
+        <div class="gallery-counter" id="galleryCounterText">1 / 1</div>
+        <div class="gallery-strip" id="galleryStrip"></div>
+    </div>
+
+    <div class="coreSystem">
+        <div class="warp-container">
+            <h1 class="title-main">PDF Editor</h1>
+
+            <!-- NIER PROFESSIONAL EDITOR TOOLBAR -->
+            <div class="nier-toolbar" id="editorToolbar">
+                <div class="toolbar-group">
+                    <div class="toolbar-label"><i class="fas fa-sliders-h"></i> TOOLS</div>
+
+                    <button type="button" class="tool-btn" id="toolAddNote"
+                        data-tip-title="Attach Page Note"
+                        data-tip-desc="Stamp a framed NieR-style annotation callout box onto the page corner.">
+                        <i class="fas fa-sticky-note"></i><span>NOTE</span>
+                    </button>
+
+                    <button type="button" class="tool-btn" id="toolWatermark"
+                        data-tip-title="Document Watermark"
+                        data-tip-desc="Apply single or repeating pattern watermark text across pages.">
+                        <i class="fas fa-stamp"></i><span>WATERMARK</span>
+                    </button>
+
+                    <button type="button" class="tool-btn" id="toolPageNum"
+                        data-tip-title="Auto Page Numbering"
+                        data-tip-desc="Automatically stamp sequence numbers with custom color and opacity.">
+                        <i class="fas fa-list-ol"></i><span>PAGE NUM</span>
+                    </button>
+
+                    <div class="toolbar-divider"></div>
+
+                    <button type="button" class="tool-btn" id="toolBlankPage"
+                        data-tip-title="Insert Blank Page">
+                        <i class="fas fa-file-medical"></i><span>BLANK PAGE</span>
+                    </button>
+
+                    <button type="button" class="tool-btn" id="toolExtractText"
+                        data-tip-title="Extract PDF Text"
+                        data-tip-desc="Parse embedded text streams directly from PDF pages without OCR into plain text.">
+                        <i class="fas fa-file-alt"></i><span>EXTRACT TXT</span>
+                    </button>
+
+                    <button type="button" class="tool-btn" id="toolResetEdits"
+                        data-tip-title="Reset Page Overlays"
+                        data-tip-desc="Clear note, watermark, and page number overlays to restore original pages.">
+                        <i class="fas fa-undo"></i><span>RESET</span>
+                    </button>
+                </div>
+
+                <div class="toolbar-status" id="toolbarStatusText">TARGET: NONE</div>
+            </div>
+            
+            <div class="function-wrapper">
+                <div class="input-panel section">
+                    <h2 class="sectionTitle">Data Input & Sequence</h2>
+                    <div class="dropzone" id="dropZone">
+                        <p>CLICK HERE OR DROP FILES TO UPLOAD</p>
+                        <small>(Supported: PDF, JPG, PNG, WEBP)</small>
+                        <input type="file" id="fileInput" multiple accept="image/*,application/pdf,.pdf">
+                    </div>
+                    <div class="thumb-grid" id="thumbGrid"></div>
+                    <button id="convertBtn" class="themebutton">Export</button>
+                </div>
+
+                <div class="result-panel">
+                    <div class="section">
+                        <h2 class="sectionTitle">Target Preview</h2>
+                        <div id="previewWrapper">
+                            <div class="preview-box" id="mainPreviewBox">
+                                <p class="placeholder" id="previewPlaceholder">Select a page or image to inspect.</p>
+                                <img id="mainPreviewImg" src="">
+                            </div>
+                        </div>
+                        <div class="preview-name-outside" id="mainPreviewName"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const hoverSound = document.getElementById("hover-sound");
+        const clickSound = document.getElementById("click-sound");
+        const actionSound = document.getElementById("action-sound");
+        const openCloseSound = document.getElementById("open-close-sound");
+        const deleteSound = document.getElementById("delete-sound");
+
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        if (pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+        
+        let uploadedFiles = []; 
+        const pdfBuffersMap = new Map();
+        let generatedExportBlob = null;
+        let currentPreviewData = null; 
+        let currentPreviewId = null;
+
+        // Cấu hình Watermark (hỗ trợ Single & Pattern Mode)
+        let watermarkConfig = {
+            enabled: false,
+            text: 'CONFIDENTIAL',
+            style: 'diagonal', // 'diagonal' | 'horizontal'
+            color: '#4b4340',
+            opacity: 0.25,
+            sizeRatio: 0.065,
+            isPattern: false,
+            spacing: 24 // Khoảng cách giãn cách giữa các chữ trong pattern (% kích thước trang)
+        };
+
+        // Cấu hình Đánh số trang (hỗ trợ nhiều màu sắc & độ đậm nhạt Opacity)
+        let pageNumberConfig = {
+            enabled: false,
+            position: 'bottom-center', // 'bottom-center' | 'bottom-right' | 'bottom-left' | 'top-right' | 'top-center'
+            format: 'slash', // 'slash' (1 / N) | 'page' (Page 1 of N) | 'dash' (- 1 -)
+            color: '#4b4340',
+            opacity: 0.90
+        };
+
+        // --- HỆ THỐNG CUSTOM NIER SELECT BOX (THAY THẾ DROPDOWN MẶC ĐỊNH) ---
+        function initNierSelects(root = document) {
+            root.querySelectorAll('select.nier-select:not(.nier-select-native-hidden)').forEach(selectEl => {
+                selectEl.classList.add('nier-select-native-hidden');
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'nier-custom-select';
+
+                const trigger = document.createElement('div');
+                trigger.className = 'nier-select-trigger';
+
+                const optionsBox = document.createElement('div');
+                optionsBox.className = 'nier-select-options';
+
+                function rebuildOptions() {
+                    optionsBox.innerHTML = '';
+                    const selectedOpt = selectEl.options[selectEl.selectedIndex] || selectEl.options[0];
+                    trigger.textContent = selectedOpt ? selectedOpt.textContent : '';
+
+                    Array.from(selectEl.options).forEach((opt, idx) => {
+                        const item = document.createElement('div');
+                        item.className = 'nier-select-option' + (idx === selectEl.selectedIndex ? ' selected' : '');
+                        item.textContent = opt.textContent;
+                        item.dataset.value = opt.value;
+
+                        item.addEventListener('mouseenter', () => {
+                            hoverSound.currentTime = 0; hoverSound.play();
+                        });
+
+                        item.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            clickSound.currentTime = 0; clickSound.play();
+                            selectEl.selectedIndex = idx;
+                            trigger.textContent = opt.textContent;
+                            optionsBox.querySelectorAll('.nier-select-option').forEach((el, i) => {
+                                el.classList.toggle('selected', i === idx);
+                            });
+                            wrapper.classList.remove('open');
+                            $(selectEl).trigger('change');
+                        });
+
+                        optionsBox.appendChild(item);
+                    });
+                }
+
+                rebuildOptions();
+
+                trigger.addEventListener('mouseenter', () => {
+                    hoverSound.currentTime = 0; hoverSound.play();
+                });
+
+                trigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    clickSound.currentTime = 0; clickSound.play();
+                    const isOpen = wrapper.classList.contains('open');
+                    document.querySelectorAll('.nier-custom-select.open').forEach(el => el.classList.remove('open'));
+                    if (!isOpen) wrapper.classList.add('open');
+                });
+
+                selectEl.parentNode.insertBefore(wrapper, selectEl.nextSibling);
+                wrapper.appendChild(trigger);
+                wrapper.appendChild(optionsBox);
+            });
+        }
+
+        document.addEventListener('click', () => {
+            document.querySelectorAll('.nier-custom-select.open').forEach(el => el.classList.remove('open'));
+        });
+
+        // --- HỆ THỐNG TOOLTIP BÊN PHẢI CHUỘT (HIỆN SAU 1S, FADE IN 0.2S, RỜI CHUỘT FADE OUT NGAY 0.2S) ---
+        const tooltipEl = document.getElementById('nierTooltip');
+        const tipTitleEl = document.getElementById('nierTipTitle');
+        const tipDescEl = document.getElementById('nierTipDesc');
+        let tipShowTimer = null;
+
+        function positionTooltip(clientX, clientY) {
+            const offsetX = 16;
+            const offsetY = -10;
+            const rect = tooltipEl.getBoundingClientRect();
+            let left = clientX + offsetX;
+            let top = clientY + offsetY;
+
+            if (left + rect.width > window.innerWidth - 10) {
+                left = Math.max(10, clientX - rect.width - 12);
+            }
+            if (top + rect.height > window.innerHeight - 10) {
+                top = Math.max(10, window.innerHeight - rect.height - 10);
+            }
+            if (top < 10) top = 10;
+
+            tooltipEl.style.left = left + 'px';
+            tooltipEl.style.top = top + 'px';
+        }
+
+        document.querySelectorAll('.tool-btn[data-tip-title]').forEach(btn => {
+            btn.addEventListener('mouseenter', (e) => {
+                if (tipShowTimer) {
+                    clearTimeout(tipShowTimer);
+                    tipShowTimer = null;
+                }
+                btn._lastMouseX = e.clientX;
+                btn._lastMouseY = e.clientY;
+
+                const title = btn.getAttribute('data-tip-title') || '';
+                const desc = btn.getAttribute('data-tip-desc') || '';
+
+                tipShowTimer = setTimeout(() => {
+                    tipTitleEl.textContent = title;
+                    if (desc.trim() !== '') {
+                        tipDescEl.textContent = desc;
+                        tipDescEl.style.display = 'block';
+                    } else {
+                        tipDescEl.textContent = '';
+                        tipDescEl.style.display = 'none';
+                    }
+                    positionTooltip(btn._lastMouseX, btn._lastMouseY);
+                    tooltipEl.classList.add('visible');
+                }, 1000); // Chuột đi vào button sau 1s mới bắt đầu hiện (fade in 0.2s)
+            });
+
+            btn.addEventListener('mousemove', (e) => {
+                btn._lastMouseX = e.clientX;
+                btn._lastMouseY = e.clientY;
+                if (tooltipEl.classList.contains('visible')) {
+                    positionTooltip(e.clientX, e.clientY);
+                }
+            });
+
+            btn.addEventListener('mouseleave', () => {
+                if (tipShowTimer) {
+                    clearTimeout(tipShowTimer);
+                    tipShowTimer = null;
+                }
+                // Rời chuột khỏi button thì ngay lập tức bắt đầu fade out trong 0.2s
+                tooltipEl.classList.remove('visible');
+            });
+
+            btn.addEventListener('click', () => {
+                if (tipShowTimer) {
+                    clearTimeout(tipShowTimer);
+                    tipShowTimer = null;
+                }
+                tooltipEl.classList.remove('visible');
+            });
+        });
+
+        // --- NÂNG CẤP SORTABLEJS ---
+        const sortableGrid = new Sortable(document.getElementById('thumbGrid'), {
+            animation: 200, ghostClass: 'nier-ghost', dragClass: 'nier-drag',
+            fallbackClass: 'nier-fallback', forceFallback: true, fallbackOnBody: true, 
+            delay: 100, delayOnTouchOnly: true, 
+            onStart: function(evt) { evt.item.setAttribute('data-slot', evt.oldIndex + 1); },
+            onChange: function(evt) { if(evt.item) evt.item.setAttribute('data-slot', evt.newIndex + 1); },
+            onEnd: function() {
+                if (pageNumberConfig.enabled) {
+                    refreshAllPagesComposited();
+                }
+                updateToolbarStatus();
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            const grid = document.getElementById('thumbGrid');
+            if (grid) { e.target.closest('.thumb-wrapper') ? grid.classList.add('show-delete-mobile') : grid.classList.remove('show-delete-mobile'); }
+        });
+
+        $(document).on('mouseenter', '.themebutton:not(:disabled), .tool-btn:not(:disabled), .thumb-box, .dropzone, .gallery-nav, .gallery-thumb, .gallery-close', () => { 
+            hoverSound.currentTime = 0; hoverSound.play(); 
+        });
+
+        function updateToolbarStatus() {
+            const statusEl = document.getElementById('toolbarStatusText');
+            const activeItem = uploadedFiles.find(f => f.id === currentPreviewId);
+            const checkedCount = getCheckedSequence().length;
+            if (activeItem) {
+                let shortName = activeItem.name;
+                if (shortName.length > 26) shortName = shortName.substring(0, 23) + '...';
+                statusEl.textContent = `TARGET: ${shortName} | SELECTED: ${checkedCount}`;
+            } else {
+                statusEl.textContent = `TARGET: NONE | SELECTED: ${checkedCount}`;
+            }
+
+            const wmBtn = document.getElementById('toolWatermark');
+            const pnBtn = document.getElementById('toolPageNum');
+            if (wmBtn) wmBtn.classList.toggle('active-modifier', watermarkConfig.enabled);
+            if (pnBtn) pnBtn.classList.toggle('active-modifier', pageNumberConfig.enabled);
+        }
+
+        // --- UPLOAD FILES (PDF & IMAGES) ---
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        dropZone.addEventListener('click', () => { clickSound.play(); fileInput.click(); });
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('hover'); });
+        dropZone.addEventListener('dragleave', (e) => { e.preventDefault(); dropZone.classList.remove('hover'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault(); dropZone.classList.remove('hover');
+            if (e.dataTransfer.files.length > 0) handleFiles(e.dataTransfer.files);
+        });
+        fileInput.addEventListener('change', (e) => { handleFiles(e.target.files); fileInput.value = ''; });
+
+        function isPdfFile(file) {
+            return file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+        }
+
+        function isImageFile(file) {
+            return file.type.startsWith('image/') || /\.(jpe?g|png|webp|gif|bmp)$/i.test(file.name);
+        }
+
+        function getBaseFileName(fileName) {
+            return fileName.replace(/\.[^/.]+$/, "") || 'Nier_Document';
+        }
+
+        async function renderPdfPageToBlobUrl(pdfPage) {
+            const baseViewport = pdfPage.getViewport({ scale: 1 });
+            const maxDim = Math.max(baseViewport.width, baseViewport.height);
+            const scale = Math.min(2.0, Math.max(1.5, 1600 / (maxDim || 1)));
+            const viewport = pdfPage.getViewport({ scale: scale });
+
+            const canvas = document.createElement('canvas');
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            await pdfPage.render({ canvasContext: ctx, viewport: viewport }).promise;
+
+            return new Promise((resolve) => {
+                canvas.toBlob((blob) => {
+                    if (blob) {
+                        resolve(URL.createObjectURL(blob));
+                    } else {
+                        resolve(canvas.toDataURL('image/jpeg', 0.92));
+                    }
+                }, 'image/jpeg', 0.92);
+            });
+        }
+
+        async function handleFiles(files) {
+            const validFiles = Array.from(files).filter(f => isImageFile(f) || isPdfFile(f));
+            if (validFiles.length === 0) return;
+
+            const hasPdf = validFiles.some(f => isPdfFile(f));
+            if (hasPdf) {
+                $('#popupOverlay, #customPopup').stop(true, true);
+                $('#popupOverlay').css('pointer-events', 'none');
+                showPopup(
+                    "READING DATA...",
+                    `<p id="extractStatusText" style="text-align:center;">Extracting document pages...</p>
+                     <div class="progress-container">
+                        <div id="extractProgressBar" class="progress-bar"></div>
+                        <div id="extractProgressText" class="progress-text">STANDBY 0%</div>
+                     </div>`,
+                    []
+                );
+                $('#popupButtons').hide();
+            }
+
+            const newItems = [];
+            let failedCount = 0;
+
+            try {
+                for (let fIdx = 0; fIdx < validFiles.length; fIdx++) {
+                    const file = validFiles[fIdx];
+                    const baseName = getBaseFileName(file.name);
+
+                    if (isImageFile(file)) {
+                        const objUrl = URL.createObjectURL(file);
+                        newItems.push({
+                            id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            type: 'image',
+                            name: file.name,
+                            baseFileName: baseName,
+                            originalDataUrl: objUrl,
+                            dataUrl: objUrl,
+                            rotation: 0,
+                            annotations: [],
+                            checked: true
+                        });
+                    } else if (isPdfFile(file)) {
+                        try {
+                            const arrayBuffer = await file.arrayBuffer();
+                            const pdfId = 'pdf_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                            pdfBuffersMap.set(pdfId, arrayBuffer.slice(0));
+
+                            const loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) });
+                            const pdfDoc = await loadingTask.promise;
+                            const numPages = pdfDoc.numPages;
+
+                            for (let p = 1; p <= numPages; p++) {
+                                const statusEl = document.getElementById('extractStatusText');
+                                const barEl = document.getElementById('extractProgressBar');
+                                const textEl = document.getElementById('extractProgressText');
+                                if (statusEl) statusEl.textContent = `Splitting: ${file.name} (Page ${p}/${numPages})`;
+                                if (barEl && textEl) {
+                                    const pagePct = Math.round((p / numPages) * 100);
+                                    barEl.style.width = pagePct + '%';
+                                    textEl.textContent = `PAGE ${p} / ${numPages} (${pagePct}%)`;
+                                }
+
+                                const page = await pdfDoc.getPage(p);
+                                const previewUrl = await renderPdfPageToBlobUrl(page);
+
+                                newItems.push({
+                                    id: 'page_' + Date.now() + '_' + p + '_' + Math.random().toString(36).substr(2, 7),
+                                    type: 'pdf-page',
+                                    pdfId: pdfId,
+                                    pageIndex: p - 1,
+                                    pageNumber: p,
+                                    name: `${baseName} - Page ${p}`,
+                                    baseFileName: baseName,
+                                    originalDataUrl: previewUrl,
+                                    dataUrl: previewUrl,
+                                    rotation: 0,
+                                    annotations: [],
+                                    checked: true
+                                });
+                            }
+                        } catch (err) {
+                            console.error("Failed to parse PDF:", file.name, err);
+                            failedCount++;
+                        }
+                    }
+                }
+            } finally {
+                if (newItems.length > 0) {
+                    uploadedFiles = uploadedFiles.concat(newItems);
+                    renderThumbnails(newItems);
+                    if (watermarkConfig.enabled || pageNumberConfig.enabled) {
+                        await refreshAllPagesComposited();
+                    }
+                    updateToolbarStatus();
+                }
+
+                if (hasPdf) {
+                    $('#popupOverlay').css('pointer-events', 'auto');
+                    $('#popupButtons').show();
+                    if (failedCount > 0) {
+                        showPopup("SYSTEM ALERT", `<p style="text-align:center;">Failed to read ${failedCount} PDF file(s). Please ensure the file is valid and not password-protected.</p>`);
+                    } else {
+                        $('#popupOverlay, #customPopup').stop(true, true).fadeOut(200);
+                    }
+                }
+            }
+        }
+
+        function cleanupUnusedPdfBuffer(pdfId) {
+            if (!pdfId) return;
+            const stillUsed = uploadedFiles.some(item => item.pdfId === pdfId);
+            if (!stillUsed) {
+                pdfBuffersMap.delete(pdfId);
+            }
+        }
+
+        function revokeItemUrls(item) {
+            if (item.dataUrl && item.dataUrl !== item.originalDataUrl && item.dataUrl.startsWith('blob:')) {
+                URL.revokeObjectURL(item.dataUrl);
+            }
+            if (item.originalDataUrl && item.originalDataUrl.startsWith('blob:')) {
+                URL.revokeObjectURL(item.originalDataUrl);
+            }
+        }
+
+        function resetPreviewIfDeleted(deletedId) {
+            if (currentPreviewId === deletedId) {
+                currentPreviewId = null;
+                currentPreviewData = null;
+                const box = document.getElementById('mainPreviewBox');
+                const img = document.getElementById('mainPreviewImg');
+                const nameEl = document.getElementById('mainPreviewName');
+                const placeholder = document.getElementById('previewPlaceholder');
+
+                img.src = '';
+                img.style.display = 'none';
+                nameEl.textContent = '';
+                nameEl.style.display = 'none';
+                placeholder.style.display = 'block';
+                box.style.width = '100%';
+                box.style.height = '100%';
+                updateToolbarStatus();
+            }
+        }
+
+        function resizePreviewBox(naturalWidth, naturalHeight) {
+            let wrap = document.getElementById('previewWrapper'); let box = document.getElementById('mainPreviewBox');
+            let scale = Math.min(wrap.clientWidth / naturalWidth, wrap.clientHeight / naturalHeight);
+            box.style.width = (naturalWidth * scale) + 'px'; box.style.height = (naturalHeight * scale) + 'px';
+        }
+
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            if (currentPreviewData) {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(() => {
+                    let box = document.getElementById('mainPreviewBox');
+                    box.style.transition = 'none';
+                    resizePreviewBox(currentPreviewData.w, currentPreviewData.h);
+                    void box.offsetWidth; 
+                    box.style.transition = 'width 0.4s cubic-bezier(0.25, 1, 0.5, 1), height 0.4s cubic-bezier(0.25, 1, 0.5, 1)';
+                }, 100);
+            }
+        });
+
+        function selectPageForPreview(file) {
+            document.querySelectorAll('.thumb-wrapper').forEach(w => {
+                w.classList.toggle('active-target', w.dataset.id === file.id);
+            });
+
+            document.getElementById('previewPlaceholder').style.display = 'none';
+            let imgPre = new Image();
+            imgPre.onload = function() {
+                currentPreviewId = file.id;
+                currentPreviewData = { w: this.naturalWidth, h: this.naturalHeight };
+                resizePreviewBox(this.naturalWidth, this.naturalHeight);
+                document.getElementById('mainPreviewImg').src = file.dataUrl;
+                document.getElementById('mainPreviewImg').style.display = 'block';
+                document.getElementById('mainPreviewName').textContent = file.name; 
+                document.getElementById('mainPreviewName').style.display = 'block';
+                updateToolbarStatus();
+            };
+            imgPre.src = file.dataUrl;
+        }
+
+        // --- XOAY TRANG TRỰC TIẾP TRÊN THUMBNAIL ---
+        async function rotatePageItem(file) {
+            file.rotation = ((file.rotation || 0) + 90) % 360;
+
+            const rotatedOriginalUrl = await new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.naturalHeight;
+                    canvas.height = img.naturalWidth;
+                    const ctx = canvas.getContext('2d');
+                    ctx.translate(canvas.width / 2, canvas.height / 2);
+                    ctx.rotate(Math.PI / 2);
+                    ctx.drawImage(img, -img.naturalWidth / 2, -img.naturalHeight / 2);
+                    canvas.toBlob((blob) => {
+                        resolve(blob ? URL.createObjectURL(blob) : canvas.toDataURL('image/jpeg', 0.92));
+                    }, 'image/jpeg', 0.92);
+                };
+                img.src = file.originalDataUrl;
+            });
+
+            if (file.originalDataUrl && file.originalDataUrl.startsWith('blob:')) {
+                if (file.dataUrl === file.originalDataUrl) {
+                    file.dataUrl = null;
+                }
+                URL.revokeObjectURL(file.originalDataUrl);
+            }
+            file.originalDataUrl = rotatedOriginalUrl;
+
+            await rebuildSinglePageComposite(file);
+        }
+
+        // --- RENDER COMPOSITE (GỐC + NOTE + WATERMARK PATTERN/SINGLE + PAGE NUM) ---
+        function drawOverlaysOnCanvas(ctx, w, h, file, seqIndex, totalChecked) {
+            // 1. Vẽ Note của trang
+            if (file.annotations && file.annotations.length > 0) {
+                file.annotations.forEach(ann => {
+                    if (ann.type === 'note') {
+                        ctx.save();
+                        const fontSize = Math.max(12, Math.round(Math.min(w, h) * 0.022));
+                        ctx.font = `600 ${fontSize}px Montserrat, sans-serif`;
+                        const boxW = Math.round(w * 0.34);
+                        const pad = Math.round(fontSize * 0.8);
+                        const words = String(ann.text).split(/\s+/);
+                        const lines = [];
+                        let curLine = '';
+                        words.forEach(word => {
+                            const test = curLine ? curLine + ' ' + word : word;
+                            if (ctx.measureText(test).width > boxW - pad * 2) {
+                                if (curLine) lines.push(curLine);
+                                curLine = word;
+                            } else {
+                                curLine = test;
+                            }
+                        });
+                        if (curLine) lines.push(curLine);
+
+                        const headerH = Math.round(fontSize * 1.6);
+                        const boxH = headerH + lines.length * Math.round(fontSize * 1.35) + pad * 1.5;
+                        const margin = Math.round(Math.min(w, h) * 0.035);
+
+                        let bx = w - boxW - margin;
+                        let by = margin;
+                        if (ann.position === 'top-left') { bx = margin; by = margin; }
+                        if (ann.position === 'bottom-right') { bx = w - boxW - margin; by = h - boxH - margin; }
+                        if (ann.position === 'bottom-left') { bx = margin; by = h - boxH - margin; }
+
+                        ctx.fillStyle = 'rgba(216, 210, 186, 0.94)';
+                        ctx.fillRect(bx, by, boxW, boxH);
+                        ctx.strokeStyle = '#4b4340';
+                        ctx.lineWidth = Math.max(2, Math.round(Math.min(w, h) * 0.003));
+                        ctx.strokeRect(bx, by, boxW, boxH);
+
+                        ctx.fillStyle = '#4b4340';
+                        ctx.fillRect(bx, by, boxW, headerH);
+                        ctx.fillStyle = '#d3cebb';
+                        ctx.font = `700 ${Math.round(fontSize * 0.85)}px Montserrat, sans-serif`;
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText('NOTE', bx + pad * 0.7, by + headerH / 2);
+
+                        ctx.fillStyle = '#4b4340';
+                        ctx.font = `600 ${fontSize}px Montserrat, sans-serif`;
+                        lines.forEach((ln, i) => {
+                            ctx.fillText(ln, bx + pad * 0.7, by + headerH + pad * 0.8 + i * Math.round(fontSize * 1.35));
+                        });
+                        ctx.restore();
+                    }
+                });
+            }
+
+            // 2. Vẽ Watermark (Single hoặc Pattern lặp đều cùng hướng)
+            if (watermarkConfig.enabled && watermarkConfig.text) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.rect(0, 0, w, h);
+                ctx.clip();
+
+                ctx.globalAlpha = watermarkConfig.opacity;
+                ctx.fillStyle = watermarkConfig.color;
+                const wmFontSize = Math.round(Math.min(w, h) * watermarkConfig.sizeRatio);
+                ctx.font = `700 ${wmFontSize}px Montserrat, sans-serif`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.translate(w / 2, h / 2);
+                if (watermarkConfig.style === 'diagonal') {
+                    ctx.rotate(-Math.PI / 4);
+                }
+
+                if (!watermarkConfig.isPattern) {
+                    ctx.fillText(watermarkConfig.text, 0, 0);
+                } else {
+                    const textMetrics = ctx.measureText(watermarkConfig.text);
+                    const textW = Math.max(textMetrics.width, wmFontSize * 2);
+                    const minDim = Math.min(w, h);
+                    const gap = minDim * ((watermarkConfig.spacing || 24) / 100);
+                    const stepX = textW + gap * 1.3;
+                    const stepY = wmFontSize * 1.4 + gap;
+                    const diag = Math.hypot(w, h);
+
+                    const countX = Math.ceil(diag / stepX) + 1;
+                    const countY = Math.ceil(diag / stepY) + 1;
+
+                    for (let row = -countY; row <= countY; row++) {
+                        const y = row * stepY;
+                        const rowOffset = (Math.abs(row) % 2 === 1) ? (stepX / 2) : 0;
+                        for (let col = -countX; col <= countX; col++) {
+                            const x = col * stepX + rowOffset;
+                            ctx.fillText(watermarkConfig.text, x, y);
+                        }
+                    }
+                }
+                ctx.restore();
+            }
+
+            // 3. Vẽ Số trang tự động (Đa màu sắc & Opacity)
+            if (pageNumberConfig.enabled && seqIndex !== -1 && totalChecked > 0) {
+                ctx.save();
+                ctx.globalAlpha = pageNumberConfig.opacity ?? 0.90;
+                const numFontSize = Math.max(12, Math.round(Math.min(w, h) * 0.022));
+                ctx.font = `700 ${numFontSize}px Montserrat, sans-serif`;
+                ctx.fillStyle = pageNumberConfig.color || '#4b4340';
+                const margin = Math.round(Math.min(w, h) * 0.035);
+                const pageNum = seqIndex + 1;
+                let label = `${pageNum} / ${totalChecked}`;
+                if (pageNumberConfig.format === 'page') label = `Page ${pageNum} of ${totalChecked}`;
+                if (pageNumberConfig.format === 'dash') label = `- ${pageNum} -`;
+
+                let nx = w / 2, ny = h - margin;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+
+                if (pageNumberConfig.position === 'bottom-right') {
+                    nx = w - margin;
+                    ctx.textAlign = 'right';
+                } else if (pageNumberConfig.position === 'bottom-left') {
+                    nx = margin;
+                    ctx.textAlign = 'left';
+                } else if (pageNumberConfig.position === 'top-right') {
+                    nx = w - margin;
+                    ny = margin + numFontSize;
+                    ctx.textAlign = 'right';
+                } else if (pageNumberConfig.position === 'top-center') {
+                    nx = w / 2;
+                    ny = margin + numFontSize;
+                    ctx.textAlign = 'center';
+                }
+                ctx.fillText(label, nx, ny);
+                ctx.restore();
+            }
+        }
+
+        function hasAnyOverlay(file) {
+            return (file.annotations && file.annotations.length > 0) || watermarkConfig.enabled || pageNumberConfig.enabled;
+        }
+
+        async function rebuildSinglePageComposite(file) {
+            const checkedSeq = getCheckedSequence();
+            const seqIdx = checkedSeq.findIndex(item => item.id === file.id);
+
+            if (!hasAnyOverlay(file)) {
+                if (file.dataUrl && file.dataUrl !== file.originalDataUrl && file.dataUrl.startsWith('blob:')) {
+                    URL.revokeObjectURL(file.dataUrl);
+                }
+                file.dataUrl = file.originalDataUrl;
+            } else {
+                const newUrl = await new Promise((resolve) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.naturalWidth;
+                        canvas.height = img.naturalHeight;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        drawOverlaysOnCanvas(ctx, canvas.width, canvas.height, file, seqIdx, checkedSeq.length);
+                        canvas.toBlob((blob) => {
+                            resolve(blob ? URL.createObjectURL(blob) : canvas.toDataURL('image/jpeg', 0.92));
+                        }, 'image/jpeg', 0.92);
+                    };
+                    img.src = file.originalDataUrl;
+                });
+
+                if (file.dataUrl && file.dataUrl !== file.originalDataUrl && file.dataUrl.startsWith('blob:')) {
+                    URL.revokeObjectURL(file.dataUrl);
+                }
+                file.dataUrl = newUrl;
+            }
+
+            const thumbImg = document.querySelector(`.thumb-wrapper[data-id="${file.id}"] .thumb-box img`);
+            if (thumbImg) thumbImg.src = file.dataUrl;
+
+            if (currentPreviewId === file.id) {
+                selectPageForPreview(file);
+            }
+        }
+
+        async function refreshAllPagesComposited() {
+            const currentSeq = getCurrentSequence();
+            for (let i = 0; i < currentSeq.length; i++) {
+                await rebuildSinglePageComposite(currentSeq[i]);
+            }
+        }
+
+        function renderThumbnails(filesToRender, insertBeforeEl = null) {
+            const grid = document.getElementById('thumbGrid');
+            if(grid.innerHTML.includes("No images")) grid.innerHTML = '';
+            
+            const fragment = document.createDocumentFragment();
+
+            filesToRender.forEach(file => {
+                let displayName = file.name;
+                if(displayName.length > 56) displayName = displayName.substring(0, 53) + '...';
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'thumb-wrapper'; wrapper.dataset.id = file.id;
+
+                wrapper.innerHTML = `
+                    <div class="thumb-box">
+                        <input type="checkbox" class="thumb-checkbox" checked>
+                        <div class="thumb-delete" title="Remove"><i class="fas fa-times"></i></div>
+                        <div class="thumb-rotate" title="Rotate 90°"><i class="fas fa-redo-alt"></i></div>
+                        <img src="${file.dataUrl}">
+                    </div>
+                    <div class="thumb-name" title="${file.name}">${displayName}</div>
+                `;
+
+                wrapper.querySelector('.thumb-checkbox').addEventListener('click', async (e) => { 
+                    e.stopPropagation();
+                    file.checked = e.target.checked;
+                    clickSound.currentTime = 0; clickSound.play();
+                    if (pageNumberConfig.enabled) {
+                        await refreshAllPagesComposited();
+                    }
+                    updateToolbarStatus();
+                });
+
+                wrapper.querySelector('.thumb-rotate').addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    clickSound.currentTime = 0; clickSound.play();
+                    await rotatePageItem(file);
+                });
+
+                wrapper.querySelector('.thumb-delete').addEventListener('click', (e) => {
+                    e.stopPropagation(); deleteSound.currentTime = 0; deleteSound.play(); 
+                    wrapper.classList.add('removing');
+                    setTimeout(async () => { 
+                        wrapper.remove();
+                        revokeItemUrls(file);
+                        uploadedFiles = uploadedFiles.filter(f => f.id !== file.id);
+                        cleanupUnusedPdfBuffer(file.pdfId);
+                        resetPreviewIfDeleted(file.id);
+                        if (pageNumberConfig.enabled) {
+                            await refreshAllPagesComposited();
+                        }
+                        updateToolbarStatus();
+                    }, 5);
+                });
+
+                wrapper.querySelector('.thumb-box').addEventListener('click', (e) => {
+                    if (
+                        e.target.closest('.thumb-delete') ||
+                        e.target.closest('.thumb-rotate') ||
+                        e.target.classList.contains('thumb-checkbox')
+                    ) return;
+                    clickSound.currentTime = 0; clickSound.play();
+                    selectPageForPreview(file);
+                });
+                fragment.appendChild(wrapper);
+            });
+
+            if (insertBeforeEl && insertBeforeEl.parentNode === grid) {
+                grid.insertBefore(fragment, insertBeforeEl);
+            } else {
+                grid.appendChild(fragment);
+            }
+        }
+
+        function getCurrentSequence() {
+            const currentUI = [];
+            document.querySelectorAll('.thumb-wrapper').forEach(el => {
+                const fileObj = uploadedFiles.find(f => f.id === el.dataset.id);
+                if (fileObj && !el.classList.contains('removing')) currentUI.push(fileObj);
+            });
+            return currentUI;
+        }
+
+        function getCheckedSequence() {
+            return getCurrentSequence().filter(f => document.querySelector(`.thumb-wrapper[data-id="${f.id}"] .thumb-checkbox`)?.checked);
+        }
+
+        function ensurePagesLoaded() {
+            if (getCurrentSequence().length === 0) {
+                $('#popupButtons').show();
+                showPopup("SYSTEM ALERT", "<p style='text-align:center;'>Data Missing: Please upload at least one PDF or image file first.</p>");
+                return false;
+            }
+            return true;
+        }
+
+        function getTargetOrFirstPage() {
+            const seq = getCurrentSequence();
+            if (seq.length === 0) return null;
+            return seq.find(f => f.id === currentPreviewId) || seq[0];
+        }
+
+        // --- CÁC TÍNH NĂNG TRÊN TOOLBAR ---
+
+        // 1. NOTE (CALLOUT BOX)
+        document.getElementById('toolAddNote').addEventListener('click', () => {
+            clickSound.currentTime = 0; clickSound.play();
+            if (!ensurePagesLoaded()) return;
+            const target = getTargetOrFirstPage();
+
+            showPopup(
+                "ATTACH PAGE NOTE",
+                `<div class="nier-form-group">
+                    <label class="nier-form-label">Note Message (Target: ${target.name})</label>
+                    <textarea id="noteContentInput" class="nier-textarea" placeholder="Write inspection note or memo..."></textarea>
+                 </div>
+                 <div class="nier-form-group">
+                    <label class="nier-form-label">Corner Placement</label>
+                    <select id="noteCornerSelect" class="nier-select">
+                        <option value="top-right">Top Right Corner</option>
+                        <option value="top-left">Top Left Corner</option>
+                        <option value="bottom-right">Bottom Right Corner</option>
+                        <option value="bottom-left">Bottom Left Corner</option>
+                    </select>
+                 </div>`,
+                [
+                    {
+                        text: "STAMP NOTE",
+                        action: async function() {
+                            const txt = $('#noteContentInput').val().trim();
+                            if (!txt) { closePopup(false); return; }
+                            actionSound.currentTime = 0; actionSound.play();
+                            const corner = $('#noteCornerSelect').val();
+                            target.annotations.push({
+                                type: 'note',
+                                text: txt,
+                                position: corner
+                            });
+                            await rebuildSinglePageComposite(target);
+                            selectPageForPreview(target);
+                            closePopup(false);
+                        }
+                    },
+                    { text: "CANCEL", action: function() { clickSound.play(); closePopup(false); } }
+                ]
+            );
+            initNierSelects(document.getElementById('popupBody'));
+        });
+
+        // 2. WATERMARK (SINGLE & PATTERN MODE VỚI KHOẢNG CÁCH TÙY CHỈNH)
+        document.getElementById('toolWatermark').addEventListener('click', () => {
+            clickSound.currentTime = 0; clickSound.play();
+            if (!ensurePagesLoaded()) return;
+
+            showPopup(
+                "DOCUMENT WATERMARK",
+                `<div class="nier-form-group">
+                    <label class="nier-form-label">Watermark Text</label>
+                    <input type="text" id="wmTextInput" class="nier-input" value="${watermarkConfig.text}" placeholder="e.g. CONFIDENTIAL, DRAFT">
+                 </div>
+                 <div class="nier-row">
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Orientation</label>
+                        <select id="wmStyleSelect" class="nier-select">
+                            <option value="diagonal" ${watermarkConfig.style === 'diagonal' ? 'selected' : ''}>Diagonal (-45°)</option>
+                            <option value="horizontal" ${watermarkConfig.style === 'horizontal' ? 'selected' : ''}>Horizontal (0°)</option>
+                        </select>
+                    </div>
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Opacity</label>
+                        <select id="wmOpacitySelect" class="nier-select">
+                            <option value="0.15" ${watermarkConfig.opacity === 0.15 ? 'selected' : ''}>Subtle (15%)</option>
+                            <option value="0.25" ${watermarkConfig.opacity === 0.25 ? 'selected' : ''}>Standard (25%)</option>
+                            <option value="0.45" ${watermarkConfig.opacity === 0.45 ? 'selected' : ''}>Strong (45%)</option>
+                            <option value="0.65" ${watermarkConfig.opacity === 0.65 ? 'selected' : ''}>Heavy (65%)</option>
+                        </select>
+                    </div>
+                 </div>
+                 <div class="nier-form-group">
+                    <label class="nier-form-label">Stamp Color</label>
+                    <select id="wmColorSelect" class="nier-select">
+                        <option value="#4b4340" ${watermarkConfig.color === '#4b4340' ? 'selected' : ''}>NieR Dark (#4b4340)</option>
+                        <option value="#850000" ${watermarkConfig.color === '#850000' ? 'selected' : ''}>Alert Crimson (#850000)</option>
+                        <option value="#000000" ${watermarkConfig.color === '#000000' ? 'selected' : ''}>Pure Black (#000000)</option>
+                        <option value="#6e6a5f" ${watermarkConfig.color === '#6e6a5f' ? 'selected' : ''}>Archive Slate (#6e6a5f)</option>
+                    </select>
+                 </div>
+                 <label class="nier-check-row">
+                    <input type="checkbox" id="wmPatternCheck" ${watermarkConfig.isPattern ? 'checked' : ''}>
+                    <span>Pattern Mode (Distribute evenly across page)</span>
+                 </label>
+                 <div class="nier-form-group" id="wmSpacingWrap" style="display:${watermarkConfig.isPattern ? 'block' : 'none'}; margin-top:6px;">
+                    <label class="nier-form-label">Pattern Spacing: <span id="wmSpacingVal">${watermarkConfig.spacing}</span>%</label>
+                    <input type="range" id="wmSpacingRange" class="nier-range" min="10" max="60" step="2" value="${watermarkConfig.spacing}">
+                 </div>`,
+                [
+                    {
+                        text: "APPLY WATERMARK",
+                        action: async function() {
+                            const txt = $('#wmTextInput').val().trim();
+                            if (!txt) return;
+                            actionSound.currentTime = 0; actionSound.play();
+                            watermarkConfig.enabled = true;
+                            watermarkConfig.text = txt;
+                            watermarkConfig.style = $('#wmStyleSelect').val();
+                            watermarkConfig.opacity = parseFloat($('#wmOpacitySelect').val());
+                            watermarkConfig.color = $('#wmColorSelect').val();
+                            watermarkConfig.isPattern = $('#wmPatternCheck').is(':checked');
+                            watermarkConfig.spacing = parseInt($('#wmSpacingRange').val(), 10) || 24;
+                            closePopup(false);
+                            await refreshAllPagesComposited();
+                            updateToolbarStatus();
+                        }
+                    },
+                    {
+                        text: "REMOVE",
+                        action: async function() {
+                            deleteSound.currentTime = 0; deleteSound.play();
+                            watermarkConfig.enabled = false;
+                            closePopup(false);
+                            await refreshAllPagesComposited();
+                            updateToolbarStatus();
+                        }
+                    }
+                ]
+            );
+
+            initNierSelects(document.getElementById('popupBody'));
+
+            $(document).off('change.wmPat').on('change.wmPat', '#wmPatternCheck', function() {
+                clickSound.currentTime = 0; clickSound.play();
+                $('#wmSpacingWrap').slideToggle(150);
+            });
+            $(document).off('input.wmSpc').on('input.wmSpc', '#wmSpacingRange', function() {
+                $('#wmSpacingVal').text($(this).val());
+            });
+        });
+
+        // 3. AUTO PAGE NUMBERING (NHIỀU MÀU SẮC & OPACITY)
+        document.getElementById('toolPageNum').addEventListener('click', () => {
+            clickSound.currentTime = 0; clickSound.play();
+            if (!ensurePagesLoaded()) return;
+
+            showPopup(
+                "AUTO PAGE NUMBERING",
+                `<div class="nier-row">
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Numbering Format</label>
+                        <select id="pnFormatSelect" class="nier-select">
+                            <option value="slash" ${pageNumberConfig.format === 'slash' ? 'selected' : ''}>1 / N</option>
+                            <option value="page" ${pageNumberConfig.format === 'page' ? 'selected' : ''}>Page 1 of N</option>
+                            <option value="dash" ${pageNumberConfig.format === 'dash' ? 'selected' : ''}>- 1 -</option>
+                        </select>
+                    </div>
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Page Placement</label>
+                        <select id="pnPosSelect" class="nier-select">
+                            <option value="bottom-center" ${pageNumberConfig.position === 'bottom-center' ? 'selected' : ''}>Bottom Center</option>
+                            <option value="bottom-right" ${pageNumberConfig.position === 'bottom-right' ? 'selected' : ''}>Bottom Right</option>
+                            <option value="bottom-left" ${pageNumberConfig.position === 'bottom-left' ? 'selected' : ''}>Bottom Left</option>
+                            <option value="top-right" ${pageNumberConfig.position === 'top-right' ? 'selected' : ''}>Top Right</option>
+                            <option value="top-center" ${pageNumberConfig.position === 'top-center' ? 'selected' : ''}>Top Center</option>
+                        </select>
+                    </div>
+                 </div>
+                 <div class="nier-row">
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Number Color</label>
+                        <select id="pnColorSelect" class="nier-select">
+                            <option value="#4b4340" ${pageNumberConfig.color === '#4b4340' ? 'selected' : ''}>NieR Dark (#4b4340)</option>
+                            <option value="#000000" ${pageNumberConfig.color === '#000000' ? 'selected' : ''}>Pure Black (#000000)</option>
+                            <option value="#666666" ${pageNumberConfig.color === '#666666' ? 'selected' : ''}>Charcoal Gray (#666666)</option>
+                            <option value="#850000" ${pageNumberConfig.color === '#850000' ? 'selected' : ''}>Crimson Red (#850000)</option>
+                            <option value="#1b4370" ${pageNumberConfig.color === '#1b4370' ? 'selected' : ''}>Archive Blue (#1b4370)</option>
+                            <option value="#1e5631" ${pageNumberConfig.color === '#1e5631' ? 'selected' : ''}>Forest Green (#1e5631)</option>
+                            <option value="#4a235a" ${pageNumberConfig.color === '#4a235a' ? 'selected' : ''}>Royal Purple (#4a235a)</option>
+                            <option value="#d3cebb" ${pageNumberConfig.color === '#d3cebb' ? 'selected' : ''}>Light Beige (#d3cebb)</option>
+                            <option value="#ffffff" ${pageNumberConfig.color === '#ffffff' ? 'selected' : ''}>Pure White (#ffffff)</option>
+                        </select>
+                    </div>
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Opacity</label>
+                        <select id="pnOpacitySelect" class="nier-select">
+                            <option value="1" ${pageNumberConfig.opacity === 1 ? 'selected' : ''}>100% (Solid)</option>
+                            <option value="0.9" ${pageNumberConfig.opacity === 0.9 ? 'selected' : ''}>90% (Default)</option>
+                            <option value="0.75" ${pageNumberConfig.opacity === 0.75 ? 'selected' : ''}>75% (Medium)</option>
+                            <option value="0.5" ${pageNumberConfig.opacity === 0.5 ? 'selected' : ''}>50% (Semi-transparent)</option>
+                            <option value="0.3" ${pageNumberConfig.opacity === 0.3 ? 'selected' : ''}>30% (Subtle)</option>
+                        </select>
+                    </div>
+                 </div>`,
+                [
+                    {
+                        text: "ENABLE NUMBERS",
+                        action: async function() {
+                            actionSound.currentTime = 0; actionSound.play();
+                            pageNumberConfig.enabled = true;
+                            pageNumberConfig.format = $('#pnFormatSelect').val();
+                            pageNumberConfig.position = $('#pnPosSelect').val();
+                            pageNumberConfig.color = $('#pnColorSelect').val();
+                            pageNumberConfig.opacity = parseFloat($('#pnOpacitySelect').val());
+                            closePopup(false);
+                            await refreshAllPagesComposited();
+                            updateToolbarStatus();
+                        }
+                    },
+                    {
+                        text: "DISABLE",
+                        action: async function() {
+                            deleteSound.currentTime = 0; deleteSound.play();
+                            pageNumberConfig.enabled = false;
+                            closePopup(false);
+                            await refreshAllPagesComposited();
+                            updateToolbarStatus();
+                        }
+                    }
+                ]
+            );
+            initNierSelects(document.getElementById('popupBody'));
+        });
+
+        // 4. INSERT BLANK PAGE (CHÈN VÀO ĐÚNG VỊ TRÍ THUMBNAIL ĐANG SELECT VÀ DỊCH CÁC TRANG SAU SANG PHẢI 1 Ô)
+        document.getElementById('toolBlankPage').addEventListener('click', async () => {
+            actionSound.currentTime = 0; actionSound.play();
+            const canvas = document.createElement('canvas');
+            canvas.width = 1190;
+            canvas.height = 1684;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const blobUrl = await new Promise(resolve => {
+                canvas.toBlob(b => resolve(b ? URL.createObjectURL(b) : canvas.toDataURL('image/jpeg', 0.92)), 'image/jpeg', 0.92);
+            });
+
+            const blankCount = uploadedFiles.filter(f => f.baseFileName === 'Blank_Page').length + 1;
+            const newItem = {
+                id: 'blank_' + Date.now() + '_' + Math.random().toString(36).substr(2, 7),
+                type: 'image',
+                name: `Blank Page ${blankCount}`,
+                baseFileName: 'Blank_Page',
+                originalDataUrl: blobUrl,
+                dataUrl: blobUrl,
+                rotation: 0,
+                annotations: [],
+                checked: true
+            };
+
+            const activeWrapper = currentPreviewId
+                ? document.querySelector(`.thumb-wrapper[data-id="${currentPreviewId}"]:not(.removing)`)
+                : null;
+
+            if (activeWrapper) {
+                const targetIdx = uploadedFiles.findIndex(f => f.id === currentPreviewId);
+                if (targetIdx !== -1) {
+                    uploadedFiles.splice(targetIdx, 0, newItem);
+                } else {
+                    uploadedFiles.push(newItem);
+                }
+                // Chèn vào chính xác vị trí của thumbnail đang select; thumbnail đang select và các ô sau dịch sang phải 1 ô
+                renderThumbnails([newItem], activeWrapper);
+            } else {
+                uploadedFiles.push(newItem);
+                renderThumbnails([newItem]);
+                selectPageForPreview(newItem);
+            }
+
+            if (watermarkConfig.enabled || pageNumberConfig.enabled) {
+                await refreshAllPagesComposited();
+            } else {
+                await rebuildSinglePageComposite(newItem);
+            }
+            updateToolbarStatus();
+        });
+
+        // 5. EXTRACT TEXT (NO OCR - PDF.JS CONTENT STREAM PARSING)
+        async function extractTextFromSelectedPages(sequenceOverride = null) {
+            const sequence = sequenceOverride || getCheckedSequence();
+            const pdfItems = sequence.filter(item => item.type === 'pdf-page' && pdfBuffersMap.has(item.pdfId));
+            if (pdfItems.length === 0) return '';
+
+            const loadedPdfDocs = new Map();
+            let fullText = '';
+
+            for (let i = 0; i < pdfItems.length; i++) {
+                const item = pdfItems[i];
+                let pdfDoc = loadedPdfDocs.get(item.pdfId);
+                if (!pdfDoc) {
+                    const buf = pdfBuffersMap.get(item.pdfId).slice(0);
+                    pdfDoc = await pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
+                    loadedPdfDocs.set(item.pdfId, pdfDoc);
+                }
+
+                const page = await pdfDoc.getPage(item.pageNumber);
+                const textContent = await page.getTextContent();
+                let lastY = null;
+                let pageText = '';
+
+                for (const tItem of textContent.items) {
+                    const curY = tItem.transform ? tItem.transform[5] : null;
+                    if (lastY !== null && curY !== null && Math.abs(curY - lastY) > 5) {
+                        pageText += '\n';
+                    } else if (pageText.length > 0 && !pageText.endsWith(' ') && !pageText.endsWith('\n')) {
+                        pageText += ' ';
+                    }
+                    pageText += tItem.str;
+                    if (curY !== null) lastY = curY;
+                }
+
+                fullText += `=== [${item.name}] ===\n${pageText.trim() || '(No embedded vector text on this page)'}\n\n`;
+            }
+
+            return fullText.trim();
+        }
+
+        document.getElementById('toolExtractText').addEventListener('click', async () => {
+            clickSound.currentTime = 0; clickSound.play();
+            if (!ensurePagesLoaded()) return;
+
+            const extracted = await extractTextFromSelectedPages();
+            if (!extracted) {
+                showPopup("SYSTEM ALERT", "<p style='text-align:center;'>No PDF pages with embedded text stream selected.</p>");
+                return;
+            }
+
+            showPopup(
+                "EXTRACTED PDF TEXT",
+                `<div class="nier-form-group">
+                    <label class="nier-form-label">Parsed Content Stream</label>
+                    <textarea id="extractedTextArea" class="nier-textarea" style="min-height:180px;" readonly></textarea>
+                 </div>`,
+                [
+                    {
+                        text: "DOWNLOAD .TXT",
+                        action: function() {
+                            actionSound.currentTime = 0; actionSound.play();
+                            const blob = new Blob([extracted], { type: 'text/plain;charset=utf-8' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = 'Extracted_Text.txt';
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }
+                    },
+                    {
+                        text: "COPY TEXT",
+                        action: function() {
+                            actionSound.currentTime = 0; actionSound.play();
+                            navigator.clipboard.writeText(extracted);
+                            $('#extractedTextArea').select();
+                        }
+                    },
+                    { text: "CLOSE", action: function() { clickSound.play(); closePopup(false); } }
+                ]
+            );
+            $('#extractedTextArea').val(extracted);
+        });
+
+        // 6. RESET EDITS
+        document.getElementById('toolResetEdits').addEventListener('click', async () => {
+            deleteSound.currentTime = 0; deleteSound.play();
+            if (!ensurePagesLoaded()) return;
+
+            watermarkConfig.enabled = false;
+            pageNumberConfig.enabled = false;
+            uploadedFiles.forEach(item => { item.annotations = []; });
+            await refreshAllPagesComposited();
+            updateToolbarStatus();
+        });
+
+        // --- GALLERY ---
+        let galleryImages = []; let galleryIndex = 0; let isAnimating = false;
+
+        document.getElementById('mainPreviewBox').addEventListener('click', () => {
+            const src = document.getElementById('mainPreviewImg').src;
+            if(!src || src.includes(window.location.host + window.location.pathname)) return; 
+            openCloseSound.currentTime = 0; openCloseSound.play();
+            galleryImages = getCurrentSequence();
+            if (galleryImages.length === 0) return;
+            const foundIdx = galleryImages.findIndex(img => img.id === currentPreviewId || img.dataUrl === src);
+            galleryIndex = foundIdx !== -1 ? foundIdx : 0;
+            openGallery();
+        });
+
+        function openGallery() {
+            document.body.classList.add('no-scroll');
+            $('#galleryOverlay').css('display', 'flex');
+            setTimeout(() => { $('#galleryOverlay').addClass('show'); }, 10);
+            updateGalleryStrip(); renderGalleryImage(galleryImages[galleryIndex].dataUrl, 'none');
+        }
+
+        function closeGallery() {
+            openCloseSound.currentTime = 0; openCloseSound.play();
+            $('#galleryOverlay').removeClass('show');
+            setTimeout(() => { $('#galleryOverlay').css('display', 'none'); document.body.classList.remove('no-scroll'); }, 200);
+        }
+
+        document.getElementById('galleryClose').addEventListener('click', closeGallery);
+        document.getElementById('galleryMain').addEventListener('click', (e) => { if(e.target.id === 'galleryMain') closeGallery(); });
+
+        let touchStartX = 0; let touchEndX = 0;
+        const galleryMainElem = document.getElementById('galleryMain');
+        
+        galleryMainElem.addEventListener('touchstart', e => { touchStartX = e.changedTouches[0].screenX; }, {passive: true});
+        galleryMainElem.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            let swipeDist = touchStartX - touchEndX;
+            if (swipeDist > 40 && galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1);
+            else if (swipeDist < -40 && galleryIndex > 0) navigateGallery(galleryIndex - 1);
+        }, {passive: true});
+
+        function updateGalleryStrip() {
+            const strip = document.getElementById('galleryStrip'); strip.innerHTML = '';
+            document.getElementById('galleryCounterText').textContent = `${galleryIndex + 1} / ${galleryImages.length}`;
+
+            galleryImages.forEach((img, idx) => {
+                const thumb = document.createElement('img'); thumb.src = img.dataUrl;
+                thumb.className = 'gallery-thumb' + (idx === galleryIndex ? ' active' : '');
+                thumb.onclick = () => { if(!isAnimating && idx !== galleryIndex) navigateGallery(idx); };
+                strip.appendChild(thumb);
+            });
+            const activeThumb = strip.querySelector('.active');
+            if(activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+        }
+
+        function navigateGallery(targetIndex) {
+            if(isAnimating) return;
+            hoverSound.currentTime = 0; hoverSound.play();
+            let direction = targetIndex > galleryIndex ? 'right' : 'left';
+            galleryIndex = targetIndex;
+            updateGalleryStrip(); renderGalleryImage(galleryImages[galleryIndex].dataUrl, direction);
+        }
+
+        document.getElementById('galleryNext').addEventListener('click', () => { if(galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1); });
+        document.getElementById('galleryPrev').addEventListener('click', () => { if(galleryIndex > 0) navigateGallery(galleryIndex - 1); });
+        document.addEventListener('keydown', (e) => {
+            if ($('#galleryOverlay').hasClass('show')) {
+                if (e.key === 'ArrowRight' && galleryIndex < galleryImages.length - 1) navigateGallery(galleryIndex + 1);
+                if (e.key === 'ArrowLeft' && galleryIndex > 0) navigateGallery(galleryIndex - 1);
+                if (e.key === 'Escape') closeGallery();
+            }
+        });
+
+        function renderGalleryImage(newSrc, direction) {
+            const container = document.getElementById('galleryMain'); const oldImgCont = document.getElementById('galleryImgContainer');
+            if(direction === 'none') { if(oldImgCont) oldImgCont.querySelector('img').src = newSrc; return; }
+
+            isAnimating = true;
+            const newImgCont = document.createElement('div');
+            newImgCont.className = 'gallery-img-container ' + (direction === 'right' ? 'anim-in-right' : 'anim-in-left');
+            const img = document.createElement('img'); img.src = newSrc; newImgCont.appendChild(img); container.appendChild(newImgCont);
+            void newImgCont.offsetWidth; 
+
+            oldImgCont.className = 'gallery-img-container ' + (direction === 'right' ? 'anim-out-left' : 'anim-out-right');
+            newImgCont.className = 'gallery-img-container anim-center';
+
+            setTimeout(() => { oldImgCont.remove(); newImgCont.id = 'galleryImgContainer'; isAnimating = false; }, 100);
+        }
+
+        // --- HỆ THỐNG EXPORT, ƯỚC TÍNH DUNG LƯỢNG FILE & BẢO MẬT MẬT KHẨU ---
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        function imageToBytes(dataUrl, mimeType = 'image/jpeg', quality = 0.95) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                    canvas.toBlob(async (blob) => {
+                        if (!blob) return reject(new Error('Canvas toBlob failed'));
+                        const buffer = await blob.arrayBuffer();
+                        resolve({
+                            blob: blob,
+                            bytes: buffer,
+                            width: img.naturalWidth,
+                            height: img.naturalHeight
+                        });
+                    }, mimeType, quality);
+                };
+                img.onerror = reject;
+                img.src = dataUrl;
+            });
+        }
+
+        function createTransparentOverlayPng(w, h, item, seqIdx, totalChecked) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                drawOverlaysOnCanvas(ctx, w, h, item, seqIdx, totalChecked);
+                canvas.toBlob(async (blob) => {
+                    if (!blob) return resolve(null);
+                    resolve(await blob.arrayBuffer());
+                }, 'image/png');
+            });
+        }
+
+        async function addImagePageToPdfLib(outPdf, dataUrl, quality = 0.95) {
+            const { bytes, width: imgW, height: imgH } = await imageToBytes(dataUrl, 'image/jpeg', quality);
+            const embeddedImg = await outPdf.embedJpg(bytes);
+
+            const isLandscape = imgW > imgH;
+            const a4W = isLandscape ? 841.89 : 595.28;
+            const a4H = isLandscape ? 595.28 : 841.89;
+
+            const ratio = imgW / imgH;
+            let drawW = a4W;
+            let drawH = a4W / ratio;
+            if (drawH > a4H) {
+                drawH = a4H;
+                drawW = a4H * ratio;
+            }
+
+            const page = outPdf.addPage([a4W, a4H]);
+            page.drawImage(embeddedImg, {
+                x: (a4W - drawW) / 2,
+                y: (a4H - drawH) / 2,
+                width: drawW,
+                height: drawH
+            });
+        }
+
+        // Hàm biên dịch gói xuất (dùng chung cho cả tính toán Estimated File Size và khi bấm Export Now)
+        async function buildExportPackage(sequence, baseFileName, format, quality, password, onProgress = null) {
+            let blobResult = null;
+            let extResult = '.pdf';
+
+            if (format === 'txt') {
+                if (onProgress) onProgress(50, 'EXTRACTING TEXT...');
+                const txt = await extractTextFromSelectedPages(sequence);
+                blobResult = new Blob([txt || 'No embedded vector text found in the selected pages.'], { type: 'text/plain;charset=utf-8' });
+                extResult = '.txt';
+                if (onProgress) onProgress(100, 'PROCESSING 100%');
+            } else if (format === 'jpg' || format === 'png') {
+                const mime = format === 'png' ? 'image/png' : 'image/jpeg';
+                const ext = format === 'png' ? 'png' : 'jpg';
+
+                if (sequence.length === 1) {
+                    const { blob } = await imageToBytes(sequence[0].dataUrl, mime, quality);
+                    blobResult = blob;
+                    extResult = '.' + ext;
+                    if (onProgress) onProgress(100, 'PROCESSING 100%');
+                } else {
+                    const zip = new JSZip();
+                    for (let i = 0; i < sequence.length; i++) {
+                        const { blob } = await imageToBytes(sequence[i].dataUrl, mime, quality);
+                        const pageNumStr = String(i + 1).padStart(2, '0');
+                        zip.file(`${baseFileName}_Page_${pageNumStr}.${ext}`, blob);
+                        const pct = Math.round(((i + 1) / sequence.length) * 100);
+                        if (onProgress) onProgress(pct, `PACKAGING ${pct}%`);
+                    }
+                    blobResult = await zip.generateAsync({ type: 'blob' });
+                    extResult = '.zip';
+                }
+            } else {
+                const useEncryptedJsPdf = Boolean(password);
+
+                if (!useEncryptedJsPdf && window.PDFLib) {
+                    const { PDFDocument, degrees } = window.PDFLib;
+                    const outPdf = await PDFDocument.create();
+                    const loadedSrcDocs = new Map();
+
+                    for (let i = 0; i < sequence.length; i++) {
+                        const item = sequence[i];
+
+                        if (item.type === 'pdf-page' && pdfBuffersMap.has(item.pdfId) && quality >= 0.9) {
+                            try {
+                                let srcDoc = loadedSrcDocs.get(item.pdfId);
+                                if (!srcDoc) {
+                                    const rawBuffer = pdfBuffersMap.get(item.pdfId);
+                                    srcDoc = await PDFDocument.load(rawBuffer, { ignoreEncryption: true });
+                                    loadedSrcDocs.set(item.pdfId, srcDoc);
+                                }
+                                const [copiedPage] = await outPdf.copyPages(srcDoc, [item.pageIndex]);
+                                if (item.rotation) {
+                                    const curAngle = copiedPage.getRotation().angle || 0;
+                                    copiedPage.setRotation(degrees((curAngle + item.rotation) % 360));
+                                }
+                                outPdf.addPage(copiedPage);
+
+                                if (hasAnyOverlay(item)) {
+                                    const { width: pw, height: ph } = copiedPage.getSize();
+                                    const overlayBytes = await createTransparentOverlayPng(Math.round(pw * 2), Math.round(ph * 2), item, i, sequence.length);
+                                    if (overlayBytes) {
+                                        const embeddedOverlay = await outPdf.embedPng(overlayBytes);
+                                        copiedPage.drawImage(embeddedOverlay, { x: 0, y: 0, width: pw, height: ph });
+                                    }
+                                }
+                            } catch (copyErr) {
+                                console.warn("Fallback to rendered image for PDF page:", copyErr);
+                                await addImagePageToPdfLib(outPdf, item.dataUrl, quality);
+                            }
+                        } else {
+                            await addImagePageToPdfLib(outPdf, item.dataUrl, quality);
+                        }
+
+                        const percent = Math.round(((i + 1) / sequence.length) * 100);
+                        if (onProgress) onProgress(percent, `PROCESSING ${percent}%`);
+                    }
+
+                    const pdfBytes = await outPdf.save();
+                    blobResult = new Blob([pdfBytes], { type: 'application/pdf' });
+                } else {
+                    const { jsPDF } = window.jspdf;
+                    let pdf = null;
+
+                    for (let i = 0; i < sequence.length; i++) {
+                        const imgObj = sequence[i];
+                        const { blob } = await imageToBytes(imgObj.dataUrl, 'image/jpeg', quality);
+                        const compressedUrl = URL.createObjectURL(blob);
+
+                        await new Promise(resolve => {
+                            let img = new Image();
+                            img.onload = () => {
+                                let imgW = img.naturalWidth; let imgH = img.naturalHeight;
+                                let isLandscape = imgW > imgH; let orientation = isLandscape ? 'l' : 'p';
+                                let a4W = isLandscape ? 297 : 210; let a4H = isLandscape ? 210 : 297;
+
+                                if (i === 0) {
+                                    const opts = { orientation: orientation, unit: 'mm', format: 'a4' };
+                                    if (password) {
+                                        opts.encryption = {
+                                            userPassword: password,
+                                            ownerPassword: password,
+                                            userPermissions: ['print']
+                                        };
+                                    }
+                                    pdf = new jsPDF(opts);
+                                    pdf.setDisplayMode('100%', 'continuous', 'UseOutlines');
+                                } else {
+                                    pdf.addPage('a4', orientation);
+                                }
+
+                                let ratio = imgW / imgH; let drawW = a4W; let drawH = a4W / ratio;
+                                if (drawH > a4H) { drawH = a4H; drawW = a4H * ratio; }
+                                
+                                pdf.addImage(img, 'JPEG', (a4W - drawW) / 2, (a4H - drawH) / 2, drawW, drawH);
+                                URL.revokeObjectURL(compressedUrl);
+                                resolve();
+                            };
+                            img.src = compressedUrl;
+                        });
+
+                        const percent = Math.round(((i + 1) / sequence.length) * 100);
+                        if (onProgress) onProgress(percent, `PROCESSING ${percent}%`);
+                    }
+
+                    blobResult = pdf.output('blob');
+                }
+                extResult = '.pdf';
+            }
+
+            return { blob: blobResult, ext: extResult };
+        }
+
+        let estimateCalcToken = 0;
+        let cachedExportPackage = null;
+
+        document.getElementById('convertBtn').addEventListener('click', () => {
+            actionSound.currentTime = 0; actionSound.play();
+            const sequence = getCheckedSequence();
+            
+            if (sequence.length === 0) {
+                $('#popupButtons').show();
+                showPopup("SYSTEM ALERT", "<p style='text-align:center;'>Data Missing: Requires at least one selected page or image.</p>");
+                return;
+            }
+
+            const defaultBaseName = sequence[0].baseFileName || sequence[0].name.split('.').slice(0, -1).join('.') || 'Nier_Document';
+            cachedExportPackage = null;
+
+            $('#popupButtons').show();
+            showPopup(
+                "EXPORT CONFIGURATION",
+                `<div class="nier-form-group">
+                    <label class="nier-form-label">Registry File Name</label>
+                    <input type="text" id="exportFileName" class="nier-input" value="${defaultBaseName}">
+                 </div>
+                 <div class="nier-row">
+                    <div class="nier-form-group">
+                        <label class="nier-form-label">Export Format</label>
+                        <select id="exportFormatSelect" class="nier-select">
+                            <option value="pdf">PDF Document (.pdf)</option>
+                            <option value="jpg">Images - JPEG (${sequence.length > 1 ? '.zip' : '.jpg'})</option>
+                            <option value="png">Images - PNG (${sequence.length > 1 ? '.zip' : '.png'})</option>
+                            <option value="txt">Extracted Text (.txt)</option>
+                        </select>
+                    </div>
+                    <div class="nier-form-group" id="exportQualityGroup">
+                        <label class="nier-form-label">Output Quality</label>
+                        <select id="exportQualitySelect" class="nier-select">
+                            <option value="0.95">High Quality (95%)</option>
+                            <option value="0.75">Balanced / Compressed (75%)</option>
+                            <option value="0.50">Small File Size (50%)</option>
+                        </select>
+                    </div>
+                 </div>
+                 <div id="exportPdfSecuritySection">
+                    <label class="nier-check-row">
+                        <input type="checkbox" id="enablePdfPassword">
+                        <span>Optional Security: Protect PDF with Password</span>
+                    </label>
+                    <div class="nier-form-group" id="pdfPasswordInputWrap" style="display:none; margin-top:6px;">
+                        <div class="nier-password-wrapper">
+                            <input type="password" id="exportPdfPassword" class="nier-input" placeholder="Enter password required to open PDF...">
+                            <button type="button" id="togglePwdEye" class="nier-pwd-eye" title="Show / Hide Password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                 </div>
+                 <div class="estimate-size-text" id="exportEstimateText">Estimated file size: calculating...</div>`,
+                [
+                    {
+                        text: "EXPORT NOW",
+                        id: "confirmExportBtn",
+                        action: function() {
+                            const fileName = $('#exportFileName').val().trim() || defaultBaseName;
+                            const format = $('#exportFormatSelect').val();
+                            const quality = parseFloat($('#exportQualitySelect').val()) || 0.95;
+                            const usePwd = $('#enablePdfPassword').is(':checked');
+                            const password = $('#exportPdfPassword').val();
+
+                            if (format === 'pdf' && usePwd && !password) {
+                                alert("Please enter a password or uncheck Password Protection.");
+                                return;
+                            }
+
+                            executeExportProcess(sequence, fileName, format, quality, usePwd ? password : '');
+                        }
+                    },
+                    {
+                        text: "CANCEL",
+                        action: function() {
+                            estimateCalcToken++;
+                            clickSound.currentTime = 0; clickSound.play();
+                            closePopup(false);
+                        }
+                    }
+                ]
+            );
+
+            initNierSelects(document.getElementById('popupBody'));
+            $('#confirmExportBtn').css({'background-color': 'var(--nier-dark)', 'color': '#d3cebb'});
+
+            async function updateEstimatedSize() {
+                const token = ++estimateCalcToken;
+                cachedExportPackage = null;
+                const estEl = document.getElementById('exportEstimateText');
+                if (!estEl) return;
+                estEl.textContent = 'Estimated file size: calculating...';
+
+                const fmt = $('#exportFormatSelect').val() || 'pdf';
+                const qual = parseFloat($('#exportQualitySelect').val()) || 0.95;
+                const usePwd = $('#enablePdfPassword').is(':checked');
+                const pwd = (fmt === 'pdf' && usePwd) ? ($('#exportPdfPassword').val() || 'temp_lock') : '';
+
+                // Nhường luồng UI render chữ calculating... trước khi bắt đầu tính
+                await new Promise(r => setTimeout(r, 40));
+                if (token !== estimateCalcToken) return;
+
+                try {
+                    const res = await buildExportPackage(sequence, defaultBaseName, fmt, qual, pwd);
+                    if (token !== estimateCalcToken) return;
+                    const currentEl = document.getElementById('exportEstimateText');
+                    if (currentEl) {
+                        currentEl.textContent = `Estimated file size: ${formatFileSize(res.blob.size)}`;
+                    }
+                    // Chỉ cache nếu không bật password tạm
+                    if (!usePwd || $('#exportPdfPassword').val()) {
+                        cachedExportPackage = {
+                            key: `${fmt}_${qual}_${usePwd ? $('#exportPdfPassword').val() : ''}`,
+                            blob: res.blob,
+                            ext: res.ext
+                        };
+                    }
+                } catch (e) {
+                    if (token === estimateCalcToken && document.getElementById('exportEstimateText')) {
+                        document.getElementById('exportEstimateText').textContent = 'Estimated file size: N/A';
+                    }
+                }
+            }
+
+            // Chạy tính toán dung lượng ngay khi mở popup
+            updateEstimatedSize();
+
+            $(document).off('change.exportFmt').on('change.exportFmt', '#exportFormatSelect', function() {
+                const fmt = $(this).val();
+                $('#exportPdfSecuritySection').toggle(fmt === 'pdf');
+                $('#exportQualityGroup').toggle(fmt === 'pdf' || fmt === 'jpg');
+                updateEstimatedSize();
+            });
+
+            $(document).off('change.exportQual').on('change.exportQual', '#exportQualitySelect', function() {
+                updateEstimatedSize();
+            });
+
+            $(document).off('change.exportPwd').on('change.exportPwd', '#enablePdfPassword', function() {
+                clickSound.currentTime = 0; clickSound.play();
+                $('#pdfPasswordInputWrap').slideToggle(150);
+                updateEstimatedSize();
+            });
+
+            let pwdTypingTimer = null;
+            $(document).off('input.exportPwdTxt').on('input.exportPwdTxt', '#exportPdfPassword', function() {
+                clearTimeout(pwdTypingTimer);
+                pwdTypingTimer = setTimeout(updateEstimatedSize, 350);
+            });
+
+            // Nút con mắt hiện/ẩn password
+            $(document).off('click.pwdEye').on('click.pwdEye', '#togglePwdEye', function(e) {
+                e.preventDefault();
+                clickSound.currentTime = 0; clickSound.play();
+                const pwdInput = document.getElementById('exportPdfPassword');
+                const icon = this.querySelector('i');
+                if (pwdInput.type === 'password') {
+                    pwdInput.type = 'text';
+                    icon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    pwdInput.type = 'password';
+                    icon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        });
+
+        async function executeExportProcess(sequence, baseFileName, format, quality, password) {
+            estimateCalcToken++; // Dừng các tiến trình tính toán ngầm
+            actionSound.currentTime = 0; actionSound.play();
+
+            $('#popupOverlay, #customPopup').stop(true, true);
+            $('#popupOverlay').css('pointer-events', 'none');
+            showPopup(
+                "PROCESSING DATA...", 
+                `<p style="text-align:center;">Compiling output package...</p>
+                 <div class="progress-container">
+                    <div id="pdfProgressBar" class="progress-bar"></div>
+                    <div id="pdfProgressText" class="progress-text">STANDBY 0%</div>
+                 </div>`, 
+                []
+            );
+            $('#popupButtons').hide();
+
+            setTimeout(async () => {
+                const bar = document.getElementById('pdfProgressBar');
+                const pText = document.getElementById('pdfProgressText');
+
+                try {
+                    const cacheKey = `${format}_${quality}_${password}`;
+                    let finalExtension = '.pdf';
+
+                    if (cachedExportPackage && cachedExportPackage.key === cacheKey && format !== 'jpg' && format !== 'png') {
+                        generatedExportBlob = cachedExportPackage.blob;
+                        finalExtension = cachedExportPackage.ext;
+                        if (bar) bar.style.width = '100%';
+                        if (pText) pText.textContent = 'PROCESSING 100%';
+                    } else {
+                        const result = await buildExportPackage(
+                            sequence,
+                            baseFileName,
+                            format,
+                            quality,
+                            password,
+                            (pct, text) => {
+                                if (bar) bar.style.width = pct + '%';
+                                if (pText) pText.textContent = text;
+                            }
+                        );
+                        generatedExportBlob = result.blob;
+                        finalExtension = result.ext;
+                    }
+
+                    let finalFileName = baseFileName;
+                    if (!finalFileName.toLowerCase().endsWith(finalExtension)) {
+                        finalFileName = finalFileName.replace(/\.[^/.]+$/, "") + finalExtension;
+                    }
+
+                    setTimeout(() => {
+                        $('#popupOverlay').css('pointer-events', 'auto');
+                        $('#popupButtons').show();
+                        
+                        showPopup(
+                            "EXPORT COMPLETE",
+                            `<p style="text-align:center;">Package compiled (${formatFileSize(generatedExportBlob.size)}). Ready for download:</p>
+                             <input type="text" id="finalDownloadName" class="popup-input" value="${finalFileName}" style="text-align:center;">`,
+                            [
+                                {
+                                    text: "DOWNLOAD",
+                                    id: "downloadPdfBtn",
+                                    action: function() {
+                                        actionSound.currentTime = 0; actionSound.play();
+                                        let dlName = $('#finalDownloadName').val().trim() || finalFileName;
+                                        if (!dlName.toLowerCase().endsWith(finalExtension)) dlName += finalExtension;
+                                        const link = document.createElement('a');
+                                        const url = URL.createObjectURL(generatedExportBlob);
+                                        link.href = url; link.download = dlName;
+                                        document.body.appendChild(link); link.click(); document.body.removeChild(link); URL.revokeObjectURL(url);
+                                    }
+                                },
+                                {
+                                    text: "START OVER",
+                                    action: function() { 
+                                        clickSound.currentTime = 0; clickSound.play(); 
+                                        setTimeout(() => { location.reload(); }, 300); 
+                                    }
+                                }
+                            ]
+                        );
+                        
+                        $('#downloadPdfBtn').css({'background-color': 'var(--nier-dark)', 'color': '#d3cebb'});
+                    }, 350);
+                } catch (err) {
+                    console.error("Error exporting:", err);
+                    $('#popupOverlay').css('pointer-events', 'auto');
+                    $('#popupButtons').show();
+                    showPopup("SYSTEM ERROR", "<p style='text-align:center;'>An error occurred while compiling the export package.</p>");
+                }
+            }, 350);
+        }
+
+    </script>
+</body>
+</html>
