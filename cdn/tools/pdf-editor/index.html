@@ -240,7 +240,124 @@
             .toolbar-status { width: 100%; text-align: center; }
         }
 
-        /* --- UPLOAD ZONE --- */
+        /* --- UPLOAD ZONE & URL IMPORT BOX --- */
+        .url-import-box {
+            display: flex;
+            align-items: stretch;
+            gap: 10px;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        .url-import-textarea {
+            flex: 1;
+            min-height: 64px;
+            max-height: 150px;
+            padding: 10px 12px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.45;
+            border: 2px solid var(--nier-dark);
+            background: rgba(216, 210, 186, 0.45);
+            color: var(--nier-dark);
+            outline: none;
+            resize: vertical;
+            transition: background 0.2s, box-shadow 0.2s;
+        }
+        .url-import-textarea::placeholder {
+            color: rgba(75, 67, 64, 0.65);
+            font-weight: 400;
+        }
+        .url-import-textarea:focus {
+            background: rgba(216, 210, 186, 0.85);
+            box-shadow: inset 3px 0 0 var(--nier-dark);
+        }
+        .url-import-btn {
+            width: auto;
+            min-width: 105px;
+            margin-top: 0;
+            padding: 10px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+        .url-import-btn i {
+            font-size: 15px;
+        }
+
+        .url-progress-list {
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .url-progress-item {
+            background: rgba(100, 98, 86, 0.12);
+            border: 1px solid rgba(75, 67, 64, 0.45);
+            padding: 8px 10px;
+        }
+        .url-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .url-progress-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--nier-dark);
+            flex: 1;
+            text-align: left;
+        }
+        .url-progress-status {
+            font-size: 10px;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            background: rgba(75, 67, 64, 0.2);
+            color: var(--nier-dark);
+            flex-shrink: 0;
+        }
+        .url-progress-status.status-ok {
+            background: var(--nier-dark);
+            color: var(--nier-text-light);
+        }
+        .url-progress-status.status-err {
+            background: var(--nier-error-red);
+            color: #ffffff;
+        }
+        .url-mini-progress {
+            height: 18px;
+            margin: 0;
+            border-width: 1.5px;
+        }
+        .url-mini-progress .progress-text {
+            font-size: 10px;
+        }
+        .url-error-summary {
+            margin-top: 10px;
+            padding: 8px 10px;
+            background: rgba(133, 0, 0, 0.1);
+            border-left: 4px solid var(--nier-error-red);
+            color: var(--nier-error-red);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.45;
+            max-height: 110px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
         .dropzone { width: 100%; padding: 40px 20px; border: 2px dashed var(--nier-dark); background: rgba(216, 210, 186, 0.3); text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
         .dropzone.hover { background: rgba(100, 98, 86, 0.2); border-color: var(--nier-bg-btn); }
         .dropzone p { font-weight: bold; font-size: 14px; }
@@ -652,6 +769,13 @@
             <div class="function-wrapper">
                 <div class="input-panel section">
                     <h2 class="sectionTitle">Data Input & Sequence</h2>
+                    <div class="url-import-box">
+                        <textarea id="urlImportInput" class="url-import-textarea" placeholder="Import PDF or Image from URL(s) — Enter one URL per line (separate line by line)..."></textarea>
+                        <button type="button" id="urlImportBtn" class="themebutton url-import-btn">
+                            <i class="fas fa-cloud-download-alt"></i>
+                            <span>IMPORT</span>
+                        </button>
+                    </div>
                     <div class="dropzone" id="dropZone">
                         <p>CLICK HERE OR DROP FILES TO UPLOAD</p>
                         <small>(Supported: PDF, JPG, PNG, WEBP)</small>
@@ -883,7 +1007,7 @@
             if (grid) { e.target.closest('.thumb-wrapper') ? grid.classList.add('show-delete-mobile') : grid.classList.remove('show-delete-mobile'); }
         });
 
-        $(document).on('mouseenter', '.themebutton:not(:disabled), .tool-btn:not(:disabled), .thumb-box, .dropzone, .gallery-nav, .gallery-thumb, .gallery-close', () => { 
+        $(document).on('mouseenter', '.themebutton:not(:disabled), .tool-btn:not(:disabled), .thumb-box, .dropzone, .url-import-textarea, .gallery-nav, .gallery-thumb, .gallery-close', () => { 
             hoverSound.currentTime = 0; hoverSound.play(); 
         });
 
@@ -1049,7 +1173,7 @@
             });
         }
 
-        async function openPdfDocumentWithPrompt(file, arrayBuffer) {
+        async function openPdfDocumentWithPrompt(file, arrayBuffer, restorePopupFn = showReadingDataPopup) {
             let password = undefined;
             let isRetry = false;
 
@@ -1061,8 +1185,8 @@
                     }
                     const loadingTask = pdfjsLib.getDocument(params);
                     const pdfDoc = await loadingTask.promise;
-                    if (isRetry || password !== undefined) {
-                        showReadingDataPopup();
+                    if ((isRetry || password !== undefined) && typeof restorePopupFn === 'function') {
+                        restorePopupFn();
                     }
                     return { pdfDoc, password: password || null, skipped: false };
                 } catch (err) {
@@ -1077,7 +1201,7 @@
                     if (isPasswordErr) {
                         const userPwd = await promptForPdfPassword(file.name, isRetry);
                         if (userPwd === null) {
-                            showReadingDataPopup();
+                            if (typeof restorePopupFn === 'function') restorePopupFn();
                             return { pdfDoc: null, password: null, skipped: true };
                         }
                         password = userPwd;
@@ -1088,6 +1212,393 @@
                 }
             }
         }
+
+        // --- IMPORT TỪ URL (HỖ TRỢ NHIỀU URL MỖI DÒNG, PROGRESS BAR TỪNG URL & BÁO LỖI CHI TIẾT) ---
+        function isBufferPdf(arrayBuffer) {
+            if (!arrayBuffer || arrayBuffer.byteLength < 5) return false;
+            const bytes = new Uint8Array(arrayBuffer, 0, Math.min(arrayBuffer.byteLength, 1024));
+            const headerStr = String.fromCharCode.apply(null, bytes);
+            return headerStr.includes('%PDF-');
+        }
+
+        function verifyImageBlobUrl(blobUrl) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.onload = () => resolve(true);
+                img.onerror = () => resolve(false);
+                img.src = blobUrl;
+            });
+        }
+
+        function extractFileNameFromUrl(urlStr, index, isPdf) {
+            try {
+                const u = new URL(urlStr);
+                let pathname = decodeURIComponent(u.pathname || '');
+                if (pathname.endsWith('/')) pathname = pathname.slice(0, -1);
+                let name = pathname.split('/').pop() || '';
+                name = name.replace(/[<>:"/\\|?*]+/g, '_').trim();
+                if (!name) name = `URL_${isPdf ? 'Doc' : 'Image'}_${index + 1}`;
+                if (isPdf && !name.toLowerCase().endsWith('.pdf')) {
+                    name += '.pdf';
+                } else if (!isPdf && !/\.(jpe?g|png|webp|gif|bmp)$/i.test(name)) {
+                    name += '.jpg';
+                }
+                return name;
+            } catch (_) {
+                return `URL_${isPdf ? 'Doc' : 'Image'}_${index + 1}${isPdf ? '.pdf' : '.jpg'}`;
+            }
+        }
+
+        async function fetchUrlWithProgress(rawUrl, onProgress) {
+            const candidates = [
+                rawUrl,
+                `https://corsproxy.io/?url=${encodeURIComponent(rawUrl)}`,
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(rawUrl)}`
+            ];
+
+            let lastError = null;
+
+            for (let c = 0; c < candidates.length; c++) {
+                const targetUrl = candidates[c];
+                try {
+                    const response = await fetch(targetUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}`);
+                    }
+
+                    const contentType = (response.headers.get('content-type') || '').toLowerCase();
+                    const contentLength = parseInt(response.headers.get('content-length') || '0', 10);
+
+                    if (response.body && typeof response.body.getReader === 'function') {
+                        const reader = response.body.getReader();
+                        const chunks = [];
+                        let receivedLength = 0;
+
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            if (value) {
+                                chunks.push(value);
+                                receivedLength += value.byteLength;
+                                if (contentLength > 0) {
+                                    const pct = Math.min(85, Math.max(10, Math.round((receivedLength / contentLength) * 85)));
+                                    onProgress(pct, `DOWNLOADING ${pct}%`);
+                                } else {
+                                    onProgress(50, `DOWNLOADING ${(receivedLength / 1024).toFixed(0)} KB...`);
+                                }
+                            }
+                        }
+
+                        const combined = new Uint8Array(receivedLength);
+                        let pos = 0;
+                        for (const chunk of chunks) {
+                            combined.set(chunk, pos);
+                            pos += chunk.byteLength;
+                        }
+                        return { buffer: combined.buffer, contentType };
+                    } else {
+                        onProgress(60, 'DOWNLOADING...');
+                        const buffer = await response.arrayBuffer();
+                        return { buffer, contentType };
+                    }
+                } catch (err) {
+                    lastError = err;
+                }
+            }
+
+            throw lastError || new Error('Network or CORS error');
+        }
+
+        document.getElementById('urlImportBtn').addEventListener('click', async () => {
+            const textarea = document.getElementById('urlImportInput');
+            const rawLines = (textarea.value || '')
+                .split(/\r?\n/)
+                .map(line => line.trim())
+                .filter(line => line.length > 0);
+
+            if (rawLines.length === 0) {
+                clickSound.currentTime = 0; clickSound.play();
+                $('#popupButtons').show();
+                showPopup("SYSTEM ALERT", "<p style='text-align:center;'>Data Missing: Please enter at least one URL to import.</p>");
+                return;
+            }
+
+            actionSound.currentTime = 0; actionSound.play();
+
+            const urlStates = rawLines.map((url, idx) => ({
+                index: idx,
+                url: url,
+                statusText: 'WAITING',
+                statusClass: '',
+                percent: 0,
+                barText: '0%',
+                isError: false,
+                errorReason: ''
+            }));
+
+            function renderUrlImportPopupState(finished = false, failedItems = [], importedCount = 0) {
+                const listHtml = urlStates.map((st, idx) => {
+                    const barColor = st.isError ? 'background:var(--nier-error-red);' : '';
+                    return `
+                        <div class="url-progress-item" id="urlProgItem_${idx}">
+                            <div class="url-progress-header">
+                                <span class="url-progress-name" title="${st.url.replace(/"/g, '&quot;')}">[${idx + 1}] ${st.url}</span>
+                                <span class="url-progress-status ${st.statusClass}" id="urlProgStatus_${idx}">${st.statusText}</span>
+                            </div>
+                            <div class="progress-container url-mini-progress">
+                                <div class="progress-bar" id="urlProgBar_${idx}" style="width:${st.percent}%; ${barColor}"></div>
+                                <div class="progress-text" id="urlProgText_${idx}">${st.barText}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                let errorSummaryHtml = '';
+                if (finished && failedItems.length > 0) {
+                    const errLines = failedItems.map(f => `• <b>[${f.index + 1}]</b> ${f.url} — <i>${f.errorReason}</i>`).join('<br>');
+                    errorSummaryHtml = `
+                        <div class="url-error-summary">
+                            <div>IMPORT REPORT: ${importedCount} succeeded, ${failedItems.length} failed:</div>
+                            <div style="margin-top:4px; font-weight:400;">${errLines}</div>
+                        </div>
+                    `;
+                }
+
+                $('#popupOverlay, #customPopup').stop(true, true);
+                $('#popupOverlay').css('pointer-events', finished ? 'auto' : 'none');
+
+                showPopup(
+                    finished ? (failedItems.length > 0 ? "URL IMPORT COMPLETED WITH ERRORS" : "URL IMPORT COMPLETE") : "IMPORTING FROM URL(S)...",
+                    `<p style="text-align:center; margin-bottom:8px; font-size:12px;">
+                        ${finished ? `Processed ${urlStates.length} URL(s).` : `Fetching and parsing ${urlStates.length} remote resource(s)...`}
+                     </p>
+                     <div class="url-progress-list" id="urlProgressListContainer">${listHtml}</div>
+                     ${errorSummaryHtml}`,
+                    finished
+                        ? [{ text: "CLOSE", action: function() { clickSound.currentTime = 0; clickSound.play(); closePopup(false); } }]
+                        : []
+                );
+
+                if (finished) {
+                    $('#popupButtons').show();
+                } else {
+                    $('#popupButtons').hide();
+                }
+            }
+
+            function updateSingleUrlRow(idx, patch) {
+                const st = urlStates[idx];
+                Object.assign(st, patch);
+                const statusEl = document.getElementById(`urlProgStatus_${idx}`);
+                const barEl = document.getElementById(`urlProgBar_${idx}`);
+                const textEl = document.getElementById(`urlProgText_${idx}`);
+                const itemEl = document.getElementById(`urlProgItem_${idx}`);
+
+                if (statusEl) {
+                    statusEl.textContent = st.statusText;
+                    statusEl.className = 'url-progress-status ' + (st.statusClass || '');
+                }
+                if (barEl) {
+                    barEl.style.width = st.percent + '%';
+                    if (st.isError) barEl.style.background = 'var(--nier-error-red)';
+                }
+                if (textEl) {
+                    textEl.textContent = st.barText;
+                }
+                if (itemEl) {
+                    itemEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
+
+            renderUrlImportPopupState(false);
+
+            const newItems = [];
+            let successUrlCount = 0;
+
+            for (let i = 0; i < urlStates.length; i++) {
+                const rawUrl = urlStates[i].url;
+
+                // Kiểm tra định dạng URL hợp lệ
+                let parsedUrl = null;
+                try {
+                    parsedUrl = new URL(rawUrl);
+                    if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+                        throw new Error('Protocol must be HTTP/HTTPS');
+                    }
+                } catch (_) {
+                    updateSingleUrlRow(i, {
+                        statusText: 'INVALID URL',
+                        statusClass: 'status-err',
+                        percent: 100,
+                        barText: 'FAILED (SYNTAX ERROR)',
+                        isError: true,
+                        errorReason: 'Invalid URL syntax (must start with http:// or https://)'
+                    });
+                    continue;
+                }
+
+                updateSingleUrlRow(i, {
+                    statusText: 'CONNECTING',
+                    percent: 8,
+                    barText: 'CONNECTING...'
+                });
+
+                try {
+                    const { buffer, contentType } = await fetchUrlWithProgress(rawUrl, (pct, txt) => {
+                        updateSingleUrlRow(i, {
+                            statusText: 'DOWNLOADING',
+                            percent: pct,
+                            barText: txt
+                        });
+                    });
+
+                    if (!buffer || buffer.byteLength === 0) {
+                        throw new Error('Empty response received');
+                    }
+
+                    const isPdf = isBufferPdf(buffer) || contentType.includes('application/pdf');
+
+                    if (isPdf && isBufferPdf(buffer)) {
+                        const fileName = extractFileNameFromUrl(rawUrl, i, true);
+                        const baseName = getBaseFileName(fileName);
+
+                        updateSingleUrlRow(i, {
+                            statusText: 'PARSING PDF',
+                            percent: 88,
+                            barText: 'OPENING PDF...'
+                        });
+
+                        const { pdfDoc, password, skipped } = await openPdfDocumentWithPrompt(
+                            { name: fileName },
+                            buffer,
+                            () => renderUrlImportPopupState(false)
+                        );
+
+                        if (skipped || !pdfDoc) {
+                            updateSingleUrlRow(i, {
+                                statusText: 'SKIPPED',
+                                statusClass: 'status-err',
+                                percent: 100,
+                                barText: 'SKIPPED (LOCKED)',
+                                isError: true,
+                                errorReason: 'Password-protected PDF was skipped by user'
+                            });
+                            continue;
+                        }
+
+                        const pdfId = 'pdf_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                        pdfBuffersMap.set(pdfId, buffer.slice(0));
+                        if (password) {
+                            pdfPasswordsMap.set(pdfId, password);
+                        }
+
+                        const numPages = pdfDoc.numPages;
+                        for (let p = 1; p <= numPages; p++) {
+                            const pagePct = 88 + Math.round((p / numPages) * 12);
+                            updateSingleUrlRow(i, {
+                                statusText: `PAGE ${p}/${numPages}`,
+                                percent: pagePct,
+                                barText: `SPLITTING ${p} / ${numPages}`
+                            });
+
+                            const page = await pdfDoc.getPage(p);
+                            const previewUrl = await renderPdfPageToBlobUrl(page);
+
+                            newItems.push({
+                                id: 'page_' + Date.now() + '_' + p + '_' + Math.random().toString(36).substr(2, 7),
+                                type: 'pdf-page',
+                                pdfId: pdfId,
+                                pageIndex: p - 1,
+                                pageNumber: p,
+                                name: `${baseName} - Page ${p}`,
+                                baseFileName: baseName,
+                                originalDataUrl: previewUrl,
+                                dataUrl: previewUrl,
+                                rotation: 0,
+                                annotations: [],
+                                checked: true
+                            });
+                        }
+
+                        successUrlCount++;
+                        updateSingleUrlRow(i, {
+                            statusText: 'DONE',
+                            statusClass: 'status-ok',
+                            percent: 100,
+                            barText: `IMPORTED (${numPages} PAGE${numPages > 1 ? 'S' : ''})`
+                        });
+                    } else {
+                        // Kiểm tra xem có phải là file ảnh hợp lệ không
+                        const mime = contentType.startsWith('image/') ? contentType.split(';')[0] : 'image/jpeg';
+                        const imgBlob = new Blob([buffer], { type: mime });
+                        const objUrl = URL.createObjectURL(imgBlob);
+                        const isValidImg = await verifyImageBlobUrl(objUrl);
+
+                        if (!isValidImg) {
+                            URL.revokeObjectURL(objUrl);
+                            throw new Error('URL does not point to a valid PDF or Image file');
+                        }
+
+                        const fileName = extractFileNameFromUrl(rawUrl, i, false);
+                        const baseName = getBaseFileName(fileName);
+
+                        newItems.push({
+                            id: 'img_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            type: 'image',
+                            name: fileName,
+                            baseFileName: baseName,
+                            originalDataUrl: objUrl,
+                            dataUrl: objUrl,
+                            rotation: 0,
+                            annotations: [],
+                            checked: true
+                        });
+
+                        successUrlCount++;
+                        updateSingleUrlRow(i, {
+                            statusText: 'DONE',
+                            statusClass: 'status-ok',
+                            percent: 100,
+                            barText: 'IMPORTED (IMAGE)'
+                        });
+                    }
+                } catch (err) {
+                    console.error('URL Import Error:', rawUrl, err);
+                    updateSingleUrlRow(i, {
+                        statusText: 'FAILED',
+                        statusClass: 'status-err',
+                        percent: 100,
+                        barText: 'IMPORT FAILED',
+                        isError: true,
+                        errorReason: err && err.message ? err.message : 'Unable to fetch or decode resource'
+                    });
+                }
+            }
+
+            if (newItems.length > 0) {
+                uploadedFiles = uploadedFiles.concat(newItems);
+                renderThumbnails(newItems);
+                if (watermarkConfig.enabled || pageNumberConfig.enabled) {
+                    await refreshAllPagesComposited();
+                }
+                updateToolbarStatus();
+            }
+
+            const failedItems = urlStates.filter(st => st.isError);
+            if (failedItems.length === 0) {
+                textarea.value = '';
+                setTimeout(() => {
+                    $('#popupOverlay').css('pointer-events', 'auto');
+                    $('#popupButtons').show();
+                    $('#popupOverlay, #customPopup').stop(true, true).fadeOut(200);
+                }, 500);
+            } else {
+                // Giữ lại các URL bị lỗi trong ô nhập để người dùng dễ kiểm tra/sửa lại
+                textarea.value = failedItems.map(f => f.url).join('\n');
+                deleteSound.currentTime = 0; deleteSound.play();
+                renderUrlImportPopupState(true, failedItems, successUrlCount);
+            }
+        });
 
         async function handleFiles(files) {
             const validFiles = Array.from(files).filter(f => isImageFile(f) || isPdfFile(f));
